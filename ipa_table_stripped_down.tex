@@ -1,0 +1,34 @@
+
+\documentclass[a4paper,oneside,12pt]{book}
+
+% FONTSETUP FOR XELATEX + IPA
+\usepackage{fontspec}
+\setmainfont{Libertinus Serif} % Use Charis SIL or Doulos SIL if needed
+
+% PAGE AND TABLE SETUP
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+
+\begin{document}
+
+\chapter*{IPA Phoneme Groups}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3cm} p{12cm}}
+\toprule
+\textbf{Phoneme Group} & \textbf{Phonemes} \\
+\midrule
+Vowel & a, aː, e, eː, i, iː, o, oː, u, uː, æ, ɐ, ɑ, ɑː, ɒ, ɒː, ɔ, ə, ɛ, ɛː, ɜː, ɚ, ɪ, ʉ, ʉː, ʊ, y, ø, œ, ɑ̃, ɔ̃, ɛ̃ \\
+Diphthong & aj, aw, ej, ow, ɔj, əw \\
+Stop & b, bʲ, c, cʰ, cʷ, d, dʲ, d̪, g, ɡ, k, kʰ, kʷ, p, pʰ, pʲ, t, tʰ, tʲ, tʷ, t̪, ɖ, ɟ, ɟʷ, ʈ, ʈʲ, ʈʷ \\
+Nasal & m, mʲ, m̩, n, n̩, ŋ, ɱ, ɲ \\
+Fricative & f, fʲ, h, s, v, vʲ, x, z, ç, ð, ɣ, ʃ, ʒ, ʝ, β, θ, ʁ \\
+Affricate & dʒ, tʃ, ts \\
+Approximant & j, l, w, ɫ, ɹ, ʎ, ɥ, ʋ \\
+Closure & sil \\
+Tap \& Trill & ɾ, r \\
+\bottomrule
+\end{longtable}
+
+\end{document}

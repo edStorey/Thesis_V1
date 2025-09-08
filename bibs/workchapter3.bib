@@ -1,0 +1,349 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Mulilingual SSL ASR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Using Several Romance languages (basque, catalan, french) they use an algorithm that selects utterances with relevant phonemes, they get very good results with little data
+@inproceedings{zhang2023fast,
+  title={Fast and efficient multilingual self-supervised pre-training for low-resource speech recognition},
+  author={Zhang, Zhilong and Wang, Wei and Qian, Yanmin},
+  booktitle={Proc. Interspeech},
+  year={2023}
+}
+
+%%%%%%% AAVE (African American Vernacular English) does badly on 4 different SSL ASR Models
+@article{chang2024self,
+  title={Self-supervised speech representations still struggle with african american vernacular english},
+  author={Chang, Kalvin and Chou, Yi-Hui and Shi, Jiatong and Chen, Hsuan-Ming and Holliday, Nicole and Scharenborg, Odette and Mortensen, David R},
+  journal={arXiv preprint arXiv:2408.14262},
+  year={2024}
+}
+
+%%%%%%%%%%  Japanese SSL ASR they find that monolingual japanese pretraining is much more effective than multilingual training
+@inproceedings{ashihara2023exploration,
+  title={Exploration of language dependency for japanese self-supervised speech representation models},
+  author={Ashihara, Takanori and Moriya, Takafumi and Matsuura, Kohei and Tanaka, Tomohiro},
+  booktitle={ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2023},
+  organization={IEEE}
+}
+
+%%%%%% They pretrain SSL ASR on Flemish Dutch and:
+%%%%%% "We find that the most important factors for positive transfer to downstream speech recognition tasks include a substantial amount of data and a matching pre-training domain"
+@inproceedings{poncelet2021comparison,
+  title={Comparison of self-supervised speech pre-training methods on Flemish Dutch},
+  author={Poncelet, Jakob and others},
+  booktitle={2021 IEEE Automatic Speech Recognition and Understanding Workshop (ASRU)},
+  pages={169--176},
+  year={2021},
+  organization={IEEE}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                  Probing and Layer Analysis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Cormac's probing paper
+@inproceedings{english2022domain,
+  title={Domain-informed probing of wav2vec 2.0 embeddings for phonetic features},
+  author={English, Patrick Cormac and Kelleher, John and Carson-Berndsen, Julie},
+  booktitle={Proceedings of the 19th SIGMORPHON Workshop on Computational Research in Phonetics, Phonology, and Morphology},
+  pages={83--91},
+  year={2022}
+}
+
+%%%%%%%%%%%%%%%%%% LAyer Analysis
+%%%% Pasad et al.
+@inproceedings{pasad2021layer,
+  title={Layer-wise analysis of a self-supervised speech representation model},
+  author={Pasad, Ankita and Chou, Ju-Chieh and Livescu, Karen},
+  booktitle={2021 IEEE Automatic Speech Recognition and Understanding Workshop (ASRU)},
+  pages={914--921},
+  year={2021},
+  organization={IEEE}
+}
+
+%%%%%% Layer analysis of deepspeech
+@article{belinkov2017analyzing,
+  title={Analyzing hidden representations in end-to-end automatic speech recognition systems},
+  author={Belinkov, Yonatan and Glass, James},
+  journal={Advances in Neural Information Processing Systems},
+  volume={30},
+  year={2017}
+}
+
+%%%%%%%%%%%%%  They test layer difference between finetuned and pretrained, they also do this for multilingual FT.
+%%%%%%%%%%%%% HuBERT prefers languages with less phonemes
+%%%%%%%%%%%%% They do a phoneme task that involves FT to phonemes first then FT to words, not sure it's much worth talking about
+@article{zhao2022improving,
+  title={Improving automatic speech recognition performance for low-resource languages with self-supervised models},
+  author={Zhao, Jing and Zhang, Wei-Qiang},
+  journal={IEEE Journal of Selected Topics in Signal Processing},
+  volume={16},
+  number={6},
+  pages={1227--1241},
+  year={2022},
+  publisher={IEEE}
+}
+
+%%%% Probing for NLP 
+@article{immer2021probing,
+  title={Probing as quantifying inductive bias},
+  author={Immer, Alexander and Hennigen, Lucas Torroba and Fortuin, Vincent and Cotterell, Ryan},
+  journal={arXiv preprint arXiv:2110.08388},
+  year={2021}
+}
+
+%%%% Probing for visual recognition
+@inproceedings{schneiderleveraging,
+author = {Schneider, Johannes and Prabhushankar, Mohit},
+title = {Understanding and leveraging the learning phases of neural networks},
+year = {2024},
+isbn = {978-1-57735-887-9},
+publisher = {AAAI Press},
+url = {https://doi.org/10.1609/aaai.v38i13.29408},
+doi = {10.1609/aaai.v38i13.29408},
+booktitle = {Proceedings of the Thirty-Eighth AAAI Conference on Artificial Intelligence and Thirty-Sixth Conference on Innovative Applications of Artificial Intelligence and Fourteenth Symposium on Educational Advances in Artificial Intelligence},
+articleno = {1660},
+numpages = {8},
+series = {AAAI'24/IAAI'24/EAAI'24}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%% Zero Shot CTC finetuning to phonemes with wav2vec 2.0, they get good results by using lots of multilingual data from common voice 
+@article{xu2021simple,
+  title={Simple and effective zero-shot cross-lingual phoneme recognition},
+  author={Xu, Qiantong and Baevski, Alexei and Auli, Michael},
+  journal={arXiv preprint arXiv:2109.11680},
+  year={2021}
+}
+
+
+
+%%%%%% Multilingual Indic Lnaguges pretraining shows better error than monoligual training
+%%%%%% Arxiv only!!
+@article{gupta2021clsril,
+  title={Clsril-23: Cross lingual speech representations for indic languages},
+  author={Gupta, Anirudh and Chadha, Harveen Singh and Shah, Priyanshi and Chhimwal, Neeraj and Dhuriya, Ankur and Gaur, Rishabh and Raghavan, Vivek},
+  journal={arXiv preprint arXiv:2107.07402},
+  year={2021}
+}
+
+
+%%%%% SSL Models are better at encoding phonetic information than semantic information
+@article{choi2024self,
+  title={Self-supervised speech representations are more phonetic than semantic},
+  author={Choi, Kwanghee and Pasad, Ankita and Nakamura, Tomohiko and Fukayama, Satoru and Livescu, Karen and Watanabe, Shinji},
+  journal={arXiv preprint arXiv:2406.08619},
+  year={2024}
+}
+
+
+%%%%% Japanese SSL, monlingual japanese outperforms XLS-R
+@inproceedings{ashihara2023exploration,
+  title={Exploration of language dependency for japanese self-supervised speech representation models},
+  author={Ashihara, Takanori and Moriya, Takafumi and Matsuura, Kohei and Tanaka, Tomohiro},
+  booktitle={ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2023},
+  organization={IEEE}
+}
+
+
+%%%%%%% Big SSL, Billions of parameters and millions of hours of speech, they show that scaling to large models and large datasets have lower WER
+@article{zhang2022bigssl,
+  title={Bigssl: Exploring the frontier of large-scale semi-supervised learning for automatic speech recognition},
+  author={Zhang, Yu and Park, Daniel S and Han, Wei and Qin, James and Gulati, Anmol and Shor, Joel and Jansen, Aren and Xu, Yuanzhong and Huang, Yanping and Wang, Shibo and others},
+  journal={IEEE Journal of Selected Topics in Signal Processing},
+  volume={16},
+  number={6},
+  pages={1519--1532},
+  year={2022},
+  publisher={IEEE}
+}
+
+%%%%%%%%%%%%%%%%% Neural Scaling %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Neural scaling for large models and large datasets
+@article{hestness2017deep,
+  title={Deep learning scaling is predictable, empirically},
+  author={Hestness, Joel and Narang, Sharan and Ardalani, Newsha and Diamos, Gregory and Jun, Heewoo and Kianinejad, Hassan and Patwary, Md Mostofa Ali and Yang, Yang and Zhou, Yanqi},
+  journal={arXiv preprint arXiv:1712.00409},
+  year={2017}
+}
+
+%%%%% Neural network accuracy improves as dataset size, model size and compute power increase
+@article{kaplan2020scaling,
+  title={Scaling laws for neural language models},
+  author={Kaplan, Jared and McCandlish, Sam and Henighan, Tom and Brown, Tom B and Chess, Benjamin and Child, Rewon and Gray, Scott and Radford, Alec and Wu, Jeffrey and Amodei, Dario},
+  journal={arXiv preprint arXiv:2001.08361},
+  year={2020}
+}
+
+%%%%%%%%%%%%%%%% I should check to see if the above 2 papers have non arxiv papers, I can't dfind any right now  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% More stuff on scaling and size, in this case size can make up for a lackm of data
+@inproceedings{pu21_interspeech,
+  title     = {Scaling Effect of Self-Supervised Speech Models},
+  author    = {Jie Pu and Yuguang Yang and Ruirui Li and Oguz Elibol and Jasha Droppo},
+  year      = {2021},
+  booktitle = {Interspeech 2021},
+  pages     = {1084--1088},
+  doi       = {10.21437/Interspeech.2021-1935},
+  issn      = {2958-1796},
+}
+
+%% This contains weight analysis of features extracted at different layers when given data from multiple langauges (not probing) that shows that the layers of HuBERT learn the same tasks regardless of language
+%%% However this is for speaker change detection not ASR
+@inproceedings{li2023quantitative,
+  title={A Quantitative Approach to Understand Self-Supervised Models as Cross-lingual Feature Extracters},
+  author={Li, Shuyue Stella and Xu, Beining and Zhang, Xiangyu and Liu, Hexin and Chao, Wenhan and Garcia, Paola},
+  booktitle={Proceedings of the 6th International Conference on Natural Language and Speech Processing (ICNLSP 2023)},
+  pages={200--211},
+  year={2023}
+}
+
+
+%%%%%%%%% Linguistics
+%%%%%%%%%%%%% French Influences on The English language %%%%%%
+%%%%%  Referenced in li2023quantitative
+@article{roth2010explore,
+  title={Explore the influence of French on English},
+  author={Roth, Isabel},
+  journal={Leading Undergraduate Work in English Studies},
+  volume={3},
+  pages={255--261},
+  year={2010}
+}
+
+%%%%%  Autralian English Speakers and French Speakers on how they percieve mandarin
+%%%%%  Referenced in li2023quantitative
+@article{so2014phonetic,
+  title={PHONETIC INFLUENCES ON ENGLISH AND FRENCH LISTENERS’ASSIMILATION OF MANDARIN TONES TO NATIVE PROSODIC CATEGORIES},
+  author={So, Connie K and Best, Catherine T},
+  journal={Studies in Second Language Acquisition},
+  volume={36},
+  number={2},
+  pages={195--221},
+  year={2014},
+  publisher={Cambridge University Press}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% Neural Network Types %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Transformer Blocks
+@inproceedings{vaswani2017attention,
+  title={Attention is All You Need},
+  author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, Łukasz and Polosukhin, Illia},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2017},
+  pages={5998--6008}
+}
+
+%%%% CNNs
+@inproceedings{krizhevsky2012imagenet,
+  title={ImageNet Classification with Deep Convolutional Neural Networks},
+  author={Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={25},
+  pages={1097--1105},
+  year={2012}
+}
+
+%%%% Autoencoders
+@article{hinton2006reducing,
+  title={Reducing the dimensionality of data with neural networks},
+  author={Hinton, Geoffrey E and Salakhutdinov, Ruslan R},
+  journal={Science},
+  volume={313},
+  number={5786},
+  pages={504--507},
+  year={2006},
+  publisher={American Association for the Advancement of Science}
+}
+
+%%% CTC Loss
+@inproceedings{graves2006connectionist,
+  title={Connectionist temporal classification: labelling unsegmented sequence data with recurrent neural networks},
+  author={Graves, Alex and Fernandez, Santiago and Gomez, Faustino and Schmidhuber, J{\"u}rgen},
+  booktitle={Proceedings of the 23rd International Conference on Machine Learning (ICML)},
+  pages={369--376},
+  year={2006},
+  organization={ACM}
+}
+
+
+%%%%%%%%%%%%%%%%%%%% ASR Models %%%%%%%%%%%%%%%%%%%%%
+%%% DeepSpeech2
+@inproceedings{amodei2016deep,
+  title={Deep speech 2: End-to-end speech recognition in english and mandarin},
+  author={Amodei, Dario and Ananthanarayanan, Sundaram and Anubhai, Rishita and Bai, Jingliang and Battenberg, Eric and Case, Carl and Casper, Jared and Catanzaro, Bryan and Cheng, Qiang and Chen, Guoliang and others},
+  booktitle={International conference on machine learning},
+  pages={173--182},
+  year={2016},
+  organization={PMLR}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        Tools, SDKs and Libraries
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%Montreal Forced ALigner
+@INPROCEEDINGS{mcauliffe2017montreal,
+  title={Montreal forced aligner: Trainable text-speech alignment using kaldi.},
+  author={McAuliffe, Michael and Socolof, Michaela and Mihuc, Sarah and Wagner, Michael and Sonderegger, Morgan},
+  booktitle={Proc. Interspeech},
+  year={2017}
+}
+
+%%% Fairseq
+@inproceedings{ott-etal-2019-fairseq,
+    title = "fairseq: A Fast, Extensible Toolkit for Sequence Modeling",
+    author = "Ott, Myle  and
+      Edunov, Sergey  and
+      Baevski, Alexei  and
+      Fan, Angela  and
+      Gross, Sam  and
+      Ng, Nathan  and
+      Grangier, David  and
+      Auli, Michael",
+    editor = "Ammar, Waleed  and
+      Louis, Annie  and
+      Mostafazadeh, Nasrin",
+    booktitle = "Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics (Demonstrations)",
+    month = jun,
+    year = "2019",
+    address = "Minneapolis, Minnesota",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/N19-4009/",
+    doi = "10.18653/v1/N19-4009",
+    pages = "48--53"
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@misc{timit,
+author="Garofolo, John S. and Lamel, Lori F. and Fisher, William M. and Pallett, David S. and Dahlgren, Nancy L. and Zue, Victor and Fiscus, Jonathan G.",
+title="TIMIT Acoustic-Phonetic Continuous Speech Corpus",
+publisher="Linguistic Data Consortium",
+year="1993",
+month="01",
+DOI="10.35111/17gk-bn40",
+URL="https://cir.nii.ac.jp/crid/1881146593179904768"
+}
+
+
+%%%%%%%%%%%%%%%%% MY SLT Paper %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@INPROCEEDINGS{storeyedbiasSSL,
+  author={Storey, Edward and Harte, Naomi and Bell, Peter},
+  booktitle={2024 IEEE Spoken Language Technology Workshop (SLT)}, 
+  title={Language Bias in Self-Supervised Learning For Automatic Speech Recognition}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={37-42},
+  keywords={Deep learning;Conferences;Training data;Self-supervised learning;Multilingual;Labeling;Automatic speech recognition;Speech recognition;self-supervised learning;language bias;language-specific subnetworks;model pruning},
+  doi={10.1109/SLT61566.2024.10832268}}

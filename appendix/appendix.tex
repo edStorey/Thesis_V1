@@ -1,0 +1,472 @@
+\chapter{Appendix}
+You may use appendices to include relevant background information, such as calibration certificates, derivations of key equations or presentation of a particular data reduction method. You should not use the appendices to dump large amounts of additional results or data which are not properly discussed. If these results are really relevant, then they should appear in the main body of the report.
+
+\section{Appendix numbering}
+Appendices are numbered sequentially, A1, A2, A3\ldots The sections, figures and tables within appendices are numbered in the same way as in the main text. For example, the first figure in Appendix A1 would be Figure A1.1. Equations continue the numbering from the main text.
+
+
+%\newpage
+\section{Chapter 5 }\label{app_sec:chapter_5_appendix}
+\thoughts{NEED TO CHANGE TITLE!}
+
+%\newpage
+%%%%%%%%%%%%%%%%%%%%  Table for number of phonemes in each group in the training data %%%%%%%%%%%%%%%%%%%
+\begin{table}[h]
+\centering
+%\scriptsize
+\begin{tabular}{l|ccccccc}
+\toprule
+Phoneme Class & 960 / 0 & 800 / 100 & 600 / 300 & 450 / 450 & 300 / 600 & 100 / 800 & 0 / 920 \\
+\midrule
+Vowel & 10216k & 10116k & 11215k & 12035k & 12852k & 13740k & 14800k \\
+Diphthong & 1974k & 1643k & 1233k & 924k & 617k & 206k & 0 \\
+Stop & 5800k & 5347k & 5177k & 5049k & 4921k & 4688k & 4775k \\
+Nasal & 3716k & 3461k & 3422k & 3392k & 3362k & 3274k & 3370k \\
+Fricative & 4613k & 4395k & 4548k & 4661k & 4775k & 4854k & 5106k \\
+Affricate & 376k & 323k & 264k & 220k & 177k & 117k & 90k \\
+Approximant & 3611k & 3294k & 3118k & 2985k & 2852k & 2641k & 2644k \\
+Closure & 2079k & 1957k & 1974k & 1986k & 1997k & 1984k & 2051k \\
+Tap \& Trill & 382k & 558k & 957k & 1258k & 1558k & 1928k & 2208k \\
+\addlinespace
+\textbf{Total} & 32767k & 31094k & 31907k & 32511k & 33110k & 33431k & 35044k \\
+\bottomrule
+\end{tabular}
+\caption{Phoneme token counts grouped by phoneme class and model (in thousands).}
+\label{app_tab:phoneme_token_class_counts_k}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\newpage
+%%%%%%%%%%%%%% Phoneme Group exact results and difference %%%%%%%%%%%%%%%%%%
+\begin{table}
+\centering
+\scriptsize
+\begin{tabular}{l|ccccccc|c}
+\toprule
+Phoneme Class & 960 / 0 & 800 / 100 & 600 / 300 & 450 / 450 & 300 / 600 & 100 / 800 & 0 / 920 & Diff (EN - ES) \\
+\midrule
+\multicolumn{9}{l}{\textbf{English}} \\
+Vowel & 62.2\% & 60.8\% & 59.4\% & 59.7\% & 57.1\% & 53.0\% & 44.0\% & 18.1\% \\
+Diphthong & 85.8\% & 84.4\% & 83.6\% & 84.4\% & 84.2\% & 79.0\% & 69.6\% & 16.3\% \\
+Approximant & 73.4\% & 72.8\% & 74.8\% & 73.9\% & 74.2\% & 70.3\% & 58.6\% & 14.8\% \\
+Nasal & 49.7\% & 55.9\% & 54.9\% & 52.9\% & 50.4\% & 49.7\% & 41.0\% & 8.7\% \\
+Tap \& Trill & 33.5\% & 32.8\% & 25.4\% & 21.7\% & 29.8\% & 30.0\% & 18.2\% & 15.3\% \\
+Stop & 60.5\% & 59.9\% & 58.9\% & 57.1\% & 53.5\% & 53.7\% & 41.2\% & 19.3\% \\
+Affricate & 82.3\% & 82.5\% & 77.9\% & 76.1\% & 70.3\% & 68.2\% & 57.4\% & 24.9\% \\
+Fricative & 65.4\% & 65.4\% & 65.4\% & 62.5\% & 62.4\% & 60.2\% & 49.8\% & 15.7\% \\
+Closure & 96.6\% & 96.0\% & 97.3\% & 97.6\% & 96.6\% & 94.1\% & 97.1\% & -0.5\% \\
+\addlinespace
+\multicolumn{9}{l}{\textbf{Spanish}} \\
+Vowel & 78.8\% & 82.7\% & 81.8\% & 81.2\% & 81.8\% & 81.7\% & 82.2\% & -3.4\% \\
+Diphthong & -- & -- & -- & -- & -- & -- & -- & -- \\
+Approximant & 57.8\% & 65.7\% & 68.8\% & 69.9\% & 68.8\% & 74.4\% & 75.6\% & -17.8\% \\
+Nasal & 57.8\% & 55.4\% & 57.2\% & 57.3\% & 55.9\% & 61.7\% & 49.4\% & 8.4\% \\
+Tap \& Trill & 48.3\% & 56.4\% & 56.5\% & 59.3\% & 59.5\% & 56.9\% & 57.9\% & -9.6\% \\
+Stop & 49.3\% & 53.3\% & 54.3\% & 57.6\% & 50.3\% & 51.7\% & 50.6\% & -1.3\% \\
+Affricate & 83.5\% & 78.4\% & 82.0\% & 84.7\% & 64.7\% & 79.0\% & 72.5\% & 10.9\% \\
+Fricative & 48.5\% & 54.9\% & 51.6\% & 52.0\% & 50.3\% & 55.4\% & 56.5\% & -8.1\% \\
+Closure & 80.3\% & 79.8\% & 81.7\% & 82.0\% & 82.7\% & 82.3\% & 82.7\% & -2.4\% \\
+\addlinespace
+\multicolumn{9}{l}{\textbf{French}} \\
+Vowel & 53.4\% & 53.4\% & 54.0\% & 52.4\% & 51.9\% & 49.6\% & 48.7\% & 4.8\% \\
+Diphthong & -- & -- & -- & -- & -- & -- & -- & -- \\
+Approximant & 49.4\% & 52.0\% & 50.1\% & 49.3\% & 46.3\% & 46.9\% & 48.0\% & 1.4\% \\
+Nasal & 41.4\% & 42.0\% & 39.8\% & 39.3\% & 39.3\% & 41.8\% & 37.9\% & 3.5\% \\
+Tap \& Trill & -- & -- & -- & -- & -- & -- & -- & -- \\
+Stop & 67.6\% & 67.2\% & 67.7\% & 67.0\% & 60.9\% & 61.6\% & 57.2\% & 10.4\% \\
+Fricative & 79.4\% & 81.0\% & 82.6\% & 77.5\% & 80.7\% & 78.1\% & 72.0\% & 7.5\% \\
+Closure & 94.2\% & 94.9\% & 94.8\% & 93.8\% & 95.0\% & 94.9\% & 94.9\% & -0.8\% \\
+\addlinespace
+\multicolumn{9}{l}{\textbf{Polish}} \\
+Vowel & 66.0\% & 68.1\% & 67.1\% & 70.2\% & 64.2\% & 62.2\% & 65.0\% & 1.1\% \\
+Diphthong & -- & -- & -- & -- & -- & -- & -- & -- \\
+Approximant & 62.9\% & 64.8\% & 57.0\% & 57.8\% & 63.0\% & 60.7\% & 49.2\% & 13.6\% \\
+Nasal & 70.6\% & 69.6\% & 71.1\% & 68.6\% & 66.4\% & 63.6\% & 62.4\% & 8.2\% \\
+Tap \& Trill & 20.4\% & 14.6\% & 18.1\% & 17.3\% & 17.6\% & 13.6\% & 21.4\% & -1.0\% \\
+Stop & 61.9\% & 63.8\% & 61.0\% & 62.3\% & 61.5\% & 59.9\% & 54.0\% & 7.9\% \\
+Affricate & 64.4\% & 64.3\% & 60.7\% & 63.9\% & 59.2\% & 57.8\% & 63.0\% & 1.3\% \\
+Fricative & 68.6\% & 72.4\% & 70.7\% & 69.0\% & 68.6\% & 68.7\% & 62.6\% & 6.0\% \\
+Closure & 79.8\% & 77.6\% & 78.7\% & 77.5\% & 78.6\% & 79.2\% & 78.6\% & 1.2\% \\
+\addlinespace
+\bottomrule
+\end{tabular}
+\caption{Mean phoneme classification accuracy (layer 7) by language, model, and phoneme class. Final column shows monolingual model difference (EN - ES).}
+\label{app_tab:phoneme_class_acc_with_diff}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{table}%[h]
+\centering
+\begin{tabular}{llp{0.5\linewidth}}
+\toprule
+\textbf{Language} & \textbf{ Phoneme Group} & \textbf{Phonemes} \\
+\midrule
+\multicolumn{3}{l}{\textbf{English}} \\
+%Vowel & \textipa{i, iː, æ, ɐ, ɑ, ɑː, ɒ, ɒː, ə, ɚ, ɛ, ɝ, ɪ, ʉ, ʉː, ʊ} \\
+%Vowel & \textipa{i, i:, {\ae}, 5, A, A:, 6, 6:, @, \textrhookschwa, E, \textrhookrevepsilon, \i, 0, 0:, U} \\ %% All 
+& Vowel & \textipa{i, i:, {\ae}, 5, A, A:, 6, 6:, @, \textrhookschwa, E, \textrhookrevepsilon, \i, 0, 0:, U} \\
+& Diphthong & \textipa{aj, aw, ej, ow, @w} \\
+& Stop & \textipa{b, b\super j, c, c\super h, c\super w, d, d\super j, \|[{d}, k, k\super h, k\super w, p, p\super h, p\super j, p\super w, t, t\super h, t\super j, t\super w, \|[{t}, \textObardotlessj, \textObardotlessj\super w, g, g\super w, P} \\
+& Nasal & \textipa{m, m \super j, \textsyllabic{m}, n, \textsyllabic{n}, N, M, \textltailn} \\
+& Fricative & \textipa{f, f\super j, h, s, v, v\super j, z, \c{c}, D, S, Z, T} \\
+& Affricate & \textipa{dZ, tS} \\
+%Approximant & \textipa{j, l, w, ɫ, ɫ̩, ɹ, ʎ} \\
+& Approximant & \textipa{j, l, w, \textltilde, \textsyllabic{\textltilde}, \*r, L} \\
+& Closure & \textipa{sil} \\
+%Tap \& Trill & \textipa{ɾ, ɾʲ, ɾ̃} \\
+& Tap \& Trill & \textipa{R, R\super j, \~{R}} \\
+\addlinespace
+\multicolumn{3}{l}{\textbf{Spanish}} \\
+& Vowel & \textipa{a, e, i, o, u} \\
+& Stop & \textipa{b, c,  \|[{d}, k, p, \|[{t}, \textbardotlessj, \textbardotlessj J, g} \\
+& Nasal & \textipa{m, n, N, M} \\
+& Fricative & \textipa{f, s, x, \c{c}, D, G, S, J, B, T} \\
+& Affricate & \textipa{tS} \\
+& Approximant & \textipa{j, l, w, L} \\
+& Closure & \textipa{sil} \\
+& Tap \& Trill & \textipa{r, R} \\
+\addlinespace
+\multicolumn{3}{l}{\textbf{French}} \\
+& Vowel & \textipa{a, e, i, o, u, y, \o, \ae, A, \~{A}, O, \~{O}, \textschwa, E, \~{E}, \oe} \\
+& Stop & \textipa{b, c, d, k, p, t, \textObardotlessj, g} \\
+& Nasal & \textipa{m, m\super j, n, N, \textltailn} \\
+& Fricative & \textipa{f, s, v, z, K, S, Z} \\
+& Affricate & \textipa{dZ, ts, tS} \\
+& Approximant & \textipa{j, l, w, y, L, 4} \\
+& Closure & \textipa{sil} \\
+\addlinespace
+\multicolumn{3}{l}{\textbf{Polish}} \\
+& Vowel & \textipa{a, i, u, O, \~{O}, E, \~{E}, 1} \\
+& Stop & \textipa{b, b\super j, c, \|[{d}, k, p, p\super j, \|[{t}, t\super j, \textObardotlessj, g, P} \\
+& Nasal & \textipa{m, m\super j, \|[{n}, N, \textltailn} \\
+& Fricative & \textipa{f, f\super j, \|[{s}, v, v\super j, x, \|[{z}, \c{c}, C, \:s, \textcommatailz, \textctz} \\
+& Affricate & \textipa{d\textcommatailz, d\textctz, \|[{d}\|[{z}, t\c{c}, t\:s, \|[{t}\|[{s}} \\
+& Approximant & \textipa{j, \~{j}, l, w, L} \\
+& Closure & \textipa{sil} \\
+& Tap \& Trill & \textipa{r, r\super j} \\
+\addlinespace
+\bottomrule
+\end{tabular}
+\caption{Phonemes per language grouped by articulatory class. All of the available MFA tokens for all languages are used.}
+\label{app_tab:phoneme_groups_by_language}
+\end{table}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%% Phoneme Counts for Train Set %%%%%%%%%%%%%%%%%%%%
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{{Phoneme}} & \textbf{English} & \textbf{Spanish} & \textbf{French} & \textbf{Polish} \\
+\midrule
+\textipa{\ae} & 8247 & 0 & 0 & 0 \\
+\textipa{a} & 0 & 20315 & 11067 & 39552 \\
+\textipa{aj} & 5777 & 0 & 0 & 0 \\
+\textipa{aw} & 1906 & 0 & 0 & 0 \\
+\textipa{5} & 5064 & 0 & 0 & 0 \\
+\textipa{A} & 4729 & 0 & 955 & 0 \\
+\textipa{A:} & 532 & 0 & 0 & 0 \\
+\textipa{\~A} & 0 & 0 & 4607 & 0 \\
+\textipa{6} & 2899 & 0 & 0 & 0 \\
+\textipa{6:} & 1037 & 0 & 0 & 0 \\
+\textipa{b} & 4197 & 1742 & 1790 & 5471 \\
+\textipa{b\super j} & 2026 & 0 & 0 & 1293 \\
+\textipa{B} & 0 & 2988 & 0 & 0 \\
+\textipa{c} & 1016 & 1961 & 1262 & 2522 \\
+\textipa{c\super h} & 917 & 0 & 0 & 0 \\
+\textipa{c\super w} & 161 & 0 & 0 & 0 \\
+\textipa{\c{c}} & 1588 & 795 & 0 & 103 \\
+\textipa{C} & 0 & 0 & 0 & 7376 \\
+\textipa{d} & 7692 & 0 & 7025 & 0 \\
+\textipa{d\textcommatailz} & 0 & 0 & 0 & 27 \\
+\textipa{d\textctz} & 0 & 0 & 0 & 2539 \\
+\textipa{dZ} & 1406 & 0 & 11 & 0 \\
+\textipa{d\super j} & 2163 & 0 & 0 & 0 \\
+\textipa{\|[{d}} & 7439 & 5783 & 0 & 10024 \\
+\textipa{\|[{d}\|[{z}} & 0 & 0 & 0 & 724 \\
+\textipa{D} & 2789 & 3490 & 0 & 0 \\
+\textipa{e} & 0 & 23999 & 8558 & 0 \\
+\textipa{ej} & 7181 & 0 & 0 & 0 \\
+\textipa{@} & 15887 & 0 & 7971 & 0 \\
+\textipa{\textrhookschwa} & 6758 & 0 & 0 & 0 \\
+\textipa{E} & 8531 & 0 & 7921 & 43914 \\
+\textipa{\~E} & 0 & 0 & 2580 & 475 \\
+\textipa{\textrhookrevepsilon} & 2159 & 0 & 0 & 0 \\
+\textipa{f} & 5436 & 853 & 2252 & 4102 \\
+\textipa{f\super j} & 731 & 0 & 0 & 885 \\
+\textipa{g} & 1615 & 415 & 733 & 5891 \\
+\textipa{g\super w} & 2 & 0 & 0 & 0 \\
+\textipa{G} & 0 & 900 & 0 & 0 \\
+\textipa{h} & 2970 & 0 & 0 & 0 \\
+\textipa{4} & 0 & 0 & 831 & 0 \\
+\textipa{i} & 6569 & 9690 & 8272 & 16895 \\
+\textipa{i:} & 10178 & 0 & 0 & 0 \\
+\textipa{\textbari} & 0 & 0 & 0 & 16986 \\
+\textipa{I} & 22181 & 0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Phoneme occurrence counts per language for the 10 hour training set.}
+\label{{app_tab:phoneme_counts_per_language_train_10h_1}}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{{Phoneme}} & \textbf{English} & \textbf{Spanish} & \textbf{French} & \textbf{Polish} \\
+\midrule
+\textipa{j} & 1451 & 3257 & 2231 & 9811 \\
+\textipa{\~j} & 0 & 0 & 0 & 185 \\
+\textipa{J} & 0 & 228 & 0 & 0 \\
+\textipa{\textbardotlessj} & 1027 & 19 & 51 & 486 \\
+\textipa{\textbardotlessj J} & 0 & 269 & 0 & 0 \\
+\textipa{\textbardotlessj\super w} & 31 & 0 & 0 & 0 \\
+\textipa{k} & 3727 & 3474 & 4451 & 11139 \\
+\textipa{k\super h} & 2014 & 0 & 0 & 0 \\
+\textipa{k\super w} & 180 & 0 & 0 & 0 \\
+\textipa{l} & 4031 & 8134 & 9705 & 6267 \\
+\textipa{\textltilde} & 4736 & 0 & 0 & 0 \\
+\textipa{\textsyllabic{\textltilde}} & 831 & 0 & 0 & 0 \\
+\textipa{m} & 7283 & 5543 & 4815 & 13027 \\
+\textipa{m\super j} & 1536 & 0 & 80 & 3114 \\
+\textipa{\textsyllabic{m}} & 1282 & 0 & 0 & 0 \\
+\textipa{M} & 6 & 0 & 0 & 0 \\
+\textipa{n} & 18157 & 9658 & 3791 & 0 \\
+\textipa{\textsyllabic{n}} & 4352 & 0 & 0 & 0 \\
+\textipa{\|[{n}} & 0 & 0 & 0 & 16301 \\
+\textipa{N} & 2328 & 285 & 3 & 618 \\
+\textipa{\textltailn} & 2163 & 577 & 524 & 9756 \\
+\textipa{o} & 0 & 17480 & 1682 & 0 \\
+\textipa{ow} & 4234 & 0 & 0 & 0 \\
+\textipa{\oe} & 0 & 0 & 910 & 0 \\
+\textipa{\o} & 0 & 0 & 1022 & 0 \\
+\textipa{O} & 0 & 0 & 3324 & 34016 \\
+\textipa{Oj} & 340 & 0 & 0 & 0 \\
+\textipa{\~O} & 0 & 0 & 2753 & 2608 \\
+\textipa{p} & 3431 & 3453 & 5363 & 11411 \\
+\textipa{p\super h} & 2135 & 0 & 0 & 0 \\
+\textipa{p\super j} & 522 & 0 & 0 & 1187 \\
+\textipa{p\super w} & 1 & 0 & 0 & 0 \\
+\textipa{r} & 0 & 2611 & 0 & 12117 \\
+\textipa{r\super j} & 0 & 0 & 0 & 76 \\
+\textipa{\*r} & 14146 & 0 & 0 & 0 \\
+\textipa{R} & 2962 & 8288 & 0 & 0 \\
+\textipa{R\super j} & 359 & 0 & 0 & 0 \\
+\textipa{\~R} & 469 & 0 & 0 & 0 \\
+\textipa{K} & 0 & 0 & 12500 & 0 \\
+\textipa{s} & 16358 & 14409 & 8768 & 0 \\
+\textipa{\:s} & 0 & 0 & 0 & 8784 \\
+\textipa{S} & 2851 & 15 & 895 & 0 \\
+\textipa{\|[{s}} & 0 & 0 & 0 & 11679 \\
+\textipa{spn} & 19 & 0 & 599 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Phoneme occurrence counts per language for the 10 hour training set cont.}
+\label{{app_tab:phoneme_counts_per_language_train_10h_2}}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{{Phoneme}} & \textbf{English} & \textbf{Spanish} & \textbf{French} & \textbf{Polish} \\
+\midrule
+\textipa{t} & 8548 & 0 & 7452 & 0 \\
+\textipa{ts} & 0 & 0 & 4 & 0 \\
+\textipa{tC} & 0 & 0 & 0 & 6163 \\
+\textipa{t\:s} & 0 & 0 & 0 & 4401 \\
+\textipa{tS} & 2318 & 391 & 3 & 0 \\
+\textipa{t\super h} & 4649 & 0 & 0 & 0 \\
+\textipa{t\super j} & 2377 & 0 & 0 & 22 \\
+\textipa{t\super w} & 109 & 0 & 0 & 0 \\
+\textipa{\|[{t}} & 769 & 6684 & 0 & 18000 \\
+\textipa{\|[{t}\|[{s}} & 0 & 0 & 0 & 5087 \\
+\textipa{T} & 1751 & 2478 & 0 & 0 \\
+\textipa{u} & 0 & 4338 & 3257 & 14694 \\
+\textipa{0} & 848 & 0 & 0 & 0 \\
+\textipa{0:} & 2748 & 0 & 0 & 0 \\
+\textipa{U} & 3915 & 0 & 0 & 0 \\
+\textipa{v} & 2858 & 0 & 3787 & 9792 \\
+\textipa{v\super j} & 532 & 0 & 0 & 3995 \\
+\textipa{w} & 7139 & 1674 & 1683 & 12660 \\
+\textipa{x} & 0 & 1087 & 0 & 4534 \\
+\textipa{y} & 0 & 0 & 2797 & 0 \\
+\textipa{L} & 3183 & 671 & 538 & 2206 \\
+\textipa{z} & 8680 & 0 & 1196 & 0 \\
+\textipa{\|[{z}} & 0 & 0 & 0 & 8104 \\
+\textipa{\textcommatailz} & 0 & 0 & 0 & 5135 \\
+\textipa{\textctz} & 0 & 0 & 0 & 560 \\
+\textipa{Z} & 160 & 0 & 2213 & 0 \\
+\textipa{P} & 7 & 0 & 0 & 15 \\
+\bottomrule
+\end{tabular}
+\caption{Phoneme occurrence counts per language for the 10 hour training set cont.}
+\label{app_tab:phoneme_counts_per_language_train_10h_3}
+\end{table}
+
+
+
+
+%%%%%%%%%%% Phoneme Counts for Validation sets
+\begin{table}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{{Phoneme}} & \textbf{English} & \textbf{Spanish} & \textbf{French} & \textbf{Polish} \\
+\midrule
+\textipa{{\ae}} & 5887 & 0 & 0 & 0 \\
+\textipa{a} & 0 & 45089 & 20150 & 7066 \\
+\textipa{aj} & 3413 & 0 & 0 & 0 \\
+\textipa{aw} & 1256 & 0 & 0 & 0 \\
+\textipa{5} & 3768 & 0 & 0 & 0 \\
+\textipa{\~A} & 0 & 0 & 9031 & 0 \\
+\textipa{6} & 2010 & 0 & 0 & 0 \\
+\textipa{6:} & 443 & 0 & 0 & 0 \\
+\textipa{A} & 2588 & 0 & 1498 & 0 \\
+\textipa{A:} & 399 & 0 & 0 & 0 \\
+\textipa{b} & 2490 & 4001 & 3376 & 1100 \\
+\textipa{b\super j} & 919 & 0 & 0 & 233 \\
+\textipa{B} & 0 & 5653 & 0 & 0 \\
+\textipa{c} & 594 & 5538 & 2042 & 462 \\
+\textipa{c\super h} & 638 & 0 & 0 & 0 \\
+\textipa{c\super w} & 108 & 0 & 0 & 0 \\
+\textipa{\c{c}} & 1828 & 766 & 0 & 12 \\
+\textipa{C} & 0 & 0 & 0 & 1394 \\
+\textipa{d} & 6349 & 0 & 13194 & 0 \\
+\textipa{d\textcommatailz} & 0 & 0 & 0 & 4 \\
+\textipa{d\textcommatailz} & 0 & 0 & 0 & 486 \\
+\textipa{dZ} & 837 & 0 & 2 & 0 \\
+\textipa{d\super j} & 1277 & 0 & 0 & 0 \\
+\textipa{\|[{d}} & 5493 & 11263 & 0 & 1726 \\
+\textipa{\|[{d}\|[{z}} & 0 & 0 & 0 & 137 \\
+\textipa{D} & 773 & 7171 & 0 & 0 \\
+\textipa{e} & 0 & 50721 & 15737 & 0 \\
+\textipa{ej} & 3298 & 0 & 0 & 0 \\
+\textipa{@} & 14341 & 0 & 14280 & 0 \\
+\textipa{\textrhookschwa} & 3480 & 0 & 0 & 0 \\
+\textipa{E} & 5716 & 0 & 15204 & 8056 \\
+\textipa{\~E} & 0 & 0 & 4868 & 98 \\
+\textipa{\:3} & 94 & 0 & 4184 & 0 \\
+\textipa{\textrhookrevepsilon} & 1373 & 0 & 0 & 0 \\
+\textipa{f} & 3214 & 1788 & 4242 & 712 \\
+\textipa{f\super j} & 419 & 0 & 0 & 164 \\
+\textipa{g} & 1100 & 981 & 1440 & 1162 \\
+\textipa{G} & 0 & 2433 & 0 & 0 \\
+\textipa{h} & 2133 & 0 & 0 & 0 \\
+\textipa{4} & 0 & 0 & 1539 & 0 \\
+\textipa{i} & 3855 & 18612 & 14544 & 3122 \\
+\textipa{i:} & 3288 & 0 & 0 & 0 \\
+\textipa{\textbari} & 0 & 0 & 0 & 3147 \\
+\textipa{I} & 12992 & 0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Phoneme occurrence counts per language for all validations sets.}
+\label{{app_tab:phoneme_counts_per_language_vaid_1}}
+\end{table}
+
+
+\begin{table}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{{Phoneme}} & \textbf{English} & \textbf{Spanish} & \textbf{French} & \textbf{Polish} \\
+\midrule
+\textipa{j} & 741 & 5939 & 4241 & 1828 \\
+\textipa{\~{j}} & 0 & 0 & 0 & 26 \\
+\textipa{J} & 0 & 534 & 0 & 0 \\
+\textipa{\textbardotlessj} & 613 & 44 & 112 & 102 \\
+\textipa{\textbardotlessj J} & 0 & 561 & 0 & 0 \\
+\textipa{\textbardotlessj\super w} & 30 & 0 & 0 & 0 \\
+\textipa{k} & 2420 & 8565 & 8324 & 2030 \\
+\textipa{k\super h} & 1099 & 0 & 0 & 0 \\
+\textipa{k\super w} & 126 & 0 & 0 & 0 \\
+\textipa{l} & 2488 & 16597 & 17448 & 1116 \\
+\textipa{\textltilde} & 3101 & 0 & 0 & 0 \\
+\textipa{\textsyllabic\textltilde} & 319 & 0 & 0 & 0 \\
+\textipa{m} & 4816 & 11324 & 9628 & 2235 \\
+\textipa{m\super j} & 818 & 0 & 191 & 596 \\
+\textipa{\textsyllabic{m}} & 89 & 0 & 0 & 0 \\
+\textipa{n} & 12676 & 23129 & 7577 & 0 \\
+\textipa{\textsyllabic{n}} & 123 & 0 & 0 & 0 \\
+\textipa{\|[{n}} & 0 & 0 & 0 & 2954 \\
+\textipa{N} & 1564 & 792 & 4 & 136 \\
+\textipa{\textltailn} & 1366 & 1140 & 991 & 1823 \\
+\textipa{o} & 0 & 35699 & 3464 & 0 \\
+\textipa{ow} & 2505 & 0 & 0 & 0 \\
+\textipa{\oe} & 0 & 0 & 1639 & 0 \\
+\textipa{\o} & 0 & 0 & 2291 & 0 \\
+\textipa{O} & 0 & 0 & 6213 & 6205 \\
+\textipa{Oj} & 225 & 0 & 0 & 0 \\
+\textipa{\~O} & 0 & 0 & 5387 & 525 \\
+\textipa{p} & 2056 & 7832 & 9932 & 2184 \\
+\textipa{p\super h} & 1231 & 0 & 0 & 0 \\
+\textipa{p\super j} & 320 & 0 & 0 & 210 \\
+\textipa{r} & 0 & 5879 & 0 & 2403 \\
+\textipa{r\super j} & 0 & 0 & 0 & 12 \\
+\textipa{R} & 290 & 17431 & 0 & 0 \\
+\textipa{R\super j} & 155 & 0 & 0 & 0 \\
+\textipa{\~R} & 5 & 0 & 0 & 0 \\
+\textipa{\*r} & 8516 & 0 & 0 & 0 \\
+\textipa{K} & 0 & 0 & 23440 & 0 \\
+\textipa{s} & 9153 & 27401 & 16637 & 0 \\
+\textipa{\|[{s}} & 0 & 0 & 0 & 2183 \\
+\textipa{\:s} & 0 & 0 & 0 & 1644 \\
+\textipa{S} & 1515 & 24 & 1728 & 0 \\
+\textipa{spn} & 345 & 0 & 781 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Phoneme occurrence counts per language for all validations sets cont.}
+\label{{app_tab:phoneme_counts_per_language_vaid_2}}
+\end{table}
+
+
+\begin{table}[t]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{{Phoneme}} & \textbf{English} & \textbf{Spanish} & \textbf{French} & \textbf{Polish} \\
+\midrule
+\textipa{t} & 9042 & 0 & 14097 & 0 \\
+\textipa{ts} & 0 & 0 & 14 & 0 \\
+\textipa{tC} & 0 & 0 & 0 & 1013 \\
+\textipa{t\:s} & 0 & 0 & 0 & 856 \\
+\textipa{tS} & 1259 & 1461 & 20 & 0 \\
+\textipa{t\super h} & 1668 & 0 & 0 & 0 \\
+\textipa{t\super j} & 1438 & 0 & 0 & 20 \\
+\textipa{t\super w} & 71 & 0 & 0 & 0 \\
+\textipa{\|[{t}} & 300 & 13878 & 0 & 3349 \\
+\textipa{\|[{t}\|[{s}} & 0 & 0 & 0 & 924 \\
+\textipa{T} & 753 & 5259 & 0 & 0 \\
+\textipa{u} & 0 & 9096 & 5955 & 2762 \\
+\textipa{0} & 583 & 0 & 0 & 0 \\
+\textipa{0:} & 1769 & 0 & 0 & 0 \\
+\textipa{U} & 975 & 0 & 0 & 0 \\
+\textipa{v} & 3537 & 0 & 6963 & 1770 \\
+\textipa{v\super j} & 314 & 0 & 0 & 739 \\
+\textipa{w} & 4182 & 3512 & 3052 & 2512 \\
+\textipa{x} & 0 & 1958 & 0 & 960 \\
+\textipa{y} & 0 & 0 & 5544 & 0 \\
+\textipa{L} & 1840 & 1791 & 1089 & 358 \\
+\textipa{z} & 5375 & 0 & 2351 & 0 \\
+\textipa{\|[{z}} & 0 & 0 & 0 & 1430 \\
+\textipa{\textcommatailz} & 0 & 0 & 0 & 936 \\
+\textipa{\textctz} & 0 & 0 & 0 & 116 \\
+\textipa{Z} & 94 & 0 & 4184 & 0 \\
+\textipa{P} & 0 & 0 & 0 & 6 \\
+%\textcommatailz, \textctz
+\bottomrule
+\end{tabular}
+\caption{Phoneme occurrence counts per language for all validations sets cont.}
+\label{{app_tab:phoneme_counts_per_language_vaid_3}}
+\end{table}
+

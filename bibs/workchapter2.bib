@@ -1,0 +1,605 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                    ASR MODELS                                   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% XXLS-R 128
+@misc{babu2021xlsr,
+      title={{XLS-R}: Self-supervised Cross-lingual Speech Representation Learning at Scale}, 
+      author={Arun Babu and Changhan Wang and Andros Tjandra and Kushal Lakhotia and Qiantong Xu and Naman Goyal and Kritika Singh and Patrick von Platen and Yatharth Saraf and Juan Pino and Alexei Baevski and Alexis Conneau and Michael Auli},
+      year={2021},
+      eprint={2111.09296},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+%% whisper
+@inproceedings{whisper,
+  title={Robust speech recognition via large-scale weak supervision},
+  author={Radford, Alec and Kim, Jong Wook and Xu, Tao and Brockman, Greg and McLeavey, Christine and Sutskever, Ilya},
+  booktitle={International Conference on Machine Learning},
+  pages={28492--28518},
+  year={2023},
+  organization={PMLR}
+}
+
+
+
+% wav2vec2.0
+@article{wav2vec,
+  title={wav2vec 2.0: A framework for self-supervised learning of speech representations},
+  author={Baevski, Alexei and Zhou, Yuhao and Mohamed, Abdelrahman and Auli, Michael},
+  journal={Advances in neural information processing systems},
+  volume={33},
+  pages={12449--12460},
+  year={2020}
+}
+
+# HuBERT
+@article{hsu2021hubert,
+  title={Hubert: Self-supervised speech representation learning by masked prediction of hidden units},
+  author={Hsu, Wei-Ning and Bolte, Benjamin and Tsai, Yao-Hung Hubert and Lakhotia, Kushal and Salakhutdinov, Ruslan and Mohamed, Abdelrahman},
+  journal={IEEE/ACM Transactions on Audio, Speech, and Language Processing},
+  volume={29},
+  pages={3451--3460},
+  year={2021},
+  publisher={IEEE}
+}
+
+%%% XLSR-53
+@inproceedings{XLSR-53,
+  author={Alexis Conneau and Alexei Baevski and Ronan Collobert and Abdelrahman Mohamed and Michael Auli},
+  title={{Unsupervised Cross-Lingual Representation Learning for Speech Recognition}},
+  year=2021,
+  booktitle={Proc. Interspeech 2021},
+  pages={2426--2430},
+  doi={10.21437/Interspeech.2021-329}
+}
+
+%%%% WavLM
+@article{chen2022wavlm,
+  title={Wavlm: Large-scale self-supervised pre-training for full stack speech processing},
+  author={Chen, Sanyuan and Wang, Chengyi and Chen, Zhengyang and Wu, Yu and Liu, Shujie and Chen, Zhuo and Li, Jinyu and Kanda, Naoyuki and Yoshioka, Takuya and Xiao, Xiong and others},
+  journal={IEEE Journal of Selected Topics in Signal Processing},
+  volume={16},
+  number={6},
+  pages={1505--1518},
+  year={2022},
+  publisher={IEEE}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                DATASETS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% FLEURS
+@INPROCEEDINGS{FLEURS,
+  author={Conneau, Alexis and Ma, Min and Khanuja, Simran and Zhang, Yu and Axelrod, Vera and Dalmia, Siddharth and Riesa, Jason and Rivera, Clara and Bapna, Ankur},
+  booktitle={2022 IEEE Spoken Language Technology Workshop (SLT)}, 
+  title={FLEURS: FEW-Shot Learning Evaluation of Universal Representations of Speech}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={798-805},
+  }
+
+%% VoxPopuli
+@inproceedings{wang-etal-2021-voxpopuli,
+    title = "{V}ox{P}opuli: A Large-Scale Multilingual Speech Corpus for Representation Learning, Semi-Supervised Learning and Interpretation",
+    author = "Wang, Changhan  and
+      Riviere, Morgane  and
+      Lee, Ann  and
+      Wu, Anne  and
+      Talnikar, Chaitanya  and
+      Haziza, Daniel  and
+      Williamson, Mary  and
+      Pino, Juan  and
+      Dupoux, Emmanuel",
+    editor = "Zong, Chengqing  and
+      Xia, Fei  and
+      Li, Wenjie  and
+      Navigli, Roberto",
+    booktitle = "Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)",
+    month = aug,
+    year = "2021",
+    publisher = "Association for Computational Linguistics",
+    doi = "10.18653/v1/2021.acl-long.80",
+    pages = "993--1003",
+}
+
+
+%%% MLS
+@inproceedings{MLS,
+  author={Vineel Pratap and Qiantong Xu and Anuroop Sriram and Gabriel Synnaeve and Ronan Collobert},
+  title={{MLS: A Large-Scale Multilingual Dataset for Speech Research}},
+  year=2020,
+  booktitle={Proc. Interspeech 2020},
+  pages={2757--2761},
+  doi={10.21437/Interspeech.2020-2826}
+}
+
+%%% Common Voice
+@inproceedings{ardila-etal-2020-common,
+    title = "Common Voice: A Massively-Multilingual Speech Corpus",
+    author = "Ardila, Rosana  and
+      Branson, Megan  and
+      Davis, Kelly  and
+      Kohler, Michael  and
+      Meyer, Josh  and
+      Henretty, Michael  and
+      Morais, Reuben  and
+      Saunders, Lindsay  and
+      Tyers, Francis  and
+      Weber, Gregor",
+    booktitle = "Proceedings of the Twelfth Language Resources and Evaluation Conference",
+    month = may,
+    year = "2020",
+    address = "Marseille, France",
+    publisher = "European Language Resources Association",
+    pages = "4218--4222",
+    language = "English",
+    ISBN = "979-10-95546-34-4",
+}
+
+
+%%% VoxLingua
+@INPROCEEDINGS{VoxLingua,
+  author={Valk, Jörgen and Alumäe, Tanel},
+  booktitle={2021 IEEE Spoken Language Technology Workshop (SLT)}, 
+  title={VOXLINGUA107: A Dataset for Spoken Language Recognition}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={652-658},
+  keywords={Training;Training data;Speech recognition;Feature extraction;Data models;Task analysis;Videos;Spoken language recognition;web scraping;x-vectors;crowd-sourcing},
+  doi={10.1109/SLT48900.2021.9383459}
+}
+
+
+%%%% BABEl
+@inproceedings{gales2014speech,
+  author={Mark J. F. Gales, Kate M. Knill, Anton Ragni and Shakti P. Rath},
+  title={Speech recognition and keyword spotting for low-resource languages: Babel project research at cued},
+  booktitle={Fourth International workshop on spoken language technologies for under-resourced languages (SLTU-2014)},
+  pages={16--23},
+  year={2014},
+  organization={International Speech Communication Association (ISCA)}
+}
+
+%%% Librispeech 
+@INPROCEEDINGS{librispeech,
+  author={Panayotov, Vassil and Chen, Guoguo and Povey, Daniel and Khudanpur, Sanjeev},
+  booktitle={2015 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Librispeech: An ASR corpus based on public domain audio books}, 
+  year={2015},
+  volume={},
+  number={},
+  pages={5206-5210},
+  keywords={Resource description framework;Genomics;Bioinformatics;Blogs;Information services;Electronic publishing;Speech Recognition;Corpus;LibriVox},
+  doi={10.1109/ICASSP.2015.7178964}}
+
+%%% Libri-Light 60k
+@INPROCEEDINGS{librilight,
+  author={Kahn, J. and Rivière, M. and Zheng, W. and Kharitonov, E. and Xu, Q. and Mazaré, P.E. and Karadayi, J. and Liptchinsky, V. and Collobert, R. and Fuegen, C. and Likhomanenko, T. and Synnaeve, G. and Joulin, A. and Mohamed, A. and Dupoux, E.},
+  booktitle={ICASSP 2020 - 2020 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Libri-Light: A Benchmark for ASR with Limited or No Supervision}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={7669-7673},
+  keywords={Training;Voice activity detection;Benchmark testing;Task analysis;Tuning;Standards;Signal to noise ratio;unsupervised and semi-supervised learning;distant supervision;dataset;zero- and low resource ASR.},
+  doi={10.1109/ICASSP40776.2020.9052942}}
+
+
+%%%% LibriSpeech
+@INPROCEEDINGS{librispeech,
+  author={Panayotov, Vassil and Chen, Guoguo and Povey, Daniel and Khudanpur, Sanjeev},
+  booktitle={2015 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Librispeech: An ASR corpus based on public domain audio books}, 
+  year={2015},}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            COMPRESSION TECHNIQUES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% This is the arXiv citation, it can be cited from In International Conference on Learning Representation, pages 1–13, 2022. (found in https://arxiv.org/pdf/2402.04009.pdf) but most people seem to just use the arXiv paper
+@misc{hu2021lora,
+      title={LoRA: Low-Rank Adaptation of Large Language Models}, 
+      author={Edward J. Hu and Yelong Shen and Phillip Wallis and Zeyuan Allen-Zhu and Yuanzhi Li and Shean Wang and Lu Wang and Weizhu Chen},
+      year={2021},
+      eprint={2106.09685},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+%% Model Distillation
+@article{distillation,
+    title={Distilling the Knowledge in a Neural Network},
+    author={Geoffrey Hinton and Oriol Vinyals and Jeff Dean},
+    year={2015},
+    journal={NIPS Deep Learning and Representation Learning Workshop}
+}
+
+%% Lottery Ticket Hypothesis
+@inproceedings{frankle2018LTH,
+title={The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks},
+author={Jonathan Frankle and Michael Carbin},
+booktitle={International Conference on Learning Representations},
+year={2019},
+}
+
+%% Han Original weight pruning paper
+@article{han2015learning,
+  title={Learning both weights and connections for efficient neural network},
+  author={Han, Song and Pool, Jeff and Tran, John and Dally, William},
+  journal={Advances in neural information processing systems},
+  volume={28},
+  year={2015}
+}
+
+%%% PARP: Prune, Adjust and Re-Prune for Self-Supervised Speech Recognition
+@inproceedings{PARP,
+ author = {Lai, Cheng-I Jeff and Zhang, Yang and Liu, Alexander H. and Chang, Shiyu and Liao, Yi-Lun and Chuang, Yung-Sung and Qian, Kaizhi and Khurana, Sameer and Cox, David and Glass, Jim},
+ booktitle = {Advances in Neural Information Processing Systems},
+ pages = {21256--21272},
+ title = {PARP: Prune, Adjust and Re-Prune for Self-Supervised Speech Recognition},
+ volume = {34},
+ year = {2021}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            COMPRESSION Applied
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@inproceedings{chang2022distilhubert,
+  title={Distilhubert: Speech representation learning by layer-wise distillation of hidden-unit bert},
+  author={Chang, Heng-Jui and Yang, Shu-wen and Lee, Hung-yi},
+  booktitle={ICASSP 2022-2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={7087--7091},
+  year={2022},
+  organization={IEEE}
+}
+
+%% A sparse multilingual asr model
+@inproceedings{yang2023learning,
+  title={Learning asr pathways: A sparse multilingual asr model},
+  author={Yang, Mu and Tjandra, Andros and Liu, Chunxi and Zhang, David and Le, Duc and Kalinli, Ozlem},
+  booktitle={ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1-5},
+  year={2023},
+  organization={IEEE}
+}
+
+
+%%%% Language Adaptive Cross-Lingual Speech Representation Learning with Sparse Sharing Sub-Networks
+@INPROCEEDINGS{Lu_Language_adap_xlsr,
+  author={Lu, Yizhou and Huang, Mingkun and Qu, Xinghua and Wei, Pengfei and Ma, Zejun},
+  booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Language Adaptive Cross-Lingual Speech Representation Learning with Sparse Sharing Sub-Networks}, 
+  year={2022},
+  pages={6882-6886},
+}
+
+%%%% AUDIO Lottery Ticket
+@inproceedings{
+ding2022audio,
+title={Audio Lottery: Speech Recognition Made Ultra-Lightweight, Noise-Robust, and Transferable},
+author={Shaojin Ding and Tianlong Chen and Zhangyang Wang},
+booktitle={International Conference on Learning Representations},
+year={2022},
+}
+
+%%%%% Pruning for speech
+@inproceedings{Losses_NEURIPS2022_83d349b6,
+ author = {Fu, Yonggan and Zhang, Yang and Qian, Kaizhi and Ye, Zhifan and Yu, Zhongzhi and Lai, Cheng-I Jeff and Lin, Celine},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {S. Koyejo and S. Mohamed and A. Agarwal and D. Belgrave and K. Cho and A. Oh},
+ pages = {20902--20920},
+ publisher = {Curran Associates, Inc.},
+ title = {Losses Can Be Blessings: Routing Self-Supervised Speech Representations Towards Efficient Multilingual and Multitask Speech Processing},
+ volume = {35},
+ year = {2022}
+}
+
+
+%% Measured Structured pruning of speech models in MACs
+@INPROCEEDINGS{Unstructured_Speech,
+  author={Peng, Yifan and Kim, Kwangyoun and Wu, Felix and Sridhar, Prashant and Watanabe, Shinji},
+  booktitle={ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Structured Pruning of Self-Supervised Pre-Trained Models for Speech Recognition and Understanding}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={1-5},
+}
+
+
+%%%% PackNet Iterative
+@InProceedings{Iterative_Mallya_2018_CVPR,
+author = {Mallya, Arun and Lazebnik, Svetlana},
+title = {PackNet: Adding Multiple Tasks to a Single Network by Iterative Pruning},
+booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2018}
+}
+
+%%%% Iterative pruning
+@article{iterative,
+  title={An iterative pruning algorithm for feedforward neural networks},
+  author={Castellano, Giovanna and Fanelli, Anna Maria and Pelillo, Marcello},
+  journal={IEEE transactions on Neural networks},
+  volume={8},
+  number={3},
+  pages={519--531},
+  year={1997},
+  publisher={IEEE}
+}
+
+@inproceedings{NEURIPS2020_b6af2c97,
+ author = {Chen, Tianlong and Frankle, Jonathan and Chang, Shiyu and Liu, Sijia and Zhang, Yang and Wang, Zhangyang and Carbin, Michael},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},
+ pages = {15834--15846},
+ publisher = {Curran Associates, Inc.},
+ title = {The Lottery Ticket Hypothesis for Pre-trained BERT Networks},
+ volume = {33},
+ year = {2020}
+}
+
+
+%% DistilBERT
+@inproceedings{sanh2019distilbert,
+  title={DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter.},
+  author={Sanh, V},
+  booktitle={Proceedings of Thirty-third Conference on Neural Information Processing Systems (NIPS2019)},
+  year={2019}
+}
+
+
+%%%  QLora
+@inproceedings{NEURIPS2023_1feb8787,
+ author = {Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {A. Oh and T. Neumann and A. Globerson and K. Saenko and M. Hardt and S. Levine},
+ pages = {10088--10115},
+ publisher = {Curran Associates, Inc.},
+ title = {QLoRA: Efficient Finetuning of Quantized LLMs},
+ volume = {36},
+ year = {2023}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            XLS-R Related Papers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@inproceedings{FLEURS_XLSR_WHISPER,
+  author={Andrew Rouditchenko and Sameer Khurana and Samuel Thomas and Rogerio Feris and Leonid Karlinsky and Hilde Kuehne and David Harwath and Brian Kingsbury and James Glass},
+  title={{Comparison of Multilingual Self-Supervised and Weakly-Supervised Speech Pre-Training for Adaptation to Unseen Languages}},
+  year=2023,
+  booktitle={Proc. INTERSPEECH 2023},
+  pages={2268--2272},
+  doi={10.21437/Interspeech.2023-1061}
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                MISC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+@article{FLORES-101,
+    author = {Goyal, Naman and Gao, Cynthia and Chaudhary, Vishrav and Chen, Peng-Jen and Wenzek, Guillaume and Ju, Da and Krishnan, Sanjana and Ranzato, Marc’Aurelio and Guzmán, Francisco and Fan, Angela},
+    title = "{The Flores-101 Evaluation Benchmark for Low-Resource and Multilingual Machine Translation}",
+    journal = {Transactions of the Association for Computational Linguistics},
+    volume = {10},
+    pages = {522-538},
+    year = {2022},
+    month = {05},
+    issn = {2307-387X},
+}
+
+
+
+%%% Early Multilingual Neural Nets 2013
+@INPROCEEDINGS{Huang_CrossLingual,
+  author={Huang, Jui-Ting and Li, Jinyu and Yu, Dong and Deng, Li and Gong, Yifan},
+  booktitle={2013 IEEE International Conference on Acoustics, Speech and Signal Processing}, 
+  title={Cross-language knowledge transfer using multilingual deep neural network with shared hidden layers}, 
+  year={2013},
+  volume={},
+  number={},
+  pages={7304-7308},
+  keywords={Training;Training data;Speech recognition;Neural networks;Acoustics;Speech;Hidden Markov models;deep neural network;CD-DNN-HMM;multilingual speech recognition;multitask learning;transfer learning},
+  doi={10.1109/ICASSP.2013.6639081}}
+
+%%% Multilingual modelling with LSTMs 2018
+@INPROCEEDINGS{Toshniwal_MultiLingLSTM,
+  author={Toshniwal, Shubham and Sainath, Tara N. and Weiss, Ron J. and Li, Bo and Moreno, Pedro and Weinstein, Eugene and Rao, Kanishka},
+  booktitle={2018 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Multilingual Speech Recognition with a Single End-to-End Model}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={4904-4908},
+  keywords={Training;Speech recognition;Decoding;Data models;Acoustics;Task analysis;Adaptation models;ASR;speech recognition;multilingual;encoder-decoder;seq2seq;Indian},
+  doi={10.1109/ICASSP.2018.8461972}}
+
+
+
+%%% Swedish multilingual training 2023
+@inproceedings{mateju23_interspeech,
+  author={Lukas Mateju and Jan Nouza and Petr Červa and Jindrich Zdansky and Frantisek Kynych},
+  title={{Combining Multilingual Resources and Models to Develop State-of-the-Art E2E ASR for Swedish}},
+  year=2023,
+  booktitle={Proc. INTERSPEECH 2023},
+  pages={3252--3256},
+  doi={10.21437/Interspeech.2023-737}
+}
+
+
+%%% Adaptive multilingual training 2023
+@inproceedings{pham22_interspeech,
+  author={Ngoc-Quan Pham and Alexander Waibel and Jan Niehues},
+  title={{Adaptive multilingual speech recognition with pretrained models}},
+  year=2022,
+  booktitle={Proc. Interspeech 2022},
+  pages={3879--3883},
+  doi={10.21437/Interspeech.2022-872}
+}
+
+%%%% New pruning techniques
+@article{JMLR_Sparsity,
+  author  = {Torsten Hoefler and Dan Alistarh and Tal Ben-Nun and Nikoli Dryden and Alexandra Peste},
+  title   = {Sparsity in Deep Learning: Pruning and growth for efficient inference and training in neural networks},
+  journal = {Journal of Machine Learning Research},
+  year    = {2021},
+  volume  = {22},
+  number  = {241},
+  pages   = {1--124},
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            Languages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Asturian
+@article{Asturian_Muñiz-Cachón_2018, 
+    title={Asturian}, 
+    volume={48}, 
+    DOI={10.1017/S0025100317000202}, 
+    number={2}, 
+    journal={Journal of the International Phonetic Association}, 
+    author={Muñiz-Cachón, Carmen}, 
+    year={2018}, 
+    pages={231–241}
+}
+
+
+%%%% Edinbugh  Linguistics Student's Handbook
+%%%% Includes: Xhosa
+@book{bauer2007linguistics,
+  title={Linguistics Student's Handbook},
+  author={Bauer, Laurie},
+  year={2007},
+  publisher={Edinburgh University Press}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            Self Supervised Learning
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% SSL Models can struggle with transfer learning
+@InProceedings{Ericsson_2021_CVPR,
+    author    = {Ericsson, Linus and Gouk, Henry and Hospedales, Timothy M.},
+    title     = {How Well Do Self-Supervised Models Transfer?},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2021},
+    pages     = {5414-5423}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            Bias in SSL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% Bias in SSL for Ducth (wav2vec2.0 and whisper)
+@INPROCEEDINGS{sslbias_Dutch,
+  author={Fuckner, Marcio and Horsman, Sophie and Wiggers, Pascal and Janssen, Iskaj},
+  booktitle={2023 International Conference on Speech Technology and Human-Computer Dialogue (SpeD)}, 
+  title={Uncovering Bias in ASR Systems: Evaluating Wav2vec2 and Whisper for Dutch speakers}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={146-151},
+  keywords={Human computer interaction;Speech recognition;Quality of service;Speech;Older adults;speech recognition;bias;Dutch},
+  doi={10.1109/SpeD59241.2023.10314895}}
+
+%%%% Bias in SSL for speaking rate
+@INPROCEEDINGS{sslbias_speechrate,
+  author={Meng, Yen and Chou, Yi-Hui and Liu, Andy T. and Lee, Hung-yi},
+  booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Don't Speak Too Fast: The Impact of Data Bias on Self-Supervised Speech Models}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={3258-3262},
+  keywords={Correlation;Conferences;Benchmark testing;Signal processing;Data models;Acoustics;Noise measurement;Self-supervised Speech Models;SUPERB Benchmark;Data Bias},
+  doi={10.1109/ICASSP43922.2022.9747897}}
+
+
+%%% Gender bias SSL
+@INPROCEEDINGS{sslbias_gender,
+  title={A Study of Gender Impact in Self-supervised Models for Speech-to-Text Systems},
+  author={Boito, Marcely Zanon and Besacier, Laurent and Tomashenko, Natalia and Esteve, Yannick},
+  year={2022},
+  booktitle={Proc. Interspeech 2022}
+}
+
+%%%% Disfluency 
+@inproceedings{mujtaba-etal-2024-lost,
+    title = "Lost in Transcription: Identifying and Quantifying the Accuracy Biases of Automatic Speech Recognition Systems Against Disfluent Speech",
+    author = "Mujtaba, Dena  and
+      Mahapatra, Nihar  and
+      Arney, Megan  and
+      Yaruss, J  and
+      Gerlach-Houck, Hope  and
+      Herring, Caryn  and
+      Bin, Jia",
+    editor = "Duh, Kevin  and
+      Gomez, Helena  and
+      Bethard, Steven",
+    booktitle = "Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)",
+    month = jun,
+    year = "2024",
+    publisher = "Association for Computational Linguistics",
+   
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    Commercial Bias
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Racial Bias
+@article{koenecke2020racial,
+  title={Racial disparities in automated speech recognition},
+  author={Koenecke, Allison and Nam, Andrew and Lake, Emily and Nudell, Joe and Quartey, Minnie and Mengesha, Zion and Toups, Connor and Rickford, John R and Jurafsky, Dan and Goel, Sharad},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={117},
+  number={14},
+  pages={7684--7689},
+  year={2020},
+  publisher={National Acad Sciences}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            Supervised Learning Bias
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{towards_inclusive,
+title = {Towards inclusive automatic speech recognition},
+journal = {Computer Speech \& Language},
+volume = {84},
+pages = {101567},
+year = {2024},
+issn = {0885-2308},
+doi = {https://doi.org/10.1016/j.csl.2023.101567},
+author = {Siyuan Feng and Bence Mark Halpern and Olya Kudina and Odette Scharenborg},
+}
+
+
+
+
+
+

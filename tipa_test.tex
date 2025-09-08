@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tipa}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+\section*{Phoneme Groups (IPA) using \texttt{tipa}}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3cm} p{12cm}}
+\toprule
+\textbf{Phoneme Group} & \textbf{Phonemes} \\
+\midrule
+Vowel &
+\textipa{a, a:, e, e:, i, i:, o, o:, u, u:, {\ae}, {\textturna}, {\textscripta}, {\textscripta}:, {\textturnscripta}, {\textturnscripta}:, {\textopeno}, {\textschwa}, {\textepsilon}, {\textepsilon}:, {\textrevepsilon}:, {\textrhookschwa}, {\textsci}, {\textbaru}, {\textbaru}:, {\textupsilon}, y, {\o}, {\oe}, {\textscripta}\~{}, {\textopeno}\~{}, {\textepsilon}\~{}} \\
+Diphthong &
+\textipa{aj, aw, ej, ow, {\textopeno}j, {\textschwa}w} \\
+Stop &
+\textipa{b, b\textsuperscript{j}, c, c\textsuperscript{h}, c\textsuperscript{w}, d, d\textsuperscript{j}, d\textsubbridge, g, g, k, k\textsuperscript{h}, k\textsuperscript{w}, p, p\textsuperscript{h}, p\textsuperscript{j}, t, t\textsuperscript{h}, t\textsuperscript{j}, t\textsuperscript{w}, t\textsubbridge, {\textsubdot d}, {\textbardotlessj}, {\textbardotlessj}\textsuperscript{w}, {\textteshlig}, {\textteshlig}\textsuperscript{j}, {\textteshlig}\textsuperscript{w}} \\
+Nasal &
+\textipa{m, m\textsuperscript{j}, m\textsubbar, n, n\textsubbar, {\texteng}, {\textltailm}, {\textltailn}} \\
+Fricative &
+\textipa{f, f\textsuperscript{j}, h, s, v, v\textsuperscript{j}, x, z, {\textctc}, {\dh}, {\gamma}, {\textesh}, {\textyogh}, {\textscriptj}, {\textbeta}, {\texttheta}, {\textinvscr}} \\
+Affricate &
+\textipa{dZ, tS, ts} \\
+Approximant &
+\textipa{j, l, w, {\textbeltl}, {\textturnr}, {\textltaill}, {\textturnh}, {\textscriptv}} \\
+Closure &
+\textipa{sil} \\
+Tap \& Trill &
+\textipa{\:r, r} \\
+\bottomrule
+\end{longtable}
+
+\end{document}

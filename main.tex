@@ -1,0 +1,280 @@
+\documentclass[a4paper,oneside,12pt]{book}
+%\documentclass[numbered,print,index]{Classes/PhDThesisPSnPDF}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\RequirePackage[intoc]{nomencl}
+\makenomenclature
+\renewcommand{\nomgroup}[1]{%
+\ifthenelse{\equal{#1}{K}}{\item[\textbf{Key Concepts and Phrases}]}{%
+\ifthenelse{\equal{#1}{A}}{\item[\textbf{Roman Symbols}]}{%
+\ifthenelse{\equal{#1}{G}}{\item[\textbf{Greek Symbols}]}{%
+\ifthenelse{\equal{#1}{Z}}{\item[\textbf{Acronyms / Abbreviations}]}{%
+\ifthenelse{\equal{#1}{R}}{\item[\textbf{Superscripts}]}{%
+\ifthenelse{\equal{#1}{S}}{\item[\textbf{Subscripts}]}{%
+\ifthenelse{\equal{#1}{X}}{\item[\textbf{Other Symbols}]}
+{}
+}% matches mathematical symbols > X
+}% matches Subscripts           > S
+}% matches Superscripts         > R
+}% matches Abbreviations        > Z
+}% matches Greek Symbols        > G
+}% matches Roman Symbols        > A
+}% matches Key Words and Phrases        > K
+
+% To add nomenclature in the header
+\renewcommand{\nompreamble}{\markboth{\nomname}{\nomname}}
+
+% Add nomenclature to contents and print out nomenclature
+\newcommand{\printnomencl}[1][]{
+\ifthenelse{\equal {#1}{}}
+{\printnomenclature}
+{\printnomenclature[#1]}
+%\addcontentsline{toc}{chapter}{\nomname}
+}
+
+%----------------------------------------------------------------------------------------
+%	README!
+%   Welcome. It's worth having a read through this file
+%   to set up the broad parameters, such as the name of
+%   the degree, the school/department, the type of work
+%   (dissertation/Final Year Project/report, etc. as well
+%   as your own details.
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	COVER PAGE
+%   The cover page is laid out in title/title.tex. You can choose a colour
+%   or black and white logo
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	THESIS INFORMATION
+%   Put title, author name, degree, type of work, school, department in here
+%   It will be used for the title page and for the embedded PDF information
+%----------------------------------------------------------------------------------------
+
+\newcommand{\thesistitle}{Title of Work} % Your thesis title, this is used in the title and abstract
+\newcommand{\degree}{MAI (Computer Engineering)} % Your degree name, this is used in the title page and abstract
+\newcommand{\typeofthesis}{dissertation} % dissertation, Final Year Project, report, etc.
+\newcommand{\authorname}{Dara \'O S\'uilleabh\'ain} % Your name, this is used in the title page and PDF stuff
+%% Do not put your Student ID in the document, as TCD will not publish
+%% documents that contain both your name and your Student ID.
+
+\newcommand{\keywords}{this, that, more} % Keywords for your thesis
+\newcommand{\school}{\href{https://www.tcd.ie/Engineering/}{School of Engineering}} % Your school's name and URL, this is used in the title page
+%Edited by HS for engineering
+
+%% Comment out the next line if you don't want a department to appear
+\newcommand{\department}{\href{http://researchgroup.university.com}{Sigmedia Research Lab}} % Your research group's name and URL, this is used in the title page
+
+\AtBeginDocument{
+\hypersetup{pdftitle=\thesistitle} % Set the PDF's title to your title
+\hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
+\hypersetup{pdfkeywords=\keywords} % Set the PDF's keywords to your keywords
+\hypersetup{pdfsubject=\degree} % Set the PDF's keywords to your keywords
+}
+
+%% Johanna's note stuff
+%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+
+%% Language and font encodings
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+%% Bibliographical stuff
+%\usepackage[round,sort,comma,numbers]{natbib}
+%above commented out by HS to get [X] references instead of (X)
+\usepackage[]{cite}
+%% Document size
+% include showframe as an option if you want to see the boxes
+\usepackage[a4paper,top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm,headheight=16pt]{geometry}
+\setlength{\marginparwidth}{2cm}
+%% Useful packages
+\usepackage{amsmath}
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+\usepackage[pdftex]{graphicx}
+%\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage{caption} % if no caption, no colon
+\usepackage{sfmath} %use sans-serif in the maths sections too
+\usepackage[parfill]{parskip}    % Begin paragraphs with an empty line rather than an indent
+\usepackage{setspace} % to permit one-and-a-half or double spacing
+\usepackage{enumerate} % fancy enumerations like (i) (ii) or (a) (b) and suchlike
+\usepackage{booktabs} % To thicken table lines
+\usepackage{fancyhdr}
+\numberwithin{equation}{chapter} %HS edit for (chapter.equation)
+\pagestyle{plain} % Embrace simplicity!
+
+\usepackage{graphicx}% this is for rotating the plots
+%\usepackage{fontspec}
+\usepackage[pdftex,dvipsnames]{xcolor}
+\usepackage{xargs}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%% Johanna's extra todo stuff
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=gray,backgroundcolor=gray!25,bordercolor=gray,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thoughts}[2][1=]{\todo[linecolor=purple,backgroundcolor=purple!25,bordercolor=purple,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+
+\usepackage{soul}
+
+\usepackage{tipa}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+%\usepackage[margin=1in]{geometry}
+%\usepackage[margin=1in]{geometry}
+
+\usepackage{float} %% for full page figures
+
+
+
+
+
+%% The Mechanical engineers require your name and ID on the top of every page.
+%% Uncomment the following block if you want your name and ID at the top of
+%% (almost) every page.
+
+%\pagestyle{fancy}
+%\fancyhf{} % sets both header and footer to nothing
+%\renewcommand{\headrulewidth}{0pt}
+%\cfoot{\thepage}
+%\ifdefined\authorid
+%\chead{\it \authorname\ (\authorid)}
+%\else
+%\chead{\it \authorname}
+%\fi
+%% End of block
+
+
+\fancypagestyle{general}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0.25pt} %set to 0 for no line in header
+    \renewcommand{\footrulewidth}{0.25pt} %set to 0 for no line in footer
+    \fancyfoot[R]{Ed Storey}
+    \fancyfoot[C]{\thepage}
+    \fancyhead[R]{\rightmark}
+    \fancyhead[L]{Chapter \thechapter}
+}
+
+%% It is not a requirement of the university that the font should be sans-serif, but
+%% the Mechanical engineers require it. Comment out the following line to disable it
+\renewcommand{\familydefault}{\sfdefault} %use the sans-serif font as default
+
+%% If you're not using sans-serif, consider using Palatino instead of the LaTeX standard
+%\usepackage{mathpazo} % Use the Palatino font by default if you prefer it to Computer Modern
+
+%\renewcommand{\theequation}{\arabic{equation}} %% use continuous equation numbers
+% The above commented out by HS to enable (Ch.Eq) format
+
+%% Format Chapter headings appropriately
+\usepackage{titlesec}
+\titleformat{\chapter}[hang] 
+{\normalfont\huge\bfseries}{\thechapter}{1cm}{} 
+
+
+% BEGIN: For IPA support
+% Comment out serif override just for IPA if needed
+% \renewcommand{\familydefault}{\sfdefault}
+
+%\usepackage{fontspec}
+%\setmainfont{Libertinus Serif} % or Charis SIL, Doulos SIL
+
+% END: For IPA support
+
+
+\title{\thesistitle}
+\author{\authorname}
+
+\frontmatter
+\begin{document}
+\input{title/title.tex}
+\pagenumbering{roman}
+\section*{\Huge{Declaration}}
+\vspace{1cm}
+I hereby declare that this \typeofthesis\ is entirely my own work and that it has not been submitted as an exercise for a degree at this or any other university.
+
+\vspace{1cm}
+I have read and I understand the plagiarism provisions in the General Regulations of the University Calendar for the current year, found at \url{http://www.tcd.ie/calendar}.
+\vspace{1cm}
+
+I have also completed the Online Tutorial on avoiding plagiarism `Ready Steady Write', located at \url{http://tcd-ie.libguides.com/plagiarism/ready-steady-write}.
+\vspace{3cm}
+
+Signed:~\rule{5cm}{0.3pt}\hfill Date:~\rule{5cm}{0.3pt}
+
+\chapter*{Abstract}
+A short summary of the problem investigated, the approach taken and the key findings. This should not be more that around 400 words.
+
+
+The must be on a separate page.
+
+\newpage
+\onehalfspacing\raggedright %\raggedright turns off justification and hypenation
+
+
+
+\section*{\Huge{Acknowledgements}}
+Thanks Mum!
+
+You should acknowledge any help that you have received (for example from technical staff), or input provided by, for example, a company.
+\tableofcontents
+\listoffigures
+\listoftables
+\listoftodos
+\printnomenclature
+\newpage
+%\input{Acronyms/acronyms.tex}
+
+
+% ******************************* Nomenclature *********************************
+
+
+\iffalse
+\newpage
+\section*{\Huge{Nomenclature}}
+\begin{tabular}{lp{9cm}l}
+A&Area of the wing&$m^{2}$\\
+B\\
+C& Roman letters first, with capitals\ldots\\
+a&then lower case.\\
+b\\
+c\\
+$\Gamma$&Followed by Greek capitals\ldots\\
+$\alpha$&then lower case greek symbols.\\
+$\beta$\\
+$\epsilon$\\
+TLA&Finally, three letter acronyms and other abbreviations arranged alphabetically\\
+\end{tabular}
+\vspace{2cm}
+
+If a parameter has a typical unit that is used throughout your report, then it should be included here on the right hand side.
+
+If you have a very mathematical report, then you may wish to divide the nomenclature list into functions and variables, and then sub- and super-scripts.
+
+Note that Roman mathematical symbols are typically in a serif font in italics.
+\fi
+
+\pagestyle{general}
+\mainmatter
+%\printnomenclature
+\input{introduction/introduction.tex}
+\input{background/background.tex}
+\input{project/project.tex}
+\input{4_work_chapter_2/work_chapter_2.tex}
+\input{5_chapter5/chapter5}
+\input{evaluation/evaluation.tex}
+\input{conclusion/conclusion.tex}
+\bibliographystyle{IEEEtran} %Changed to IEEETran by HS
+\bibliography{bibs/sample, bibs/workchapter2, bibs/workchapter3}
+%\bibliography{bibs/workchapter2}
+\appendix
+\renewcommand{\thechapter}{A\arabic{chapter}}
+\input{appendix/appendix.tex}
+
+
+\end{document}

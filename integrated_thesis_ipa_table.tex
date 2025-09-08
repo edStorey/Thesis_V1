@@ -1,0 +1,96 @@
+
+\documentclass[a4paper,oneside,12pt]{book}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[intoc]{nomencl}
+\makenomenclature
+\renewcommand{\nomgroup}[1]{%
+\ifthenelse{\equal{#1}{K}}{\item[\textbf{Key Concepts and Phrases}]}{%
+\ifthenelse{\equal{#1}{A}}{\item[\textbf{Roman Symbols}]}{%
+\ifthenelse{\equal{#1}{G}}{\item[\textbf{Greek Symbols}]}{%
+\ifthenelse{\equal{#1}{Z}}{\item[\textbf{Acronyms / Abbreviations}]}{%
+\ifthenelse{\equal{#1}{R}}{\item[\textbf{Superscripts}]}{%
+\ifthenelse{\equal{#1}{S}}{\item[\textbf{Subscripts}]}{%
+\ifthenelse{\equal{#1}{X}}{\item[\textbf{Other Symbols}]}
+{}
+}% matches mathematical symbols > X
+}% matches Subscripts           > S
+}% matches Superscripts         > R
+}% matches Abbreviations        > Z
+}% matches Greek Symbols        > G
+}% matches Roman Symbols        > A
+}% matches Key Words and Phrases        > K
+
+\renewcommand{\nompreamble}{\markboth{\nomname}{\nomname}}
+\newcommand{\printnomencl}[1][]{
+\ifthenelse{\equal {#1}{}}
+{\printnomenclature}
+{\printnomenclature[#1]}
+}
+
+\newcommand{\thesistitle}{Title of Work}
+\newcommand{\degree}{MAI (Computer Engineering)}
+\newcommand{\typeofthesis}{dissertation}
+\newcommand{\authorname}{Dara \'O S\'uilleabh\'ain}
+\newcommand{\keywords}{this, that, more}
+\newcommand{\school}{\href{https://www.tcd.ie/Engineering/}{School of Engineering}}
+\newcommand{\department}{\href{http://researchgroup.university.com}{Sigmedia Research Lab}}
+
+\AtBeginDocument{
+\hypersetup{pdftitle=\thesistitle}
+\hypersetup{pdfauthor=\authorname}
+\hypersetup{pdfkeywords=\keywords}
+\hypersetup{pdfsubject=\degree}
+}
+
+\usepackage{cite}
+\usepackage[a4paper,top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm,headheight=16pt]{geometry}
+\setlength{\marginparwidth}{2cm}
+\usepackage{amsmath}
+\usepackage[autostyle=true]{csquotes}
+\usepackage[pdftex]{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage{caption}
+\usepackage{sfmath}
+\usepackage[parfill]{parskip}
+\usepackage{setspace}
+\usepackage{enumerate}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\numberwithin{equation}{chapter}
+\pagestyle{plain}
+\usepackage[pdftex,dvipsnames]{xcolor}
+\usepackage{xargs}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage{soul}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\normalfont\huge\bfseries}{\thechapter}{1cm}{}
+\title{\thesistitle}
+\author{\authorname}
+
+% FONTSPEC FOR IPA SUPPORT
+\usepackage{fontspec}
+\setmainfont{Libertinus Serif}
+
+\begin{document}
+
+\chapter*{IPA Phoneme Groups}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{3cm} p{12cm}}
+\toprule
+\textbf{Phoneme Group} & \textbf{Phonemes} \\
+\midrule
+Vowel & a, aː, e, eː, i, iː, o, oː, u, uː, æ, ɐ, ɑ, ɑː, ɒ, ɒː, ɔ, ə, ɛ, ɛː, ɜː, ɚ, ɪ, ʉ, ʉː, ʊ, y, ø, œ, ɑ̃, ɔ̃, ɛ̃ \\
+Diphthong & aj, aw, ej, ow, ɔj, əw \\
+Stop & b, bʲ, c, cʰ, cʷ, d, dʲ, d̪, g, ɡ, k, kʰ, kʷ, p, pʰ, pʲ, t, tʰ, tʲ, tʷ, t̪, ɖ, ɟ, ɟʷ, ʈ, ʈʲ, ʈʷ \\
+Nasal & m, mʲ, m̩, n, n̩, ŋ, ɱ, ɲ \\
+Fricative & f, fʲ, h, s, v, vʲ, x, z, ç, ð, ɣ, ʃ, ʒ, ʝ, β, θ, ʁ \\
+Affricate & dʒ, tʃ, ts \\
+Approximant & j, l, w, ɫ, ɹ, ʎ, ɥ, ʋ \\
+Closure & sil \\
+Tap \& Trill & ɾ, r \\
+\bottomrule
+\end{longtable}
+
+\end{document}
