@@ -1,0 +1,94 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%****************************** Third Chapter **********************************
+%*******************************************************************************
+%\chapter{Exploring Bias in Early Deep Neural Networks for Speech Applications}
+%\chapter{Single-Language ASR DNNs}
+%\chapter{Bias in Early Single-Language ASR DNNs}
+\chapter{Low-Parameter Low-Data Efficient Automatic Speech Recognition}
+\label{chapter3}
+% **************************** Define Graphics Path **************************
+\ifpdf
+    \graphicspath{{Chapter3/Figs/Raster/}{Chapter3/Figs/PDF/}{Chapter3/Figs/}}
+\else
+    \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
+\fi
+
+Quartznet
+Datatang
+Word frequency
+Mandarin
+Error rates and the IWER
+Catastrophic forgetting?
+BIAS in the Science Gallery?
+What work do I actually have to show off in this section?
+Is there anything I can do to add to the work here?
+This section could go into depth on CNNs as a precursor to the FE in the next section
+
+%\section{Exploring Speech Bias Through Art}
+%\subsection{Bias at the Science Gallery}
+%\subsection{The Uncanny Valley of Breath}
+
+\section{Speech Recognition With CNNs}
+
+\subsection{Datasets}
+
+\section{Model Selection CNNs Vs Transformers}
+\subsection{CNNs vs Transformers}
+Brief overview, the specifics presumably will have been explained more deeply in the Lit review
+\subsection{Performance Vs Parameter Counts}
+Argue the benefits of parameter efficient training vs high parameter models this would show size of models in parameter counts and the relativity to GPU size. I can make an argument that Quartznet could be trained on a single GPU wherease wav2vec 2.0 required 64 GPUs and fine-tuning on 2 to achieve very similar results ON LIBRISPEECH
+\subsection{Model Comparisons}
+A table of results on Librispeech across Quartznet, a larger Conformer Model and Wav2Vec 2.0 and their parameter counts. A short discussion on why resource efficiency was the aim here.
+I have data with the Quartznet5x5 model for Datatang, I could fit this in somewhere
+
+\section{Experimental Design}
+\subsection{Pretraining Vs Randomised Model Training and Finetuning}
+Explain the difference in experimental setup of Nvidia Vs my set up and why I made the choices I made
+\subsection{Hyperparameter Tuning and Hardware Setup}
+Learning Rate, Scheduler, Optimizer, Epochs and Batch Size etc.
+Plus GPUs Used across experiments
+\subsection{Datasets: Hours, Splits and Gender Balance}
+Balance being gender balance in particular
+\subsection{Hyperparameters and their Effects on LibriSpeech}
+Here we have the results of some experiments with different hyper parameters
+
+\section{Pretrained Models and Accent}
+\subsection{Pretrained Quartznet15x5En Baselines on Datatang Accented Data}
+Whole dataset average, each accent separately
+\subsection{Pretrained Quartznet15x5En Finetuned on Datatang Accented Data Baselines}
+Finetune on whole dataset then whole dataset average and each accent separately in this situation
+Finetune on each accent separately then whole dataset average WER and each accent WER separately in this situation
+
+%\section{Does Pretrained language Affect Second Language Accent?}
+\subsection{Pretrained Quartznet15x5Es and Quzrtnet15x5Zh-Nr Finetuned on Datatang Accented Data Baselines}
+Does pretraining Language affect the downstream accuracy for a second language?
+
+\section{Single Language Training Data for Randomly Initialised Quartznet15x5}
+\subsection{English With LibriSpeech 960h}
+\subsection{Mandarin With AISHELL-2}
+\subsection{Spanish With MLS Spanish Subset}
+\subsection{LibriSpeech 960h Trained Inital Datatang Baseline}
+\subsection{Datatang Accent Baselines When Finetuned from English, Spanish and Mandarin Randomly Initialised Models}
+
+\section{Mixed Language Training Data for Randomly Initialised Quartznet15x5}
+\subsection{English With LibriSpeech 960h and Spanish with MLS Spanish Subset}
+%\subsection{English With LibriSpeech 960h and Spanish with MLS Spanish Subset}
+%\subsection{English With LibriSpeech 960h and Spanish with MLS Spanish Subset}
+\subsection{Datatang Accent Baselines When Finetuned from Mixed English and Spanish Data Randomly Initialised Models}
+\subsection{Imbalanced Language Data and it's Effect on Finetuning}
+\subsection{English Positive and Spanish Negative Imbalance}
+\subsection{Spanish Positive and English Negative Imbalance}
+
+\section{Discussion}
+\subsection{Word Error Rates and Training Data}
+\subsection{Second Language Accents and Minimal Pairs}
+\subsection{Individual Word Error Rate}
+\subsection{Learning Rates and Catastrophic Forgetting}
+\subsection{Model Size, Multiple Data Domains and Dataset Size}
+\subsection{Multilingual Automatic Speech Recognition With Large Data and Large Models}
+
+\section{Conclusion}
+
+
+% WE HAVE CREATED A DIFFERENTIABLE VERSION OF VMAF, Ok cool, I'll go ahead and book.

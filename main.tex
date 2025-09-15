@@ -175,7 +175,7 @@
 \usepackage{titlesec}
 \titleformat{\chapter}[hang] 
 {\normalfont\huge\bfseries}{\thechapter}{1cm}{} 
-
+\usepackage{amsmath}
 
 % BEGIN: For IPA support
 % Comment out serif override just for IPA if needed
@@ -263,18 +263,22 @@ Note that Roman mathematical symbols are typically in a serif font in italics.
 \mainmatter
 %\printnomenclature
 \input{introduction/introduction.tex}
-\input{background/background.tex}
-\input{project/project.tex}
-\input{4_work_chapter_2/work_chapter_2.tex}
+%\input{background/background.tex}
+%\input{project/project.tex}
+\input{2_chapter2/chapter2.tex}
+\input{3_chapter_3/chapter3}
+\input{4_chapter_4/chapter4.tex}
 \input{5_chapter5/chapter5}
-\input{evaluation/evaluation.tex}
-\input{conclusion/conclusion.tex}
+%\input{evaluation/evaluation.tex}
+%\input{conclusion/conclusion.tex}
 \bibliographystyle{IEEEtran} %Changed to IEEETran by HS
 \bibliography{bibs/sample, bibs/workchapter2, bibs/workchapter3}
 %\bibliography{bibs/workchapter2}
 \appendix
 \renewcommand{\thechapter}{A\arabic{chapter}}
 \input{appendix/appendix.tex}
+
+
 
 
 \end{document}

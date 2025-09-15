@@ -68,6 +68,15 @@
   publisher={IEEE}
 }
 
+%%% RNN-T models foundation paper
+@article{graves2012rnnt,
+  title={Sequence transduction with recurrent neural networks},
+  author={Graves, Alex},
+  journal={arXiv preprint arXiv:1211.3711},
+  year={2012}
+}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                                 DATASETS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -292,6 +301,19 @@ booktitle={International Conference on Learning Representations},
 year={2022},
 }
 
+%%%% Adaptive language-sepcific subnetworks
+@INPROCEEDINGS{xiedynamic,
+  author={Xie, Jiamin and Li, Ke and Guo, Jinxi and Tjandra, Andros and Shangguan, Yuan and Sari, Leda and Wu, Chunyang and Jia, Junteng and Mahadeokar, Jay and Kalinli, Ozlem},
+  booktitle={ICASSP 2024 - 2024 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Dynamic ASR Pathways: An Adaptive Masking Approach Towards Efficient Pruning of a Multilingual ASR Model}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={12201-12205},
+  keywords={Adaptation models;Neural networks;Signal processing;Distance measurement;Acoustics;Speech processing;Automatic speech recognition;Multilingual;Automatic Speech Recognition;Sparsity;Pruning},
+  doi={10.1109/ICASSP48485.2024.10447373}}
+
+
 %%%%% Pruning for speech
 @inproceedings{Losses_NEURIPS2022_83d349b6,
  author = {Fu, Yonggan and Zhang, Yang and Qian, Kaizhi and Ye, Zhifan and Yu, Zhongzhi and Lai, Cheng-I Jeff and Lin, Celine},
@@ -369,6 +391,73 @@ year = {2018}
  title = {QLoRA: Efficient Finetuning of Quantized LLMs},
  volume = {36},
  year = {2023}
+}
+
+%%% Pruning after training
+@inproceedings{
+liu2018rethinking,
+title={Rethinking the Value of Network Pruning},
+author={Zhuang Liu and Mingjie Sun and Tinghui Zhou and Gao Huang and Trevor Darrell},
+booktitle={International Conference on Learning Representations},
+year={2019},
+url={https://openreview.net/forum?id=rJlnB3C5Ym},
+}
+
+
+%%%%% Review of Pruning
+@article{cheng2024survey,
+  title={A survey on deep neural network pruning: Taxonomy, comparison, analysis, and recommendations},
+  author={Cheng, Hongrong and Zhang, Miao and Shi, Javen Qinfeng},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  year={2024},
+  publisher={IEEE}
+}
+
+%%% Structured vs unstructured on hardware limitations
+@inproceedings{mao2017exploring,
+  title={Exploring the granularity of sparsity in convolutional neural networks},
+  author={Mao, Huizi and Han, Song and Pool, Jeff and Li, Wenshuo and Liu, Xingyu and Wang, Yu and Dally, William J},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition workshops},
+  pages={13--20},
+  year={2017}
+}
+
+%%% proposing structured pruning methods that can be almost as good as unstructured
+@article{yvinec2021red,
+  title={Red: Looking for redundancies for data-freestructured compression of deep neural networks},
+  author={Yvinec, Edouard and Dapogny, Arnaud and Cord, Matthieu and Bailly, Kevin},
+  journal={Advances in Neural Information Processing Systems},
+  volume={34},
+  pages={20863--20873},
+  year={2021}
+}
+
+%%%% Meta paper on layer pruning
+@article{gromov2024unreasonable,
+  title={The unreasonable ineffectiveness of the deeper layers},
+  author={Gromov, Andrey and Tirumala, Kushal and Shapourian, Hassan and Glorioso, Paolo and Roberts, Daniel A},
+  journal={arXiv preprint arXiv:2403.17887},
+  year={2024}
+}
+
+%%% Early paper on stuctured pruning
+@inproceedings{
+li2017pruning,
+title={Pruning Filters for Efficient ConvNets},
+author={Hao Li and Asim Kadav and Igor Durdanovic and Hanan Samet and Hans Peter Graf},
+booktitle={International Conference on Learning Representations},
+year={2017},
+url={https://openreview.net/forum?id=rJqFGTslg}
+}
+
+%%% Finding subnetworks before training begines
+@inproceedings{
+You2020Drawing,
+title={Drawing Early-Bird Tickets: Toward More Efficient Training of Deep Networks},
+author={Haoran You and Chaojian Li and Pengfei Xu and Yonggan Fu and Yue Wang and Xiaohan Chen and Richard G. Baraniuk and Zhangyang Wang and Yingyan Lin},
+booktitle={International Conference on Learning Representations},
+year={2020},
+url={https://openreview.net/forum?id=BJxsrgStvr}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -599,7 +688,29 @@ author = {Siyuan Feng and Bence Mark Halpern and Olya Kudina and Odette Scharenb
 }
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        Multilingual large scale pretraining
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Imbalanced multilingual pretraining showing that very large models degrade less with multingual training, but parameter counts need to be significantly increased
+@INPROCEEDINGS{liscalingasru,
+  author={Li, Bo and Pang, Ruoming and Sainath, Tara N. and Gulati, Anmol and Zhang, Yu and Qin, James and Haghani, Parisa and Huang, W. Ronny and Ma, Min and Bai, Junwen},
+  booktitle={2021 IEEE Automatic Speech Recognition and Understanding Workshop (ASRU)}, 
+  title={Scaling End-to-End Models for Large-Scale Multilingual ASR}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={1011-1018},
+  keywords={Training;Adaptation models;Costs;Buildings;Interference;Performance gain;Data models;large-scale;multilingual speech recognition},
+  doi={10.1109/ASRU51503.2021.9687871}}
 
-
-
+%%%% Again increasing the model size decreases error for low-resource language but can increase error for highresource when compared to monolingual baselines
+@inproceedings{pratap20c_interspeech,
+  title     = {Massively Multilingual ASR: 50 Languages, 1 Model, 1 Billion Parameters},
+  author    = {Vineel Pratap and Anuroop Sriram and Paden Tomasello and Awni Hannun and Vitaliy Liptchinsky and Gabriel Synnaeve and Ronan Collobert},
+  year      = {2020},
+  booktitle = {Interspeech 2020},
+  pages     = {4751--4755},
+  doi       = {10.21437/Interspeech.2020-2831},
+  issn      = {2958-1796},
+}
 

@@ -1,0 +1,70 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%****************************** Second Chapter *********************************
+%*******************************************************************************
+% Use [] to create a short form of the title which is used in the header of the chapter when the title is too long for the running headers
+\chapter[Literature Review]{Literature Review}
+
+\ifpdf
+    \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
+\else
+    \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
+\fi
+
+\section{Speech Technology and Automatic Speech Recognition}
+%\label{chapter2:Speech_technology_and_automatic_speech_recognition}
+
+\subsection{Speech Representations}
+%\label{chapter2:limitations_of_conventional_approaches}
+% FFT, Spectrogram, Mel-Cepstrum-Coefficients (and then CNN feature extraction?)
+
+\subsection{Deep Neural Nets}
+
+\subsection{Feature Extraction Via CNNs}
+%First feature extractors, RESNET etc.
+
+\subsection{DNNs in ASR}
+%First uses of DNNs for ASR
+
+\subsection{CNNs in Speech}
+
+\section{Language models}
+%\label{chapter2:perceptual_criteria_vqa}
+
+\subsection{Classic Language Modelling}
+\label{ssec:vmaf_non_differentiable}
+%Beam search
+
+\subsection{Transformers} 
+%Deep learning
+%LSTM and Transformers
+
+\section{Self-supervised learning}
+\label{litreview:nn_artifact}
+
+\subsection{Large-Scale ASR Training}
+
+%\subsection{Neural based Approaches for Artifact Suppression}
+
+\section{Data Bias in Speech}
+
+\subsection{Low-resource and Zero-shot Learning}
+
+\subsection{Dominance of English Data in Speech}
+
+\section{Model Evaluation}
+%\label{chapter2:training_NN_percept_crit}
+
+\subsection{Evaluation Through Inference}
+
+\subsection{Evaluation Through Weight Activation}
+
+\subsection{Evaluation Through Model Compression}
+
+\section{Open Questions}
+
+\section{Datasets}
+
+\section{Conclusion}
+
+% Put actual numbers in papers 
