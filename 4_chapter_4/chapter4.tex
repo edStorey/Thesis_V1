@@ -100,15 +100,15 @@ Both wav2vec 2.0 and XLS-R utilise contrastive loss to teach the transformer enc
 \multicolumn{1}{r|}{Total Hours} & \multicolumn{1}{c}{162.8k} & \multicolumn{1}{c}{37.33}   %\hline
 \end{tabular}
 \caption{\textbf{The proportions to which each language tested in this study exists within the XLS-R pretraining data} XLS-R pretraining data is 436k hours in total}%\\[-6.5ex]}
-\label{tab:XLSR_Data_Splits}
+\label{pru_tab:XLSR_Data_Splits}
 \end{table}
 
 %\thoughts{does the position of this table need to be changed?}
 
 
-However, like other multilingual SSL ASR models, such as its predecessor XLSR-53 \cite{XLSR-53}, the pretraining data for XLS-R contains more English data than any other language, due to the largest datasets included in the XLS-R pretraining data \cite{MLS, wang-etal-2021-voxpopuli}. Table \ref{tab:XLSR_Data_Splits} shows a breakdown of the number of hours of several languages that are included in the pretraining data and the percentage of total pretraining data each language has, the languages shown in Table \ref{tab:XLSR_Data_Splits} are all tested throughout the research in this chapter, a breakdown of the number of hours per language can be found in the original XLS-R paper \cite{babu2021xlsr}.
+However, like other multilingual SSL ASR models, such as its predecessor XLSR-53 \cite{XLSR-53}, the pretraining data for XLS-R contains more English data than any other language, due to the largest datasets included in the XLS-R pretraining data \cite{MLS, wang-etal-2021-voxpopuli}. Table \ref{pru_tab:XLSR_Data_Splits} shows a breakdown of the number of hours of several languages that are included in the pretraining data and the percentage of total pretraining data each language has, the languages shown in Table \ref{pru_tab:XLSR_Data_Splits} are all tested throughout the research in this chapter, a breakdown of the number of hours per language can be found in the original XLS-R paper \cite{babu2021xlsr}.
 
-English language speech data accounts for approximately 15.9\% of the total training data as seen in Table \ref{tab:XLSR_Data_Splits}. Additionally, the first 24 languages account for 98\% of the total data XLS-R was trained on \cite{babu2021xlsr}. We chose XLS-R for this study due to its variety of languages and also the imbalance in the number of hours for each language in the pretraining data. Studies have shown that increasing parameter size and the size of the pretraining dataset decrease the final error on languages that are unseen or low-data in pretraining . For languages that have the highest number of hours in pretraining can be negatively affected by multilingual pretraining when compared to monolingual pretraining, but this effect can be mitigated by larger models and more pretraining data \cite{liscalingasru, pratap20c_interspeech}. Given theses findings and that the XLS-R pretraining is highly imbalanced towards a small number of languages it is important that we understand how large open-source SSL ASR models are learning speech.\change{does this need better wording?}
+English language speech data accounts for approximately 15.9\% of the total training data as seen in Table \ref{pru_tab:XLSR_Data_Splits}. Additionally, the first 24 languages account for 98\% of the total data XLS-R was trained on \cite{babu2021xlsr}. We chose XLS-R for this study due to its variety of languages and also the imbalance in the number of hours for each language in the pretraining data. Studies have shown that increasing parameter size and the size of the pretraining dataset decrease the final error on languages that are unseen or low-data in pretraining . For languages that have the highest number of hours in pretraining can be negatively affected by multilingual pretraining when compared to monolingual pretraining, but this effect can be mitigated by larger models and more pretraining data \cite{liscalingasru, pratap20c_interspeech}. Given theses findings and that the XLS-R pretraining is highly imbalanced towards a small number of languages it is important that we understand how large open-source SSL ASR models are learning speech.\change{does this need better wording?}
 
 
 %If XLS-R has learned speech representations through 69.5k hours of English data but only 3 hours of Irish, for example, how well is it learning Irish when compared to English and is it truly multilingual?\thoughts{I should add in these references and make a point that multilingual pretraeining can degrade the final results \cite{liscalingasru}\cite{pratap20c_interspeech}} Moreover how does it learn new languages when only a few languages are so dominant in the pretraining data.
@@ -150,7 +150,7 @@ While assessing the effectiveness of PARP Lai \textit{et al}. \cite{PARP} use th
 
 
 \newpage
-\section{Experimental Design}
+\section{Experimental Design}\label{pru_sec:experimental_design}
 In this section we outline the Self-Supervised Learning (SSL) Automatic Speech Recognition (ASR) model and datasets used throughout the experiments in this chapter. We then outline the training strategies and hyperparameters used in all training. Finally we outline the pruning strategies we use to find language-specific subnetworks within our pretrained and finetuned models and then the strategies we use to analyse these subnetworks. 
 
 \subsection{Model} 
@@ -184,10 +184,10 @@ L1 Normalization:\thoughts{not sure if I need this equation, and if I do do I ne
 \end{equation}
 \fi
 
-Finally we evaluate the weights that have been pruned by calculating the Intersection Over Union (IOU) between 2 or more pruning masks as seen in \cite{PARP}. A pruning mask is generated when pruning a model and is simply a matrix of the weights that will be zeroed or kept\thoughts{is there a better word than kept?}, weights that will be zeroed are set to 0 and weights that will be kept after pruning are set to 1 in the pruning mask. To calculate the IOU we multiply 2 or more pruning masks, here a zeroed weight multiplied by a kept weight or 2 zeroed weights multiplied will always equal to 0 whereas two kept weights multiplied will always equal to 1. This technique allows us to evaluate which weights are commonly used across different languages and which are not.
+Finally we evaluate the weights that have been pruned by calculating the Intersection Over Union (IOU) between 2 or more pruning masks as seen in \cite{PARP}. A pruning mask is generated when pruning a model and is simply a matrix of the weights that will be zeroed or kept, weights that will be zeroed are set to 0 and weights that will be kept after pruning are set to 1 in the pruning mask. To calculate the IOU we multiply 2 or more pruning masks, here a zeroed weight multiplied by a kept weight or 2 zeroed weights multiplied will always equal to 0 whereas two kept weights multiplied will always equal to 1. This technique allows us to evaluate which weights are commonly used across different languages and which are not.
 
 \subsection{Training Strategies}
-To obtain subnetworks for each language tested, we must first finetune XLS-R. We adapt the hyperparameters Rouditchenko et al. \cite{FLEURS_XLSR_WHISPER}\thoughts{we could expand this rather than just referencing the paper, the HP would be LR, GA, BS} used for XLS-R for our setup. We train on 8 2080ti GPUs, use a learning rate of 5e-5 a batch size of 8 split across the 8 GPUs and no gradient accumulation. First, we train XLS-R for 100 epochs and select the point in training with the lowest CTC loss on the validation set for the final upstream model. Finetuning XLS-R to one of the FLEURs 12 hour subsets gives us what will be described from here on as the "upstream model" and the FLEURs language used at this stage will be referred to as the "upstream language". 
+To obtain subnetworks for each language tested, we must first finetune XLS-R. We adapt the hyperparameters Rouditchenko et al. \cite{FLEURS_XLSR_WHISPER} used for XLS-R for our setup. We train on 8 2080ti GPUs, use a learning rate of 5e-5 a batch size of 8 split across the 8 GPUs and no gradient accumulation. First, we train XLS-R for 100 epochs and select the point in training with the lowest CTC loss on the validation set for the final upstream model. Finetuning XLS-R to one of the FLEURs 12 hour subsets gives us what will be described from here on as the "upstream model" and the FLEURs language used at this stage will be referred to as the "upstream language". 
 
 The next step is then to prune the encoder of the upstream model to various target sparsities and finetune it again on more FLEURs data, this stage of training will be referred to as the "downstream model" and the FLEURs data used here will be referred to as the "downstream language". When finetuning the pretrained XLS-R we change task from contrastive loss to Connectionist Temporal Classification (CTC) Loss in order to produce character as an output from the model. A single linear output layer is added to the model after the encoder that takes the output from the final transformer block of the XLS-R encoder as an input and outputs characters from the language. The character outputs are collected by iterating through each utterance in the language subset of FLEURs and collecting every text character in that subset. Each character is an output of this final layer and the number of output is different for every language we test.
 
@@ -197,7 +197,7 @@ If we consider the following situation: XLS-R has been finetuned on English as t
 In the scenario that the upstream language and the downstream language match (i.e. English upstream and English downstream) we train the downstream model for 10 epochs at sparsities increasing in steps of 10\%. For downstream languages that do not match the upstream language (i.e. an English model trained on downstream Spanish), we first freeze the encoder of the upstream pruned model for one epoch of training before unfreezing and continuing to train for the full 10 epochs. This extra step is done to give the linear output layer one extra epoch to train and settle its weights before we finetune the full model, we saw in testing that this step reduced final downstream error rates. We evaluate the performance of all models based on Character Error Rate (CER) as in \cite{FLEURS_XLSR_WHISPER}. An illustration of the training pathways can be seen in Figure \ref{fig:Training_Strategy}.
 
 \subsection{Data}
-For the experiments in this chapter we use the FLEURS: FEW-Shot Learning Evaluation of Universal Representations of Speech dataset \cite{FLEURS}. FLEURs contains data from 101 languages with approximately 12 hours of data per language. For our upstream languages, we selected English, German, French, Spanish and Polish. These languages are all Indo-European languages from three sub-groups: Germanic, Latin and Slavic \cite{bauer2007linguistics}. They are all high-data languages within the XLS-R pretraining data, as seen in Table \ref{tab:XLSR_Data_Splits}. All of these languages were tested downstream alongside Asturian and Xhosa which are languages unseen by XLS-R in its pretraining \cite{babu2021xlsr}. Asturian is a language spoken in Northern Spain and like Spanish is a Latin language \cite{Asturian_Muñiz-Cachón_2018}. Xhosa is a language spoken in South Africa with no linguistic relationship to the other languages in these experiments \cite{bauer2007linguistics}. Catalan is a low-data language in XLS-R pretraining data and is a Latin language from Spain.
+For the experiments in this chapter we use the FLEURS: FEW-Shot Learning Evaluation of Universal Representations of Speech dataset \cite{FLEURS}. FLEURs contains data from 101 languages with approximately 12 hours of data per language. For our upstream languages, we selected English, German, French, Spanish and Polish. These languages are all Indo-European languages from three sub-groups: Germanic, Latin and Slavic \cite{bauer2007linguistics}. They are all high-data languages within the XLS-R pretraining data, as seen in Table \ref{pru_tab:XLSR_Data_Splits}. All of these languages were tested downstream alongside Asturian and Xhosa which are languages unseen by XLS-R in its pretraining \cite{babu2021xlsr}. Asturian is a language spoken in Northern Spain and like Spanish is a Latin language \cite{Asturian_Muñiz-Cachón_2018}. Xhosa is a language spoken in South Africa with no linguistic relationship to the other languages in these experiments \cite{bauer2007linguistics}. Catalan is a low-data language in XLS-R pretraining data and is a Latin language from Spain.
 
 
 
@@ -208,66 +208,144 @@ For the experiments in this chapter we use the FLEURS: FEW-Shot Learning Evaluat
 %\newpage
 
 \clearpage
+
+\section{Experimental Results} \label{pru_sec:experimental_results}
+In this section we cover the results of our experiments as described in Section \ref{pru_sec:experimental_design}. Firstly we finetune the pretrained XLS-R \cite{babu2021xlsr} to English data from the FLEURs dataset \cite{FLEURS} and then prune to sparsities starting at no pruning, or 0\% sparsity, up to 90\% sparsity in steps of 10\%. We then finetune each of these models further to a variety of other languages to test the performance of English language-specific subnetworks in XLS-R. Once we have data on the performance of the English subnetwork we test the performance of Spanish and Polish language-specific subnetworks on the same languages we tested the English subnetwork on.
+
+Next we further test the performance of these subnetworks by analysing the mean performance of each subnetwork across languages other than their own. We also look at the average Character Error Rate (CER) for each language when finetuned from a pruned model. When we have the results for these subnetworks we look at the option of mixing different subnetworks and whether including weights from different languages improves or degrades performance of the downstream language. Finally, we analyse the weight distributions of the subnetworks we have uncovered through pruning. We do this by taking the Intersection Over Union (IOU) of two masks to see what percentage of weights in subnetworks from different languages overlap and which weights don't. The IOU data allows us to understand how XLS-R stores language-specific information and how it affects downstream learning.
+
+
+
 \def\figscale{0.83}
 \def\capsscale{1}
-\begin{figure}
+\begin{figure}[h]
   \centering
   \captionsetup{width=\capsscale\linewidth}
   \includegraphics[width=\linewidth]{4_chapter_4/figures/English_toV6.pdf}
   \caption{\textbf{Upstream English to multiple downstream Languages} an English upstream model is fine-tuned to downstream English, French, German, Polish and Spanish while pruning from 0\% up to 90\% sparsity}
-  \label{fig:English_to_0to90}
+  \label{pru_fig:English_to_0to90}
 \end{figure}
 
 
-\begin{figure}
-  \includegraphics[width=\linewidth]{4_chapter_4/figures/Spanish_toV6.pdf}
-  \caption{\textbf{Upstream Spanish to five downstream languages} the Spanish upstream model is fine-tuned to downstream English, French, German, Polish and Spanish at 70\%, 80\% and 90\% sparsities}
-  \label{fig:Upstream_Spanish}
-\end{figure}
+
+
+\subsection{Language Specific Subnetworks}\label{pru_subsec:language_specific_subnetworks}
+Figure \ref{pru_fig:English_to_0to90} \improvement{Maybe I can expand here too I skip over a lot of the technical aspects}shows XLS-R trained on English and pruned to sparsities starting at 0\% up to 90\% sparsity in increments of 10\%. We see in Figure \ref{pru_fig:English_to_0to90} that for all downstream languages tested XLS-R can be pruned to approximately 50\% with minimal or no increase is CER. In fact, for most downstream languages CER does not rise substantially until 70\% sparsity has been reached. This corroborates findings in previous papers \cite{ding2022audio, Losses_NEURIPS2022_83d349b6, Unstructured_Speech} that show that sparse networks can achieve minimal degradation to the baseline unpruned accuracy of a model up to 50\% or 60\%. We found this effect to be consistent across all of the language-specific subnetworks that we tested.\info{do we want to include sparsity graphs with 0-90\% sparsities in the appendix? If I get time} As such our findings throughout the rest of this paper will concentrate on 70\%, 80\% and 90\% sparsities as sparse networks in this range show the most pronounced language-specific effects while still achieving reasonably low CER. 
+
+Figure \ref{pru_fig:English_to_0to90}, Figure \ref{pru_fig:Upstream_Spanish} and Figure \ref{pru_fig:Upstream_Polish} show the same experiments performed with different upstream languages. Figure \ref{pru_fig:English_to_0to90} shows the performance of the English  language-specific subnetworks when finetuned to multiple downstream languages, Figure \ref{pru_fig:Upstream_Spanish} shows performance for the Spanish language-specific subnetwork and Figure \ref{pru_fig:Upstream_Polish} shows performance for the Polish language-specific subnetwork in XLS-R. These are three languages from separate Indo-European language families \cite{bauer2007linguistics} and all high-data within the XLS-R pretraining data. 
+
+Across the three figures, we can observe that the English language-specific subnetwork acts as an outlier when compared to the Spanish and Polish languages-specific subnetworks. Figure \ref{pru_fig:English_to_0to90} has the lowest CER across all languages at all sparsities when compared to the CER for each language at each sparsity in Figures \ref{pru_fig:Upstream_Spanish} and Figures \ref{pru_fig:Upstream_Polish} . This is true even when the upstream downstream languages match, i.e. the CER for Spanish is lower on the English subnetwork than the CER on the Spanish subnetwork. This is notable as it suggests that weights that have learned speech from English language data could be more beneficial to learning than weights that match the downstream language. \info{do I need exact number for this section? I do have them for the next set of figures}
+
+Figure \ref{pru_fig:Upstream_Spanish} and Figure \ref{pru_fig:Upstream_Polish} both show substantial increases in CER on English at 80\% and 90\% sparsity when compared to the other language-specific subnetworks tested. There could be some language family relations in CER for Figure \ref{pru_fig:English_to_0to90} where we see German, a Germanic language like English, also raises significantly in CER at 90\% sparsity. However, we do not see this effect in Figure \ref{pru_fig:Upstream_Polish} this may suggest that English is the outlier in both the upstream and downstream experiments rather than the Germanic language family. Adverse to the findings in \cite{PARP} Figure \ref{pru_fig:Upstream_Spanish} and Figure \ref{pru_fig:Upstream_Polish} suggest that not training on an English subnetwork is in fact detrimental to downstream fine-tuning, even on languages unrelated to English. \info{If I want more I could go into more detail about all the languages, I would need a page worth of discourse though}
 
 \clearpage
-\begin{figure}[h]
-  \includegraphics[width=\linewidth]{4_chapter_4/figures/Polish_to_V3.pdf}
+\begin{figure}
+\centering
+  \includegraphics[width=0.95\linewidth]{4_chapter_4/figures/Spanish_toV6.pdf}
+  \caption{\textbf{Upstream Spanish to five downstream languages} the Spanish upstream model is fine-tuned to downstream English, French, German, Polish and Spanish at 70\%, 80\% and 90\% sparsities}
+  \label{pru_fig:Upstream_Spanish}
+\end{figure}
+\begin{figure}
+\centering
+  \includegraphics[width=0.95\linewidth]{4_chapter_4/figures/Polish_to_V3.pdf}
   \caption{\textbf{Upstream Polish to five downstream Languages} the Polish upstream model is fine-tuned to downstream English, French, German, Polish and Spanish at 70\%, 80\% and 90\% sparsities}
-  \label{fig:Upstream_Polish}
+  \label{pru_fig:Upstream_Polish}
 \end{figure} 
+\clearpage
 
+We\thoughts{it needs to be a discussion with Naomi about the we/I/they and how to manage that, Johanna's note generally she changed everything from we to I, but sometimes she has a passive possession and other times a note to say that someone else did this. I'm not sure that this will be necessary for my paper though} further corroborate these findings in Figure \ref{pru_fig:Language_Averages} which shows the average CER for each upstream model. To gauge how well these models generalise, we exclude the matching downstream languages on, i.e. we take the average performance for the English language-specific subnetwork when fine-tuned to French, German, Polish and Spanish, but not English, at each sparsity. 
 
-\section{Results} \label{sec:Results}
-\begin{itemize}
-    \item write preamble
-\end{itemize}
-\subsection{Language Specific Subnetworks}
-Figure \ref{fig:English_to_0to90} \improvement{Maybe I can expand here too I skip over a lot of the technical aspects}shows XLS-R trained on English and pruned to sparsities starting at 0\% up to 90\% sparsity in increments of 10\%. Figure \ref{fig:English_to_0to90} corroborates findings in previous papers \cite{ding2022audio, Losses_NEURIPS2022_83d349b6, Unstructured_Speech} that show that sparse networks can achieve minimal degradation to the baseline unpruned accuracy of a model up to 50\% or 60\%. The impact of language-specific subnetworks is more pronounced in sparsities at or above 70\%. As such our findings throughout the rest of this paper will concentrate on 70\%, 80\% and 90\% sparsities. 
+We see in Figure \ref{pru_fig:Language_Averages} that the CER for the English subnetwork at 80\% and 90\% sparsity is the lowest among all subnetworks with an absolute difference of 26.92\% CER at 90\% sparsity between the highest, French, and lowest, English, error and 21.46\% CER at 80\%. While the English CER at 70\% is not the lowest of all of the subnetworks, German is, it is within 1\% error the German subnetwork and 15.09\% less than the highest CER at 70\% sparsity for the Spanish subnetwork. This shows that across all other languages, English language-specific subnetworks perform as well or better for downstream finetuning than the other subnetworks. 
 
-Figure \ref{fig:English_to_0to90}, Figure \ref{fig:Upstream_Spanish} and Figure \ref{fig:Upstream_Polish} show the same experiments performed with different upstream languages. Figure \ref{fig:English_to_0to90} shows upstream English as a base \improvement{be more consistent with language here "for a base is not very technical"} for the language-specific subnetworks, Figure \ref{fig:Upstream_Spanish} shows upstream Spanish and Figure \ref{fig:Upstream_Polish} shows upstream Polish, three languages from separate Indo-European language families \cite{bauer2007linguistics} and all high-data within the XLS-R pretraining data. \todo{maybe I can split this into 2 paragraphs}Across the three figures, we can observe a clear trend of English as an outlier to the other languages-specific subnetworks. Figure \ref{fig:English_to_0to90} has the lowest CER across all languages, even when the downstream language matches the upstream language as with Spanish in Figure \ref{fig:Upstream_Spanish} and Polish in Figure \ref{fig:Upstream_Polish}. Figure \ref{fig:Upstream_Spanish} and Figure \ref{fig:Upstream_Polish} both show substantial increases in CER on English at 80\% and 90\% sparsity when compared to the other language-specific subnetworks tested. This may suggest that the English language subnetwork is more effective for downstream training. Adverse to the findings in \cite{PARP} Figure \ref{fig:Upstream_Spanish} and Figure \ref{fig:Upstream_Polish} suggest that not training on an English subnetwork is in fact detrimental to downstream fine-tuning, even on languages unrelated to English.
-
-We\thoughts{it needs to be a discussion with Naomi about the we/I/they and how to manage that, Johanna's note generally she changed everything from we to I, but sometimes she has a passive possession and other times a note to say that someone else did this. I'm not sure that this will be necessary for my paper though} further corroborate these findings in Figure \ref{fig:Language_Averages} which shows the average CER for each upstream model. To gauge how well these models generalise, we exclude the language the model was trained on for the results in Figure \ref{fig:Language_Averages}, i.e. the average performance for the English language-specific subnetworks fine-tuned to French, German, Polish and Spanish at each sparsity. We see in Figure \ref{fig:Language_Averages} that the CER at 80\% and 90\% sparsity is the lowest among all subnetworks with an absolute difference of 26.92\% CER at 90\% sparsity between the highest and lowest error and 21.46\% CER at 80\%. While the English CER at 70\% is not the lowest among subnetworks, it is within 1\% error from the lowest of the French subnetwork and 15.09\% less than the highest CER at 70\% sparsity for the Spanish subnetwork. This shows that across all other languages, English language-specific subnetworks perform as well or better than the other subnetworks.
+In Figures \ref{pru_fig:English_to_0to90} \ref{pru_fig:Upstream_Spanish} and \ref{pru_fig:Upstream_Polish} for each subnetwork portrayed downstream Spanish has the CER at almost all sparsities. However we also saw in Figure \ref{pru_fig:Upstream_Spanish} that all downstream languages, including Spanish, had higher CER when tested on upstream Spanish when compared to the CER for every language shown for upstream English and upstream Polish in Figure \ref{pru_fig:English_to_0to90} and \ref{pru_fig:Upstream_Polish}. This result is reflected in Figure \ref{pru_fig:Language_Averages} showing that opposed to English the Spanish subnetwork appears to be the worst subnetwork tested for downstream finetuning.
 
 %\newpage
-Finally with Figure \ref{fig:AveragedLanguages} we measure the average CER for each language across all upstream models except for when the upstream and downstream languages match. For example, English refers in Figure \ref{fig:AveragedLanguages} to the mean average CER of the French, German, Polish and Spanish upstream models when fine-tuned to English. Figure \ref{fig:AveragedLanguages} shows English as having the highest CER at 80\% and 90\% sparsity and the second highest after French at 70\% sparsity. This is especially apparent at 90\% sparsity when the average CER for English is 92.55\% and the next lowest is German at 47.33\%. These results show English again as the outlier, here however it is the language that causes the highest number of errors among the other languages tested. 
+Finally in Figure \ref{pru_fig:AveragedLanguages} we measure the average CER for each language across all upstream models except for when the upstream and downstream languages match. For example, English refers in Figure \ref{pru_fig:AveragedLanguages} to the mean average CER of the French, German, Polish and Spanish upstream models when fine-tuned to English. Figure \ref{pru_fig:AveragedLanguages} shows English as having the highest CER at 80\% and 90\% sparsity and the second highest after French at 70\% sparsity. \iffalse This is especially apparent at 90\% sparsity when the average CER for English is 92.55\% and the next lowest is German at 47.33\%. \fi These results show English again as the outlier, here however it is the language that causes the highest number of errors among the other languages. 
 
+Spanish also has the inverse behaviour for 70\% and 90\% sparsities having the lowest CER of all languages showing that Spanish performs best at these sparsities when finetuning from subnetworks that do not match Spanish. Spanish is the next highest CER at 80\% sparsity after English which may show the increased variability of weights at high sparsities. Figures \ref{pru_fig:Language_Averages} and \ref{pru_fig:AveragedLanguages} show that  certain languages will always perform better when finetuning, but simultaneously certain language-specific subnetworks have higher downstream performance across all languages. In the case of XLS-R the subnetwork with the highest downstream performance on other languages is the English language-specific subnetwork.
+
+%%%%%%%%%%%%%%%% Come back to these points, they are thinjgs I could add to this section but largely havent %%%%%%%%%%%%%%%%
+\iffalse
+\begin{itemize}
+    \item \textbf{Do we need all this is the real question?? no need to add it if not}
+    \item Things I haven't talked about in this subsection:
+    \item the relationships between the upstream and downstream languages
+    \item I could go into more detail for all the languages on each graph separately rather than just comparing them
+    \item i.e. how french is higher on the english subnetwork, how english is so high on spanish and polish
+    \item Spanish is low error on all graphs when compared only to the data shown on the graph
+    \item I also don't include absolute numbers in this section, I may have to look at how easy it would be to get these
+    
+    \newpage
+    \item -------------------------------------------------------------------------
+    \item \textbf{I could split the averages into a separate subsection}
+    \item I don't talk about:
+    \item Which specific languages are the best and worst, like I don't talk about how Spanish is high error all across this graph, but comparatively low error on every other graph.
+    \item I don't mention the spike in error at 80\% for Spanish, how can I explain it though? It is interesting because Spanish is otherwise the lowest error language averagely
+    \item do the other languages act as we'd expect based on the previous graphs?
+    \item are these graphs simply inversions of each other? Not quite but why?
+\end{itemize}
+\fi
 \clearpage
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{4_chapter_4/figures/Language_Averages_ByUpstream.pdf}
-  \caption{\textbf{Mean average results for each language-specific subnetwork when tested on all other downstream languages} each subnetwork is fine-tuned to the four other languages, these results are then averaged and plotted at 70\%, 80\% and 90\% sparsity \hl{I wasn't totally ok with the figure captions especially for these mean plots, maybe I could look into expanding them?}}%\\[-3ex]}
-  \label{fig:Language_Averages}
+  \caption{\textbf{Mean average results for each language-specific subnetwork when finetuned on all non matching downstream languages} each subnetwork is fine-tuned to the four other languages that do not match the upstream language, these results are then averaged and plotted at 70\%, 80\% and 90\% sparsity}%\\[-3ex]}
+  \label{pru_fig:Language_Averages}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{4_chapter_4/figures/Downstream_Averages_V2.pdf}
-  \caption{\textbf{Mean average results for each downstream language} each language is trained from an upstream model fine-tuned to each of the four other languages, these results are then averaged and plotted at 70\%, 80\% and 90\% sparsity. Results when the downstream and upstream languages match are not included in the averaging}%\\[-4ex]}
-  \label{fig:AveragedLanguages}
+  \caption{\textbf{Mean average results for each downstream language individually} CER for each individual language are collected from each of the other subnetworks, not including the matching upstream language, these results are then averaged and plotted at 70\%, 80\% and 90\% sparsity.}%\\[-4ex]}
+  \label{pru_fig:AveragedLanguages}
 \end{figure}
+
 \clearpage
-\subsection{Evaluation of the English Subnetwork}
-In Table \ref{tab:70perc90perc_English_Mask_Results} we compare the results of the English language-specific subnetwork to the Spanish language-specific subnetwork by fine-tuning to Asturian and Xhosa as well as English and Spanish. We compare the performance from the English subnetwork to the Spanish subnetwork at 70\% and 90\% sparsity. We also test how well Spanish and English fine-tuned models perform when pruned with subnetworks generated from each of the other languages. En / Es is the English fine-tuned model pruned to the Spanish subnetwork and Es / En is the Spanish fine-tuned model pruned to the English subnetwork. In both cases, the English upstream model pruned with the English subnetwork has the lowest average CER.
+\subsection{Evaluation of the English Subnetwork}\label{pru_subsec:evaluating_english_subnetwork}
+In Tables \ref{pru_tab:70perc_English_Mask_Results} and \ref{pru_tab:90perc_English_Mask_Results}\info{I will need to add in a reference to 80\% table if I add it in} we compare the results of the English language-specific subnetwork to the Spanish language-specific subnetwork by fine-tuning to Asturian and Xhosa as well as English and Spanish. We compare the performance from the English subnetwork to the Spanish subnetwork at 70\% and 90\% sparsity. We also test how well Spanish and English fine-tuned models perform when pruned with subnetworks generated from each of the other languages. En / Es is the English fine-tuned model pruned to the Spanish subnetwork and Es / En is the Spanish fine-tuned model pruned to the English subnetwork. 
 
-Finally, in Table \ref{tab:90perc_EnglishSpanish_Mixed_Mask} we show that combining all surviving weights from both English and Spanish subnetworks, noted in Table \ref{tab:90perc_EnglishSpanish_Mixed_Mask} as subnetwork En / Es, does not decrease CER more than the English single-language subnetwork alone. While the error on English is reduced on the Spanish upstream model, it is still 3\% higher in CER than the upstream English model with the English subnetwork.
+In Table \ref{pru_tab:70perc_English_Mask_Results} we see the Character Error Rates (CER) for each language with each combination of upstream finetuning and pruned subnetwork for a 70\% sparse network. For each language except Spanish the lowest CER is recorded on the version of XLS-R finetuned to English and then prune to the English language-specific subnetwork. For Spanish the lowest CER is found on the model finetuned to Spanish but pruned with the English subnetwork. This is notable as for both Spanish and Asturian, two closely related languages, finetuning from English language-specific weights within XLS-R gives better results than finetuning with the Spanish subnetwork. While English having the lowest CER on the En/En model is less surprising it is notable that Xhosa also has the lowest error on En/En and the average lowest CER is also recorded here. These results suggest that when comparing English and Spanish the English language-specific subnetwork contains weights that are more valuable for downstream training even for languages that are unrelated to English.
 
-\begin{table}[h]
+For Table \ref{pru_tab:90perc_English_Mask_Results} we record the same experiments but we prune to 90\% sparsity. In this case lowest CER for English and Asturian are found on the English upstream model with the English downstream subnetwork, the average CER is also the lowest for this model. Both Spanish and Xhosa have the lowest CER on the upstream Spanish downstream Spanish subnetwork model. at 70\% we saw a difference of 12.68\% between the highest and lowest CER for Xhosa, whereas in Figure \ref{pru_tab:90perc_English_Mask_Results} the difference is only 1.58\% and the average CER for every model is 9\% or more higher when compared to the results in Table \ref{pru_tab:70perc_English_Mask_Results}. This might suggest that since variation is lower at 90\% both English and Spanish subnetworks are less optimal at this sparsity for downstream CER. The average CER for the English upstream model with the English downstream subnetwork is still the lowest again suggesting it contains more valuable weights even at 90\% sparsity.
+
+
+\begin{table}
+\centering
+\begin{tabular}{llllll}
+& \\ \cline{2-6} \\[-2.3ex] 
+& \multicolumn{5}{c}{\textbf{CER (\%) at 70\% Sparsity}}  \\[0.75ex] \cline{2-6} \\[-2.35ex]
+& \multicolumn{5}{c}{\textbf{Language}}  \\[0.5ex] \hline
+\multicolumn{1}{l|}{\textbf{Model / Subnet}} & \multicolumn{1}{l}{\textbf{En}} & \multicolumn{1}{l}{\textbf{Es}} & \multicolumn{1}{l}{\textbf{As}} & \multicolumn{1}{l}{\textbf{Xh}} & \multicolumn{1}{l}{\textbf{Avg}} \\ \hline
+\multicolumn{1}{r|}{\textbf{En / En}} & \multicolumn{1}{l}{\textbf{11.74}} & \multicolumn{1}{l}{6.61} & \multicolumn{1}{l}{\textbf{11.53}} & \multicolumn{1}{l}{\textbf{10.57}} & \textbf{10.11}  \\ %\hline
+\multicolumn{1}{r|}{\textbf{En / Es}} & \multicolumn{1}{l}{12.74} & \multicolumn{1}{l}{15.46} & \multicolumn{1}{l}{21.34} & \multicolumn{1}{l}{21.65} & 17.8 \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / Es}} & \multicolumn{1}{l}{{28.28}} & \multicolumn{1}{l}{10.87} & \multicolumn{1}{l}{16.96} & \multicolumn{1}{l}{20.55} & 19.17 \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / En}} & \multicolumn{1}{l}{14.11} & \multicolumn{1}{l}{\textbf{5.31}} & \multicolumn{1}{l}{27.4} & \multicolumn{1}{l}{23.25} & 17.52 \\ \hline
+\end{tabular}
+\caption{\textbf{Upstream English and Spanish models trained with exchanged subnetworks at 70\% sparsity} we test the effect of pruning with a Spanish subnetwork on an English upstream model and an English subnetwork on a Spanish upstream model across multiple languages at 70\% sparsity \hl{since I am splitting the data into 2 tables do I need to include a third table that includes 80\% sparsity results we will have to see if I can find them}}%\\[-3.6ex]}
+\label{pru_tab:70perc_English_Mask_Results}
+%\end{table*}
+\end{table}
+
+\info{I could also include the 80\% sparsity table, which I didn't have space for in the paper}
+
+\begin{table}
+\centering
+\begin{tabular}{lllllllllll}
+& \\ \cline{2-6} \\[-2.3ex] 
+& \multicolumn{5}{c}{\textbf{CER (\%) at 90\% Sparsity}} \\[0.75ex] \cline{2-6} \\[-2.35ex]
+& \multicolumn{5}{c}{\textbf{Language}} \\[0.5ex] \hline
+\multicolumn{1}{l|}{\textbf{Model / Subnet}} & \multicolumn{1}{l}{\textbf{En}} & \multicolumn{1}{l}{\textbf{Es}} & \multicolumn{1}{l}{\textbf{As}} & \multicolumn{1}{l}{\textbf{Xh}} & \multicolumn{1}{l}{\textbf{Avg}} \\ \hline
+\multicolumn{1}{r|}{\textbf{En / En}} & \multicolumn{1}{|l}{\textbf{31.79}} & \multicolumn{1}{l}{28.51} & \multicolumn{1}{l}{\textbf{33.31}} & \multicolumn{1}{l}{{23.06}} & \textbf{29.17} \\ %\hline
+\multicolumn{1}{r|}{\textbf{En / Es}} & \multicolumn{1}{|l}{44} & \multicolumn{1}{l}{28.86} & \multicolumn{1}{l}{34.61} & \multicolumn{1}{l}{{22.77}} & 32.56 \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / Es}} & \multicolumn{1}{|l}{{97.97}} & \multicolumn{1}{l}{\textbf{23.33}} & \multicolumn{1}{l}{33.49} & \multicolumn{1}{l}{\textbf{21.48}} & 44.07 \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / En}} & \multicolumn{1}{|l}{42.5} & \multicolumn{1}{l}{{26.52}} & \multicolumn{1}{l}{38.27} & \multicolumn{1}{l}{22.61} & 32.48 \\ \hline
+\end{tabular}
+\caption{\textbf{Upstream English and Spanish models trained with exchanged subnetworks at 90\% sparsity} we test the effect of pruning with a Spanish subnetwork on an English upstream model and an English subnetwork on a Spanish upstream model across multiple languages at 90\% sparsity \hl{since I am splitting the data into 2 tables do I need to include a third table that includes 80\% sparsity results we will have to see if I can find them}}%\\[-3.6ex]}
+\label{pru_tab:90perc_English_Mask_Results}
+%\end{table*}
+\end{table}
+
+\begin{table}
 \centering
 \begin{tabular}{llll}
 \cline{2-4} \\[-1.5ex] 
@@ -279,18 +357,26 @@ Finally, in Table \ref{tab:90perc_EnglishSpanish_Mixed_Mask} we show that combin
 \multicolumn{1}{r|}{\textbf{En / EnEs}} & \multicolumn{1}{l}{34.88} & \multicolumn{1}{l}{} &\multicolumn{1}{l}{27.74} \\ %\hline
 \multicolumn{1}{r|}{\textbf{Es / EnEs}} & \multicolumn{1}{l}{40.94} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{23.86}   \\ \hline 
 \end{tabular}
-\caption{\textbf{Upstream English and Spanish models trained with mixed weight subnetworks at 90\% sparsity} we test the effect of combining the surviving weights across Spanish and English subnetworks after pruning at 90\% sparsity \hl{needs moving to more appropriate section}}%\\[-8ex]}
+\caption{\textbf{Upstream English and Spanish models trained with mixed weight subnetworks at 90\% sparsity} we test the effect of combining the surviving weights across Spanish and English subnetworks after pruning at 90\% sparsity \hl{could I include 70\& and 80\% sparsities? Maybe in appendix}}%\\[-8ex]}
 \label{tab:90perc_EnglishSpanish_Mixed_Mask}
 \end{table}
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\linewidth]{4_chapter_4/figures/IOU_EPSB_V2.pdf}
-  \caption{\textbf{Intersection Over Union (IOU) at 90\% sparsity} IOU overlap of weights in subnetworks between English, Spanish and Polish subnetworks and the subnetwork found in the base model before fine-tuning. All subnetworks pruned to 90\%.}
-  \label{fig:IOU90perc}
-\end{figure}
+\newpage
+Next we can combine different subnetworks to test whether including more valuable weights will decrease CER, the new subnetwork contains all of the weights from both of the language-specific subnetworks. Table \ref{tab:90perc_EnglishSpanish_Mixed_Mask} compares English and Spanish CER on models finetuned on upstream English and upstream Spanish, these models are then pruned with English and Spanish language-specific subnetworks at 90\% sparsity. Two more models are then created by again finetuning to English and Spanish separately and pruning with a subnetwork created by combining the 90\% sparse English and Spanish subnetworks. 
 
+We find that the lowest CER for English is found on the model finetuned first with upstream English and then pruned to the English subnetwork (En / En), in this case combining the English subnetwork with the Spanish subnetwork decreased CER for both models pruned with the combined subnetwork. The same effect is true for Spanish with the lowest CER being found on the model finetuned with upstream Spanish and pruned with the Spanish language-specific subnetwork when compared to either of the models pruned with the combined subnetwork. 
+
+These results suggest that pruning with weights found for matching languages results in lower CER, however it should be noted that CER for both English and Spanish is significantly reduced when combining subnetworks when comparing to the CER of the downstream language when finetuned from a subnetwork that does not match the language. The CER for English when tested on the upstream Spanish model when pruned with the Spanish (Es / Es) is 97.97\% and is much lower when the upstream model is finetuned to Spanish but pruned wit the combined subnetwork (Es / EnEs), this is an improvement of 57\%. 
+
+The same effect applies to Spanish, although to a less dramatic degree, Spanish CER is at 28.51\% when finetuning with upstream English and pruning wit the English subnetwork when compared to the 23.89\% when finetuning with upstream English and pruning with the combined mask. There is an improvement of 4.56\% for Spanish CER which shows that including Spanish weights improves CER, however it also suggests that the English subnetwork is still more robust to learning new languages when compared to the Spanish language-specific subnetwork only. To understand why this is we will analyse the relationships between different language-specific subnetworks.
+
+
+
+
+
+%%%%%%%%%%%%%%% Original tabel for en es as xh av CERs with 70% and 90% combined %%%%%%%%%%%%%%%
 %\begin{table*}
+\iffalse
 \begin{table}
 \centering
 \begin{tabular}{lllllllllll}
@@ -307,28 +393,66 @@ Finally, in Table \ref{tab:90perc_EnglishSpanish_Mixed_Mask} we show that combin
 \label{tab:70perc90perc_English_Mask_Results}
 %\end{table*}
 \end{table}
-\subsection{Intersection Over Union}
-The results in this section so far have shown that fine-tuning on the English subnetwork achieves lower error at high sparsities than any other subnetwork. To explore further how this behaviour is occurring we can use the Intersection Over Union (IOU) equation from \cite{PARP}. IOU is a measure of how many weights overlap between two subnetworks. Figure \ref{fig:IOU90perc} shows the overlap of saved weights between two subnetworks when a model is pruned to 90\%. We test IOUs between English, Polish and Spanish subnetworks. Figure \ref{fig:IOU90perc} shows the lowest IOU at 80.67\% when comparing the English and Spanish subnetworks. This corroborates the findings in \cite{PARP} that discovered high overall overlap between different language-specific subnetworks. However, given our findings in Section \ref{sec:Results} we can surmise that the remaining weights not overlapping have significant influence over downstream training. We also see in Figure \ref{fig:IOU90perc} that the English language subnetwork has the most saved weights in common with the base XLS-R model. Adversely the Spanish subnetwork has the least in common with the base XLS-R weights. This may imply that fine-tuning XLS-R to English requires the least change in value for weights from the base model, prior to fine-tuning, when compared to other languages. \todo{maybe there could be a deeper discussion of the IOUs and maybe some more graphs here I do have more data (pretty sure)}
+\fi
 
-Finally Figure \ref{fig:IOU90perc_ACSvsE} shows the IOUs calculated between four languages: English, Spanish, Catalan and Asturian. Spanish, Catalan and Asturian are all languages of Spain and all Latin languages whereas English is a Germanic language \cite{bauer2007linguistics}. Spanish and English are high-data languages in the XLS-R pretraining data, Catalan is a low-data language and Asturian is unseen in the XLS-R pretraining data. We see in Figure \ref{fig:IOU90perc_ACSvsE} that both Asturian and Catalan subnetworks have higher overlap in saved weights with the English language subnetwork than the Spanish subnetwork. Catalan has an IOU of 78.75\% with Spanish and 80.84\% with English and Asturian has an IOU of 81.01\% with Spanish and 84.66\% with English. This suggests that when learning low-data or new languages XLS-R is making use of the weights specific to English more than it is using weights specific to Spanish. This shows that XLS-R builds on weights learned for English when learning new or low-resource languages regardless of their language families. \thoughts{does there need to be a discussion on why I chose the 90\% sparsity? I have enough graphs to justify it.}
+
+\newpage
+\subsection{Intersection Over Union}\label{pru_subsec:intersection_over_union}
 \begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{4_chapter_4/figures/IOU_EPSB_V2.pdf}
+  \caption{\textbf{Intersection Over Union (IOU) at 90\% sparsity} IOU overlap of weights in subnetworks between English, Spanish and Polish subnetworks and the subnetwork found in the base model before fine-tuning. All subnetworks pruned to 90\%.}
+  \label{pru_fig:IOU90perc}
+\end{figure}
+The results in this section so far have shown that fine-tuning on the English subnetwork achieves lower error at high sparsities than any other subnetwork. To explore further why this behaviour is occurring we can use the Intersection Over Union (IOU) equation from \cite{PARP}. IOU is a measure of how many saved weights overlap between two subnetworks. Figure \ref{pru_fig:IOU90perc} shows the overlap of saved weights between two subnetworks when a model is pruned to 90\%. When testing we found that the IOUs were consistent in their relationships between one another i.e. that $E \cup B$ was always higher than $E \cup S$, the difference in IOU between subnetworks was most pronounced at 90\% sparsity so this was chosen for our analysis for both Figure \ref{pru_fig:IOU90perc} and Figure \ref{pru_fig:IOU90perc_ACSvsE}. 
+
+In Figure \ref{pru_fig:IOU90perc} we measure IOUs between English, Polish and Spanish subnetworks and then compare them with the IOU between each language and the "Base" pretrained but not finetuned XLS-R model. Figure \ref{pru_fig:IOU90perc} shows the lowest IOU at 80.67\% when comparing the English and Spanish subnetworks\thoughts{erm, this isn't quite right, the number is correct but P U S is the lowest}. This corroborates the findings in \cite{PARP} that discovered high overall overlap between different language-specific subnetworks. However, given our findings in Section \ref{pru_sec:experimental_results} we can surmise that the remaining weights not overlapping have significant influence over downstream training. We also see in Figure \ref{pru_fig:IOU90perc} that the English language subnetwork has the most saved weights in common with the base XLS-R model. The Spanish subnetwork however has the least in common with the base XLS-R weights. This implies that fine-tuning XLS-R to English requires the least change in value for weights from the base model, prior to fine-tuning, when compared to other languages. %\info{maybe there could be a deeper discussion of the IOUs and maybe some more graphs here I do have more data (pretty sure)}
+
+
+
+Finally, Figure \ref{pru_fig:IOU90perc_ACSvsE} shows the IOUs calculated between four languages: English, Spanish, Catalan and Asturian. Spanish, Catalan and Asturian are all languages of Spain and all Latin languages whereas English is a Germanic language unrelated to the other three languages \cite{bauer2007linguistics}. Spanish and English are high-data languages in the XLS-R pretraining data, Catalan is a low-data language and Asturian is unseen in the XLS-R pretraining data as seen in Table \ref{pru_tab:XLSR_Data_Splits}. 
+
+We see in Figure \ref{pru_fig:IOU90perc_ACSvsE} that both Asturian and Catalan subnetworks have higher overlap in saved weights with the English language subnetwork than the Spanish subnetwork. Catalan has an IOU of 78.75\% with Spanish and 80.84\% with English and Asturian has an IOU of 81.01\% with Spanish and 84.66\% with English. This suggests that when learning low-data or new languages XLS-R is making use of the weights specific to English more than it is using weights specific to Spanish. This is true even when the downstream language is closely related to Spanish or unrelated to English. The results in this section show that XLS-R builds on weights learned for the language that was most abundant in its pretraining data, English, when learning new or low-resource languages regardless of their language families. 
+
+\begin{figure}
   \centering
   \includegraphics[width=\linewidth]{4_chapter_4/figures/IOU_ESAC_V4.pdf}
   \caption{\textbf{Intersection Over Union (IOU) at 90\% sparsity for Spanish languages and English} Overlap of weights in subnetworks between English with Asturian and Catalan, then Spanish with Asturian and Catalan. Subnetworks pruned to 90\%.}%\\[-5ex]}
-  \label{fig:IOU90perc_ACSvsE}
+  \label{pru_fig:IOU90perc_ACSvsE}
 \end{figure}  
 
+\newpage
 \section{Discussion}
-Throughout Section \ref{sec:Results} we see the English subnetworks in XLS-R producing lower Character Error Rates (CER) when fine-tuned across all languages when compared to other language-specific subnetworks. Previous studies of language-specific subnetworks make the assumption that a subnetwork generated for a language will be the most efficient to further train on data from the same language or a linguistically related language \cite{Lu_Language_adap_xlsr, yang2023learning}. However, our experiments show that when pretraining data is imbalanced, this is not the case. The results in this paper instead show that regardless of linguistic content lower error will always be achieved by training on weights generated for the language with the highest data in pretraining, in this case English. The English dominance of XLS-R's performance is true for Germanic languages, such as English and German, but also languages from other Indo-European language families and one South African language. 
+Throughout Section \ref{pru_sec:experimental_results} we see the English subnetwork in XLS-R \cite{babu2021xlsr} producing lower Character Error Rates (CER) when fine-tuned to each of the downstream languages compared to the Spanish and Polish language-specific subnetwork.  other language-specific subnetworks. Previous studies of language-specific subnetworks make the assumption that a subnetwork generated for a language will be the most efficient to further train on data from the same language or a linguistically related language \cite{Lu_Language_adap_xlsr, yang2023learning}. However, our experiments show that when pretraining data is imbalanced towards one or a few languages, this is not the case. 
+
+\begin{itemize}
+    \item We can write this all out again I basically ignore the first two subsections
+    \item I can first recap the reason I only look at high sparsities, then go over the results from the pruning experiments
+    \item explain in more depth the significance of the averaged graphs
+    \item Explain why this means that different subnetworks 
+\end{itemize}
+
+In Section \ref{pru_sec:experimental_results} we first asses the performance of XLS-R after pruning has occurred by finetuning the model to 12 hours of the FLEURs English subset \cite{FLEURS} to create the upstream model. We then prune the upstream model using global One-Shot Magnitude Pruning (OMP) across the encoder, we test pruning sparsities at steps of 10\% starting at 0\% and ending at 90\%. We find that the Character Error Rates (CER) of downstream finetuning does not increase until the sparsity is above 50\% and only sees significant increases at a sparsity of 70\% or more. This affect was corroborated in the other languages tested, so as such when assessing the performance of a language-specific subnetwork we concentrate on sparsities at 70\%, 80\% and 90\%.\info{maybe refer to the appendix here then}
+
+We continue our experiments by changing the upstream language to Spanish, we prune again and finetune to multiple downstream languages. The same experiment is then replicated for Polish data as well, all of the finetuning data in this chapter is taken from FLEURs. We found that finetuning from the English language-specific subnetwork gave lower CERs for every language at all sparsities when compared to the Spanish and Polish subnetworks. This was true regardless of whether the downstream language had any language relation to English or not. We also found that Spanish consistently had some of the lowest CER for all three subnetworks and English had consistently high CER for both Polish and Spanish subnetworks.
+
+To test this further we calculate the mean average of the performance for each network, to do this we 
+
+The results in this chapter instead show that regardless of linguistic content lower error will always be achieved by training on weights generated for the language with the highest data in pretraining, in this case English. The English dominance of XLS-R's performance is true for Germanic languages, such as English and German, but also languages from other Indo-European language families and one South African language. 
+
 
 Through the use of the Intersection Over Union (IOU) we next analyse where overlap between the weights of different language-specific subnetworks occurs. We find the minimum overlap to be 78.75\%, which broadly corroborates previous results showing high overall overlap \cite{PARP}. However, given our previous findings, the remaining weights that are specific to one language do appear to impact downstream accuracy significantly. We compare each subnetwork with the base weights of XLS-R after pretraining but before fine-tuning. This shows us that the English subnetwork has the least deviation from the base model. This implies that the reliance on English has been taught to the model at the pretraining stage and not during downstream fine-tuning. Additionally, we also measure the overlap between subnetworks generated from two languages from Spain, Catalan and Asturian, to the English and Spanish subnetworks. We find that both Catalan and Asturian language-specific subnetworks have more overlap in saved weights with the English language-specific subnetwork. This reinforces our findings that when fine-tuning, XLS-R weights learned in pretraining from English language data are more impactful to training. This is regardless of the linguistic relation to English the downstream training data has.
 
 This paper shows that Self-Supervised Learning (SSL) in Automatic Speech Recognition (ASR) can bias fine-tuning tasks towards weights learned from the data domains most present in its pretraining data. Open-source SSL ASR pretraining data is highly imbalanced towards a small number of languages. These models are over-reliant on the features learned from those languages which leads them to ignore linguistic relationships when fine-tuning to unseen or low-data languages. Previous research \cite{zhang2023fast} has shown that downstream tasks can benefit from linguistically guided pretraining so fine-tuning on linguistically unrelated features is both unintuitive and inefficient. Given this, we recommend balancing the pretraining data by language and linguistic relationships. When deploying pretrained open-source models researchers must carefully analyse the data the model has been pretrained with. Imbalanced pretraining data that is abundant in just one or a few languages, but limited across many others, is not best suited for efficient multilingual SSL ASR.
 
+\begin{itemize}
+    \item It might also be good to have something that leads on to the the enxt chapter, but we could also include that in the conclusion
+    \item 
+\end{itemize}
 
-\section{Future Work}
+%\section{Future Work}
 %% May not need this section in this chapter we will see
-
+\newpage
 \section{Conclusion}
 
 
