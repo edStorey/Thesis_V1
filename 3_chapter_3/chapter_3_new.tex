@@ -1,0 +1,318 @@
+\chapter{Low-Parameter Low-Data Efficient Automatic Speech Recognition}
+\label{chapter3}
+
+\section{Introduction}\label{quartz_sec:introduction}
+
+\section{Background}\label{quartz_sec:background}
+
+\subsection{Accented English in ASR}
+\begin{itemize}
+    \item principles of phonology maybe need to go here
+    \item Accented speech, particularly non-native (L2) English, poses a persistent challenge for ASR systems trained on native data.
+    \item Even state-of-the-art systems see significant WER degradation on accented speech compared to native speech.
+    \item citations \cite{aesrc2020} The other citations given by Chatgpt are one from 1996 and a full thesis from 2011
+    \item possibly I could merge this with another subsection.
+\end{itemize}
+
+
+
+\subsection{CNNs and Quartznet 15x5}
+\begin{itemize}
+    \item QuartzNet (Kriman et al., 2019) is a lightweight ASR model using Time-Channel Separable Convolutions.
+    \item Achieves high accuracy with fewer parameters than RNN or Transformer-based models.
+    \item Commonly used for multilingual and low-resource tasks due to efficiency.
+    \item here we can outline the architecture, but not in deep detail
+    \item we also need to outline the standard learning rate scheduler but don't need to go into hyperparameters 
+    \item refs: \cite{quartznet, amodei16_deepeech2, collobert2016wav2letter}
+\end{itemize}
+
+%\subsection{Datasets}
+\subsection{Transfer Learning and Cross-Lingual Finetuning}
+\begin{itemize}
+    \item Transfer learning helps overcome data scarcity in accented datasets.
+    \item Pretraining on large corpora (LibriSpeech, MLS) can provide general speech representations.    
+    \item Cross-lingual transfer has shown success, especially when source and target languages share phonetic similarities (Spanish <-> English).
+    \item Citations \cite{luo2021cross}
+    \item \hl{I could maybe merge this section with the layer freezing stuff we'll see how big it gets}
+\end{itemize}
+
+\subsection{Pretraining Language Influence and Accent-Aware ASR}
+
+
+\subsection{Catastrophic forgetting}
+\hl{May not need this section here could just talk about it in the discussions section}
+
+\subsection{Data Augmentation}
+\hl{May not need this section here could just talk about it in the discussions section}
+
+\subsection{Individual Word Error Rate}
+\hl{May not need this section here could just talk about it in the discussions section}
+
+\subsection{Layer Freezing and Adapters}
+\begin{itemize}
+    \item There are several papers around this time that freeze deeper layer in order to avoid CF
+    \item Adapters also only train the first or first few layers for domain specific tasks
+    \item I then do this for my Accented data
+    \item citations: \cite{kunze2017transfer}
+\end{itemize}
+
+
+\newpage
+\section{Experimental Design}
+
+\begin{itemize}
+    \item Papers of this era tend to focus much more on architecture and datasets than later papers that tend to ignore simple things like learning rate or optimizer settings
+    \item It was perfectly valid at this stage to have a paper that just finetuned models in different combinations of pretraining and downstream training
+    \item it was also perfectly valid to have a paper that just changed HP and tested the outcomes
+    \begin{itemize}
+        \item such as a table with different learning rates or optimizer settings or LR schedulers and what their outcomes are
+        \item I did also try all these things
+    \end{itemize}
+    \item I have experiments for all of these things so maybe going through them is worth putting in
+    \item So maybe I should write this section first and then plan out my experiments...
+\end{itemize}
+\subsection{Model and Hyperparameters}
+\begin{itemize}
+    \item I can include overviews of the pretrained models and the models I trained here
+    \item I trained on a v100 and that should be talked about
+\end{itemize}
+\subsection{Datasets}
+\begin{itemize}
+    \item This section can include the methods I used to split the MLS data into subgroups
+\end{itemize}
+
+\subsection{Individual Word Error Rate}
+
+\subsection{Frozen Encoder Layers}
+
+\newpage
+\section{Experimental Results}
+\begin{table}[h]
+\centering
+\begin{tabular}{c}%|cccc}
+    \textbf{Experiments} \\
+    \hline
+    Pretrained English to AERSC Whole dataset \\
+    Pretrained English to AERSC Each Accent Indiviudally \\
+    Pretrained Spanish to AERSC Whole dataset \\
+    Pretrained Spanish to AERSC Each Accent Indiviudally \\
+    Pretrained Mandain to AERSC Whole dataset \\
+    Pretrained Mandarin to AERSC Each Accent Indiviudally \\
+    \hline
+    Trained from scratch on LibriSpeech \\
+    Trained from scratch on MLS Spanish \\
+    Trained from scratch on AISHELL-2 Mandarin \\
+    Train from scratch on both LibriSpeech and MLS Spanish \\
+    Trained from Scratch to the whole Datatang dataset, but for 200 epochs \\
+    the previous from scratch models were only 100 \\
+    \hline
+    I have manifests for MLS Spanish and LibriSpeech combined \\
+    But I did not train a model on this manifest \\
+    \hline
+    \textbf{things I did but didn't go anywhere} \\
+    IWER \\
+    Frozen Layers \\
+\end{tabular}
+\end{table}
+\begin{itemize}
+    \item 
+    \item I need 3 sections Ideally and just finetuning a model is not very technical
+    \item section 1 is finetuning the pretrained models 
+    \item Section 2 is currently under resourced I have model trained from scratch and one mixed model, but not much else
+    \begin{itemize}
+        \item I could run experiments that pretrain on mixed datasets, however I would ideally do as little extra work as possible
+        \item currently 40 epochs on 200 hours of data takes 24 hours, I could increase the batch size and go over 2 gpus but this might mess with my previous experiments.
+        \item I really don't want to do any more experiments but the ones I have do seem thin.
+    \end{itemize}
+    \item Currently I feel like I have 2 sections for the results where previously I thought I would have enough (ideally I would want 3 which would be the same as previous experiments)
+    \item Maybe it's OK to have a section where the results don't go anywhere and the results section can end in an un-satisfactory way.
+    \item the problem here however will be that I really have to go through that IWER and Frozen encoder data and not just that but to justify it.
+\end{itemize}
+
+\subsection{Pretrained Models and Second Language Accents}
+\begin{itemize}
+    \item Quartznet15x5En tested on datatang vs quartznet finetuned to datatang
+    \item Do we want to include a graph with data from training on datatang from scratch? (Might as well right)
+    \item we can also look at results for the pretrained models that are finetuned on each individual language here
+    \item Analyse the difference between each and what we could do next 
+\end{itemize}
+\hl{\textbf{First thing to do:} \\ Create graphs for first round of experiments pretrained Quartznet tested on datatang and then a set of graphs for the pretrained finetuned on the whole dataset and then tested on individual accents.}
+
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{3_chapter_3/figures/pretrained_english_vs_english_finetuned_to_wholedatatset.pdf}
+  \caption{\hl{update graph and update label later}}
+  \label{qzn_fig:finetuned_english_quartznet}
+\end{figure}
+
+
+
+\begin{itemize}
+    \item I can talk about the first results of the pretrained Quartznet model and how it is able to recognise Datatang accents
+    \item Then the difference of finetuning on the whole dataset and the improvement 
+    \item I would then have to mention why finetuning helps and what might be missing in the original training data (LibriSpeech) i.e. minimal pairs
+    \item if I included the finetuned to individual accents stuff I could talk about how much UK English improves there
+    \item Quick explanation of MP and then I can show the graphs from finetuning the models from Spanish and Mandarin showing that the WER is too high to base on but 
+\end{itemize}
+
+Figure \ref{qzn_fig:finetuned_english_quartznet} shows the results of testing a Quartznet 15x5 pretrained\thoughts{do I need an alternate word since this is supervised learning? It is however pretrained...} on the Librispeech dataset and then tested on each accent in the Accented English Speech Recognition Challenge 2020 (AESRC2020) dataset \cite{aesrc2020}. Figure \ref{qzn_fig:finetuned_english_quartznet} also the results after the pretrained\info{pretrained again} after being finetuned to the AESRC2020 dataset for 40 epochs and then tested on each accent separately.
+
+We see first that the average Word Error Rate (WER) is lower after the model has been finetuned to AESRC2020. US accents have the lowest WER of all accents both before and after finetuning, whereas the other native English speakers (L1) UK and Canadian (Can) are below the average for the pretrained model without finetuning, but UK English is above average after finetuning. The second language (L2) chinese (Chin) accented English is above the average both before and after finetuning. Indian English is raises in WER by \hl{ABS VAL} and is above average only after finetuning. Japanese L2 English sees the largest drop in WER between the pretrained and finetuned models but is above the average in both cases. Korean L2 English also sees a substantial drop of \hl{abs val} but this time drops below the average WER after finetuning. Portuguese L2 English and Russian L2 English also drop in WER and are below average for both models for both accents. Spanish L2 English (Spa) also has a drop in WER, but does not drop below the average WER in either stage.
+
+The high recognition of US English by both the pretrained and finetuned models align with the US accented English in the pretraining dataset LibriSpeech \cite{librilight} and the strong performance of Canadian English \cite{NEED REF}\change{need reference here!!} which is the most closely related accent to US English in AESRC2020. British and Indian accented English may have more divergence from US English and this may explain why they do not benefit as much from finetuning.\thoughts{not sure about this}
+
+For L2 accented speech we must look to what defines a second language accent, minimal pairs \cite{minimal pair stuff} are a common feature in second language accents. Minimal pairs are phonemes that are commonly substituted for another phoneme when a speaker is speaking their second language, these minimal pairs are heavily influenced by the speakers first language. Commonalities in these substitutions for many speakers of a specific first language can be used to define their L2 accent. The minimal pair phonemes are often phonemes or coarticulations between phonemes that do exist in the L2 but do exist in the speakers L1. Given that we can only find these pairs in the L1 language we can find them in two other places, L2 accented speech and the L1 language containing that phoneme. 
+
+Testing US English produced a low WER on this Quartznet model that was pretrained on US English. We can introduce the phonemes that exist as minimal pairs in the L2 data in the pretraining data by testing a model that has been pretrained on one of the L1 languages of the speakers in AESRC2020. We can then finetune to AESRC2020 and test whether their is any improvement on that second language accented English.\thoughts{possibly this could be cut down and moved to the discussion section}\thoughts{It probably needs rewording as well}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{3_chapter_3/figures/pretrained_english_vs_spanish_vs_mandarin_finetuned_to_wholedatatset.pdf}
+  \caption{\hl{update graph and update label later}}
+  \label{qzn_fig:finetuned_pretrained_all_to_whole_datatang_quartznet}
+\end{figure}
+
+\begin{itemize}
+    \item The average accuracy is lowest for the mandarin
+    \item Mandarin is much more different to English when compared to Spanish, I will need a citation for this \cite{mandarin_citation}
+    \item Spanish is also higher than starting on US English
+    \item In terms of the relationships between languages we don't see a big change with most of the languages looking the same
+    \item Why is this? Has information from the original language not been included
+    \item I actually have a bunch of experiments testing this with different amounts of data and for different numbers of epochs
+    \item \hl{We could test this by training one model from scratch on only AESRC2020}
+    \item if the results are closer than you would expect to these we can question why
+    \item Continuous learning and catastrophic forgetting combined with our high learning rate mean that we are not preserving enough information from the previous training data
+    \item so next steps:
+    \begin{itemize}
+        \item Training on mixed datasets
+        \item Testing which layers learn which pieces of information
+        \item this can be done by freezing different layers and training on one of the datasets
+        \item \hl{I already have a bunch of freezing experiments \textasciicircum\textasciicircum\textasciicircum}
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Randomly Initialised Quartznet 15x5}
+\begin{itemize}
+    \item This could be part of the previous section
+    \item I either need a table of baseline results I was able to get for each language or graphs of the loss/WER
+    \item then have the same graphs? or something that shows that our baselines were below the pretrained
+    \item even though they are the baselines we can use them to detect patterns
+    \item the baselines should be used to point out that QN is not necessarily good at learning other languages
+    \item \hl{Actually this might be a good start to the next section instead}
+\end{itemize}
+
+\subsection{Mixed Language Training}
+\begin{itemize}
+    \item I can talk about the different ratios and how they might affect the results
+    \item My results for each ratio of languages \hl{not sure what I have here}
+    \item OK, it looks like I have experiments for mixed experiments with equal amounts of english and spanish data
+    \item it doesn't look like I ever used the mixed manifests, or if I did they may have been lost of boole...
+    \item I have got several experiments that transfer from Spanish to English this could be useful for talking about CF either here or in the discussion section
+\end{itemize}
+
+\subsection{Experiments I Could Add to This Chapter}
+\begin{itemize}
+    \item \hl{I have added this section as an extra that includes ideas I could add to this section in order to flesh it out a bit}
+    \item \textbf{Training Quartznet on multiple languages}, I have a very simple version of this already I also have a script that splits the dataset into two datasets or I could even use my scripts from the last chapter
+    \begin{itemize}
+        \item I possibly already did some similar experiments that got deleted on boole I also might nto have done these...
+        \item \hl{QUESTION}: Where are the experiments from my CF paper? was that the stuff on boole??
+        \item I don't know how ethical it is to have new experiments or even how well it will flow
+    \end{itemize}
+    \item \textbf{Layer Freezing}
+    \begin{itemize}
+        \item I have a bunch of freezing layer experiments:
+        \item Frozen layers training on Librispeech:
+        \item This paper analyses DeepSpeech2 (CNN into RNN) by layer for phoneme recognition \cite{belinkov2017analyzing}
+        \item This paper does some similar work for L1 accented English \cite{prasad2020accents}
+        \item however we don't have anything for just CNN models
+        \item \hl{I have now gone through the freezing experiments and it turns out I was only unfreezing the layers that are marked}
+        \item \hl{The experiments freeze the whole excoder, also sometimes the decoder, and then unfreeze one or several layers, there is good reason the WER is so high, these experiments are pretty useless and I would have to run new ones if I wanted to use this in the results section}
+        \item The only ones that ran properly are when I freeze the final layers (I think they are marked as layer 17 and 18) and the error goes up to 120\% because obviously...
+        \item I then have a bunch of experiments where the model starts with spanish and I then train to English while freezing layers but the WER ends up at approx 80\% WER
+        \item I do try freezing each layer separately with the spa2eng and I have some where I freeze blocks of layers
+        \item freezing layer 0\-6 gets about 80\% WER and freezing 13\-8 gets 97\% error
+        \item I could talk about the results of these experiments fairly well to talk about how this coincides with our high leanring rates and how the rest of the model is changing drastically and that's why the approach didn't work
+        \item It is however likely that I will need to do some more experiments to flesh this out however
+        \item \hl{I have manually gone through these and if I wanted to include this I would have to recreate these experiments from scratch}
+        \item What would I do though, the idea was flawed from the start there isn't a clear point in the model that contains accent information
+        \item \cite{prasad2020accents} says that the first layer contains the most L1 accent information this is essentially just adapters though and it wouldn't work cross-lingually
+        \item I suppose I could train just the first layer/ layers on each accent and see what happens see if I get either better results or if I get a different distribution of 
+        \item this would be a different idea from the original however, the original idea was to preserve data from the original language but that doesn't really make sense... I could run it but I strongly believe that it will just the same but a bit worse.
+        \item I guess this was a reaction to the realisation that the learning rate was too high 
+        \item maybe I could talk about that in my experiments move things around a bit
+        \item finetuning -> starting on one language moving to another -> freezing
+        \item then mixed language training -> IWER
+        \item I am concerned however that there is little literature to back up any of these ideas it's not like I use continuous learning techniques to achieve this.
+    \end{itemize}
+    \item \textbf{IWER}
+    \begin{itemize}
+        \item This will probably be a necessary section
+        \item \hl{I NEED TO GO THROUGH AND SEE WHAT I HAVE HERE}
+    \end{itemize}
+    \item \textbf{Using MFA} to actually look at the phonemes in this section
+    \begin{itemize}
+        \item \hl{I think this would have to be in the discussion section}
+        \item This doesn't really work for the minimal pairs
+        \item if a phoneme doesn't exist in the L2 then MFA won't be able to detect it
+        \item also due to the pronunciation dictionaries I couldn't run the L1 language on the L2 accent...
+        \item However this could be included in the discussion section!
+        \item I don't know about any DNN aligners however I highly doubt they were better than MFA at this time.
+    \end{itemize}
+\end{itemize}
+
+\section{Discussion}
+\begin{itemize}
+    \item \textbf{Recap of our experiments}
+    \item recap of the approach to mixing data and the concept of minimal pairs
+    \item Why the approach didn't work
+    \begin{itemize}
+        \item low parameter count
+        \item inefficiency of CNNs
+        \item lack of GPUs to train on and low batch size
+    \end{itemize}
+    
+    \item \textbf{Things we tried but didn't go anywhere}
+    \begin{itemize}
+        \item \textbf{These are all things I have data for but didn't go anywhere}
+        \item IWER 
+        \item Learning Rates (cosine aneal, reduce on plateau) and Catastrophic forgetting (maybe this needs a large section to itself)
+        \item larger conformer models \hl{I had to lower the lr to get these working and mostly they just chrached and I gave up}
+        \item data augmentation
+        \item layer freezing \hl{if I wanted to talk about this I would need to analyse the layers in Qn a bit more}
+        \item \textbf{We didn't try this but..} I should talk about the idea of using MFA to analyse the phonetic makeup of the accents
+        \begin{itemize}
+            \item This doesn't really work for the minimal pairs
+            \item if a phoneme doesn't exist in the L2 then MFA won't be able to detect it
+            \item also due to the pronunciation dictionaries I couldn;t run the L1 language on the L2 accent...
+            \item Do I need to look up DNN versions of aligners?
+            \item DNN aligners might be better now but were pribably quite bad then
+        \end{itemize}
+        
+    \end{itemize}
+    
+    \item \textbf{Analysis of Quartznet and CTC and the limits of CNNs and DNNs}
+    \item We could discuss CTC and how it uses the graphemes as the loss function and how this doesn't fit with learning a broad array of phonemes
+    \item A discussion of CTC and grapheme based Loss function would set up the next section on SSL well
+    
+    \item \textbf{Future Work}
+    \item Can we look at what happens at each layer of a CNNN based model?
+    \item Accent Specific models
+    \item Accent specific adapter layers
+
+    \item \textbf{What to do next}
+    \item The Rise of Tranformers (explanation of transformers and why they are good for audio) \hl{I may have something at the beginning of the last chapter for this}
+    \item The increase in compute power and the rise of big data
+    \item \hl{also possibly a comment on the fast moving nature of this field at this time}
+    \item SSL and it's role with tramnformers and big data
+    \item wav2vec 2.0 XLSR-53 and XLS-R and their low scores
+    \item \hl{\textbf{thought}: is it worth finetuning XLS-R to datatang?}
+    \item the increase in compute power for our lab and what that meant for my research
+    \item Since these models are trained on so much data with little oversight into what is actually happening in them (also trained with resources we simply do not have access to) what are they actually doing?
+    \item We need to find out!
+\end{itemize}
+
+
+\section{Conclusion}

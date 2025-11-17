@@ -1,8 +1,100 @@
 \chapter{Appendix}
 
 %\clearpage
+\section{Chapter 4}\label{app_sec:chapter_4_appendix}
 
-%\newpage
+%%%%%%%%%%%%%%%%%% FLEURs LineGraph for English  upstream 0% - 90% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{appendix/figures/sparsity_line_graph_0_90_English_to.pdf}
+    \caption{\textbf{Upstream English to multiple downstream Languages} an English upstream model is fine-tuned to downstream Asturian, English, Spanish and Xhosa while pruning from 0\% up to 90\% sparsity}
+    \label{app_fig:sparsity_0_90_English_to}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%% FLEURs LineGraph for Spanish upstream 0% - 90% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}%[H]
+    \centering
+    \includegraphics[width=\linewidth]{appendix/figures/sparsity_line_graph_0_90_Spanish_to.pdf}
+    \caption{\textbf{Upstream Spanish to multiple downstream Languages} an Spanish upstream model is fine-tuned to downstream Asturian, English, Spanish and Xhosa while pruning from 0\% up to 90\% sparsity}
+    \label{app_fig:sparsity_0_90_Spanish_to}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+%%%%%%%%%%%%%%%%%% FLEURs LineGraph for French  upstream 70% - 90% %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}%[H]
+    \centering
+    \includegraphics[width=\linewidth]{appendix/figures/Sparsity_line_graph_70_90_French_to.pdf}
+    \caption{\textbf{Upstream French to multiple downstream Languages} an French upstream model is fine-tuned to downstream English, French, German, Polish and Spanish while pruning from 70\% up to 90\% sparsity \hl{have not yet included german!}}
+    \label{app_fig:sparsity_70_90_French_to}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%\newline
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%% 80% Sparsity CER for Eng, Soa, Ast, Xho %%%%%%%%%%%%%%
+\begin{table}
+\centering
+\begin{tabular}{llllll}
+& \\ \cline{2-6} \\[-2.3ex] 
+& \multicolumn{5}{c}{\textbf{CER (\%) at 80\% Sparsity}}  \\[0.75ex] \cline{2-6} \\[-2.35ex]
+& \multicolumn{5}{c}{\textbf{Language}}  \\[0.5ex] \hline
+\multicolumn{1}{l|}{\textbf{Model / Subnet}} & \multicolumn{1}{l}{\textbf{En}} & \multicolumn{1}{l}{\textbf{Es}} & \multicolumn{1}{l}{\textbf{As}} & \multicolumn{1}{l}{\textbf{Xh}} & \multicolumn{1}{l}{\textbf{Avg}} \\ \hline
+\multicolumn{1}{r|}{\textbf{En / En}} & \multicolumn{1}{l}{\textbf{14.73}} & \multicolumn{1}{l}{14.37} & \multicolumn{1}{l}{23.21} & \multicolumn{1}{l}{13.55} & 16.47 \\ %\hline
+\multicolumn{1}{r|}{\textbf{En / Es}} & \multicolumn{1}{l}{17.48} & \multicolumn{1}{l}{52.33} & \multicolumn{1}{l}{-} & \multicolumn{1}{l}{-} & - \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / Es}} & \multicolumn{1}{l}{52.56} & \multicolumn{1}{l}{15.71} & \multicolumn{1}{l}{24.85} & \multicolumn{1}{l}{24.67} & 29.45 \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / En}} & \multicolumn{1}{l}{17.34} & \multicolumn{1}{l}{\textbf{8.03}} & \multicolumn{1}{l}{-} & \multicolumn{1}{l}{-} & - \\ \hline
+\end{tabular}
+\caption{\textbf{Upstream English and Spanish models trained with exchanged subnetworks at 80\% sparsity} we test the effect of pruning with a Spanish subnetwork on an English upstream model and an English subnetwork on a Spanish upstream model across multiple languages at 80\% sparsity. Values for Xhosa and Asturian were not collected at 80\% for En/Es and Es/En at the time of publishing this data.}%\\[-3.6ex]}
+\label{app_tab:70perc_English_Mask_Results}
+%\end{table*}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% 70% Mixed models table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}
+\centering
+\begin{tabular}{llll}
+\cline{2-4} \\[-1.5ex] 
+ & \multicolumn{3}{c}{\textbf{CER (\%) at 70\% Sparsity }} \\ \cline{2-4}{} \\[-1.5ex]
+ & \multicolumn{3}{c}{\textbf{Language}} \\[0.5ex] \hline
+\multicolumn{1}{l|}{\textbf{Model / Subnet}} & \multicolumn{1}{l}{\textbf{En}} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{\textbf{Es}}  \\ \hline
+\multicolumn{1}{r|}{\textbf{En / En}} & \multicolumn{1}{l}{11.74} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{6.61}   \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / Es}} & \multicolumn{1}{l}{28.28} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{10.87}  \\ %\hline
+\multicolumn{1}{r|}{\textbf{En / EnEs}} & \multicolumn{1}{l}{\textbf{11.32}} & \multicolumn{1}{l}{} &\multicolumn{1}{l}{\textbf{6.24}} \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / EnEs}} & \multicolumn{1}{l}{21.78} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{10.91}   \\ \hline 
+\end{tabular}
+\caption{\textbf{Upstream English and Spanish models trained with mixed weight subnetworks at 70\% sparsity} we test the effect of combining the surviving weights across Spanish and English subnetworks after pruning at 70\% sparsity}%\\[-8ex]}
+\label{app_tab:70perc_EnglishSpanish_Mixed_Mask}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%% 80% mixed models table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}
+\centering
+\begin{tabular}{llll}
+\cline{2-4} \\[-1.5ex] 
+ & \multicolumn{3}{c}{\textbf{CER (\%) at 80\% Sparsity }} \\ \cline{2-4}{} \\[-1.5ex]
+ & \multicolumn{3}{c}{\textbf{Language}} \\[0.5ex] \hline
+\multicolumn{1}{l|}{\textbf{Model / Subnet}} & \multicolumn{1}{l}{\textbf{En}} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{\textbf{Es}}  \\ \hline
+\multicolumn{1}{r|}{\textbf{En / En}} & \multicolumn{1}{l}{14.73} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{\textbf{14.37}}   \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / Es}} & \multicolumn{1}{l}{52.56} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{15.71}  \\ %\hline
+\multicolumn{1}{r|}{\textbf{En / EnEs}} & \multicolumn{1}{l}{\textbf{14.44}} & \multicolumn{1}{l}{} &\multicolumn{1}{l}{16} \\ %\hline
+\multicolumn{1}{r|}{\textbf{Es / EnEs}} & \multicolumn{1}{l}{31.16} & \multicolumn{1}{l}{} & \multicolumn{1}{l}{15.72}   \\ \hline 
+\end{tabular}
+\caption{\textbf{Upstream English and Spanish models trained with mixed weight subnetworks at 80\% sparsity} we test the effect of combining the surviving weights across Spanish and English subnetworks after pruning at 80\% sparsity}%\\[-8ex]}
+\label{app_tab:80perc_EnglishSpanish_Mixed_Mask}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%          Start of Chapter 5 Appendix        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \section{Chapter 5 }\label{app_sec:chapter_5_appendix}
 %\clearpage
 %\info{How should I label the Appendices? do they need more of a title?}
@@ -16,6 +108,7 @@
     \label{app_fig:multilingual_linegraph}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 

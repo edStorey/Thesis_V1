@@ -12,9 +12,51 @@
   doi={10.1109/ICASSP40776.2020.9053889}}
 
 
+%%% Wav2Letter
+%%% A CNN based acoustic encoder with a beam search LM decoder
+%%% Made by meta/facebook
+@article{collobert2016wav2letter,
+  title={Wav2letter: an end-to-end convnet-based speech recognition system},
+  author={Collobert, Ronan and Puhrsch, Christian and Synnaeve, Gabriel},
+  journal={arXiv preprint arXiv:1609.03193},
+  year={2016}
+}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Linguistics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% DeepSpeech 2
+@InProceedings{amodei16_deepeech2,
+  title = 	 {Deep Speech 2 : End-to-End Speech Recognition in English and Mandarin},
+  author={Amodei, Dario and Ananthanarayanan, Sundaram and Anubhai, Rishita and Bai, Jingliang and Battenberg, Eric and Case, Carl and Casper, Jared and Catanzaro, Bryan and Cheng, Qiang and Chen, Guoliang and others},
+  booktitle = {Proceedings of The 33rd International Conference on Machine Learning},
+  pages = {173--182},
+  year = 	 {2016},
+  editor = 	 {Balcan, Maria Florina and Weinberger, Kilian Q.},
+  volume = 	 {48},
+  series = 	 {Proceedings of Machine Learning Research},
+  address = 	 {New York, New York, USA},
+  month = 	 {20--22 Jun},
+  publisher =    {PMLR},
+}
+
+  %author = 	 {Amodei, Dario and Ananthanarayanan, Sundaram and Anubhai, Rishita and Bai, Jingliang and Battenberg, Eric and Case, Carl and Casper, Jared and Catanzaro, Bryan and Cheng, Qiang and Chen, Guoliang and Chen, Jie and Chen, Jingdong and Chen, Zhijie and Chrzanowski, Mike and Coates, Adam and Diamos, Greg and Ding, Ke and Du, Niandong and Elsen, Erich and Engel, Jesse and Fang, Weiwei and Fan, Linxi and Fougner, Christopher and Gao, Liang and Gong, Caixia and Hannun, Awni and Han, Tony and Johannes, Lappi and Jiang, Bing and Ju, Cai and Jun, Billy and LeGresley, Patrick and Lin, Libby and Liu, Junjie and Liu, Yang and Li, Weigao and Li, Xiangang and Ma, Dongpeng and Narang, Sharan and Ng, Andrew and Ozair, Sherjil and Peng, Yiping and Prenger, Ryan and Qian, Sheng and Quan, Zongfeng and Raiman, Jonathan and Rao, Vinay and Satheesh, Sanjeev and Seetapun, David and Sengupta, Shubho and Srinet, Kavya and Sriram, Anuroop and Tang, Haiyuan and Tang, Liliang and Wang, Chong and Wang, Jidong and Wang, Kaifu and Wang, Yi and Wang, Zhijian and Wang, Zhiqian and Wu, Shuang and Wei, Likai and Xiao, Bo and Xie, Wen and Xie, Yan and Yogatama, Dani and Yuan, Bin and Zhan, Jun and Zhu, Zhenyao},
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Datasets %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@INPROCEEDINGS{aesrc2020,
+  author={Shi, Xian and Yu, Fan and Lu, Yizhou and Liang, Yuhao and Feng, Qiangze and Wang, Daliang and Qian, Yanmin and Xie, Lei},
+  booktitle={ICASSP 2021 - 2021 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={The Accented English Speech Recognition Challenge 2020: Open Datasets, Tracks, Baselines, Results and Methods}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={6918-6922},
+  keywords={Training;Conferences;Speech recognition;Signal processing;Acoustics;Speech processing;Accented speech recognition;accent recognition;acoustic modeling;end-to-end ASR},
+  doi={10.1109/ICASSP39728.2021.9413386}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Linguistics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Principles of Phonology - book for minimal pairs
 @book{trubetzkoy1969principles,
   title={Principles of Phonology},
@@ -22,3 +64,85 @@
   year={1969},
   publisher={University of California Press}
 }
+
+%%% A comparitive analysis of Spanish and English
+@article{zhang_compartitive_spa_eng,
+author = {Zhang, Hanwen},
+year = {2023},
+month = {12},
+pages = {97-103},
+title = {A Comparison Analysis of Spanish Phonological System and English Phonological System},
+volume = {21},
+journal = {Communications in Humanities Research},
+doi = {10.54254/2753-7064/21/20231430}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Layer Analysis of Supervised Learning Models %%%%%%%%%%
+%%%%%  Probing Deepspeech for speech representations on L1 accented English they find that later layers have the best phoneme recognition, middle layers recognise accent the best and the early layers contain high mututal information
+%%% "most accent information is encoded within the first recurrent layer, which is suggestive of how one could adapt such an end-to-end model to learn representations that are invariant to accents."
+@inproceedings{prasad2020accents,
+  title={How accents confound: Probing for accent information in end-to-end speech recognition systems},
+  author={Prasad, Archiki and Jyothi, Preethi},
+  booktitle={Proceedings of the 58th annual meeting of the association for computational linguistics},
+  pages={3739--3753},
+  year={2020}
+}
+
+%%%%  Layer wise analysis of DeepSpeech 2 CNN into RNNT they find the first CNN layer is good at phoneme representations and then the RNNT's get better as they go towards the deepest layers
+@article{belinkov2017analyzing,
+  title={Analyzing hidden representations in end-to-end automatic speech recognition systems},
+  author={Belinkov, Yonatan and Glass, James},
+  journal={Advances in Neural Information Processing Systems},
+  volume={30},
+  year={2017}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Layer Freezing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Freezing the shallow ("bottom") layers of Wav2Letter (a CNN based model) for cross-lingual training.
+@inproceedings{kunze2017transfer,
+  title={Transfer Learning for Speech Recognition on a Budget},
+  author={Kunze, Julius and Kirsch, Louis and Kurenkov, Ilia and Krug, Andreas and Johannsmeier, Jens and Stober, Sebastian},
+  booktitle={Proceedings of the 2nd Workshop on Representation Learning for NLP},
+  pages={168--177},
+  year={2017}
+}
+
+
+
+%%%%%%%%%%%%%%%%% Transfer Learning %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Cross-lingual Transfer learning
+%%%%%%%%%%%%%% Nvidia paper that examines cross-lingual transfer learning to preserve features from the original training data, the original training data incldues AAVE accents, cross-lingual transfers and cross-domain transfers
+@inproceedings{luo2021cross,
+  title={Cross-language transfer learning and domain adaptation for end-to-end automatic speech recognition},
+  author={Luo, Jian and Wang, Jianzong and Cheng, Ning and Xiao, Edward and Xiao, Jing and Kucsko, Georg and O’Neill, Patrick and Balam, Jagadeesh and Deng, Slyne and Flores, Adriana and others},
+  booktitle={2021 IEEE International Conference on Multimedia and Expo (ICME)},
+  pages={1--6},
+  year={2021},
+  organization={IEEE}
+}
+
+%%%% Testing various versions of wav2vec 2.0 and xlsr on their ability to transfer to MLS subsets, they do not test on upstream wav2vec non-english 
+@inproceedings{khurana2022magic,
+  title={Magic dust for cross-lingual adaptation of monolingual wav2vec-2.0},
+  author={Khurana, Sameer and Laurent, Antoine and Glass, James},
+  booktitle={ICASSP 2022-2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={6647--6651},
+  year={2022},
+  organization={IEEE}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% Language Identification  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% old article from 1996 that compares different approaches to language identification in ASR
+@article{zissman1996comparison,
+  title={Comparison of four approaches to automatic language identification of telephone speech},
+  author={Zissman, Marc A and others},
+  journal={IEEE Transactions on speech and audio processing},
+  volume={4},
+  number={1},
+  pages={31},
+  year={1996}
+}
+
+

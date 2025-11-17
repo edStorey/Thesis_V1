@@ -1,0 +1,60 @@
+
+\documentclass[a4paper,12pt]{article}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+
+\title{Chapter Overview: Multilingual Pretraining for Accented English ASR}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\begin{itemize}
+\item Challenge: Accented English ASR, especially L2 speakers
+\item AESRC2020: 10 accents (6 L2)
+\item Hypothesis: Multilingual pretraining improves L2 English ASR
+\item Model: QuartzNet 15x5 with CTC Loss
+\end{itemize}
+
+\section{Dataset and Tools}
+\begin{itemize}
+\item AESRC2020 accents: CN, ES, IN, JP, KR, RU (L2)
+\item Pretraining: LibriSpeech (EN), MLS (ES), AISHELL-2 (ZH)
+\item Metrics: WER, IWER
+\item Toolkits: NeMo, QuartzNet
+\end{itemize}
+
+\section{Experimental Design}
+\begin{itemize}
+\item Baseline: EN pretrained → AESRC2020
+\item Cross-lingual Pretraining (ES, ZH)
+\item Accent-specific Finetuning
+\item Layer Freezing / Selective Unfreezing
+\item Data Augmentation + Forgetting tests
+\end{itemize}
+
+\section{Results Summary}
+\begin{itemize}
+\item Mixed improvements with ES/ZH pretraining
+\item Freezing lower layers preserved upstream features
+\item Catastrophic forgetting observed
+\end{itemize}
+
+\section{Discussion}
+\begin{itemize}
+\item L1→L2 transfer: limited benefit
+\item Layer-wise findings: top layers lexical adaptation
+\item No consistent gain from conformers, augmentation
+\item Framework enabled further insights
+\end{itemize}
+
+\section{Conclusion and Future Work}
+\begin{itemize}
+\item Led to pivot toward multilingual SSL
+\item Findings shaped subsequent chapters
+\end{itemize}
+
+\end{document}
