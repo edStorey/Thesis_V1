@@ -6,7 +6,7 @@
 
 %\chapter{LANGUAGE BIAS IN SELF-SUPERVISED LEARNING FOR AUTOMATIC SPEECH RECOGNITION}
 \chapter{Language Bias in Self-Supervised Learning for Automatic Speech Recognition}
-\label{workchapter2}%% Change label when proper section title has been decieded
+\label{chapter4}%% Change label when proper section title has been decieded
 
 %\name[affiliation={1,2}]{Edward}{Storey}
 %\name[affiliation={1}]{Naomi}{Harte}
@@ -61,7 +61,7 @@ Self-supervised learning (SSL) is used in deep learning to train on large datase
     \item XLS-R reports good results but is it actually better, the size and pretraining data are a deciding factor but what are they doing and how are they learning?
 \end{itemize}
 \fi
-In the previous chapter we explored Automatic Speech Recognition (ASR) through a small Convolutional Neural Network (CNN) model with a low parameter count. We explored how to make efficient training datasets for small ASR models in order to improve accuracy of second language (L2) accented speech. In order to improve L2 speech from first language (L1) Spanish speakers speaking L2 English we trained Quartznet 15x5 \cite{quartznet} on data that contained mixed training data from both Spanish and English in order to introduce models to phonemes may exist as minimal pairs \cite{trubetzkoy1969principles, zhang_compartitive_spa_eng}\info{principles of phonology. Added after sending to naomi: comparative analysis of spanish and english} in L2 English from an L1 Spanish speaker. We found that by mixing datasets Quartznet 15x5 suffered higher error rates in both languages and on L2 accented English. 
+In the previous chapter we explored Automatic Speech Recognition (ASR) through a small Convolutional Neural Network (CNN) model with a low parameter count. We explored how to make efficient training datasets for small ASR models in order to improve accuracy of second language (L2) accented speech. In order to improve L2 speech from first language (L1) Spanish speakers speaking L2 English we trained Quartznet 15x5 \cite{quartznet} on data that contained mixed training data from both Spanish and English in order to introduce models to phonemes may exist as minimal pairs \cite{trubetzkoy1969principles, zhang_compartitive_spa_eng}\info{principles of phonology. Added after sending to naomi: comparative analysis of spanish and english} in L2 English from an L1 Spanish speaker. We found that by mixing datasets Quartznet 15x5 suffered higher error rates in both languages and on L2 accented English. \thoughts{somewhere in this introduction we need to add a reference to my paper \cite{storeyedbiasSSL}}
 
 %By using large transformer based models with a high parameter count more specific information can be stored in a model due to the model scalability hypothesis \cite{zhang2022bigssl, pu21_interspeech}. Due to this hypothesis state of the art ASR models scale to hundreds of millions of parameters and utilise Self-Supervised Learning (SSL) to process much larger datasets and retain more information \cite{wav2vec, chen2022wavlm, whisper}. Research published during the undertaking of the research in Chapter \ref{WC1}\info{previous chapter on QuartNet} shows how transformers and SSL can improve multilingual learning and downstream error rates for multiple languages in one model by using large transformer based SSL ASR models \cite{XLSR-53, babu2021xlsr}. 
 
