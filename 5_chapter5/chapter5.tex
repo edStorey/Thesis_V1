@@ -361,9 +361,9 @@ Once we have the results of our finetuning experiments, we can assess how pretra
 
 Pasad et al.\ show that SSL pretraining does not learn semantic or lexical tasks and instead learns acoustic and phonetic structure in the lower and middle layers \cite{pasad2021layer}. If our predictions about the impact of pretraining language balance on finetuned ASR are correct, then these acoustic and phonetic representations have a strong effect on downstream performance. We therefore need to analyse the pretrained models directly, rather than relying only on word-level error after finetuning. Prior work shows that pretrained SSL ASR models can support accurate phoneme recognition when probed with simple classifiers \cite{english2022domain}. We use phoneme-level probing to measure which phoneme groups are learned best under different pretraining language balances. We also use it to test how matched, low-resource, and mismatched pretraining conditions affect the quality of the learned phonetic representations.
 
-
-\subsection{Forced Alignment and Phoneme Accuracy}
 \iffalse
+\subsection{Forced Alignment and Phoneme Accuracy}
+
 In order to evaluate phoneme accuracy in our pretrained models, we train linear layer probes to recognise phonemes at a frame level. To obtain frame level phoneme labels we use the Montreal Forced Aligner (MFA) \cite{mcauliffe2017montreal} and apply it to 10 hour subsets of LibriSpeech, MLS Spanish and MLS French that were compiled using the gender balanced approach as in Section \ref{ed_seubsec:exp_des_probing}. The dictionaries used for phoneme alignment were english\_us\_mfa, spanish\_spain\_mfa, French\_mfa and polish\_mfa. For alignment each dictionary has a dictionary of words and the phoneme's used to pronounce them, each 10 hour training subset had some words that were Out Of Vocabulary (OOV). For the LibriSpeech 10 hour subset there were 0.75\% OOV words, for the MLS Spanish 10 hour subset 7.7\% words were OOV, MLS French 10 hour subset 7\% of the words were OOV and for MLS Polish 10 hour subset 4\% of words were OOV. To include OOV words in the dictionary we used the Grapheme to Phoneme (G2P)\footnote{\href{https://mfa-models.readthedocs.io/en/latest/g2p/index.html\#g2p}{mfa-models.readthedocs.io/en/latest/g2p/index.html\#g2p}} models to create pronunciations dictionaries and added them to a custom dictionary with the all the words from the original dictionaries that was then used to phonetically transcribe each of the datasets. Phoneme transcriptions were done for the whole 960 hour Librispeech training set and the 920 hour MLS Spanish training set in order to analyse the phonetic makeup of the pretraining data. OOV words were also transcribed using G2P models for the LibriSpeech 960 hour training set 0.88\% of words were OOV and for the 920 hour MLS Spanish training set 8.63\% were OOV. 
 
 \hl{this next part was removed from ealier subsection I could use it here}
@@ -382,17 +382,11 @@ We also run MFA on the full 960-hour LibriSpeech training set and the 920-hour M
 
 %\newpage
 \subsection{Layer Probing}\label{ed_seubsec:exp_des_probing}
-To train our layer-wise probes for phoneme accuracy, we used the same parameters as English et al. \cite{english2022domain}. We use a two layer probe taking as input the hidden states of each layer of the wav2vec 2.0 encoder and as output the phonemes included in the dataset. The input for all probes is the same size as the output to each transformer block in the wav2vec 2.0 encoder, 768 inputs.
-
-%%%%%%%%%%%%%%%
-
 We follow English et al. \cite{english2022domain} and train layer-wise probes to estimate phoneme accuracy from wav2vec~2.0 representations. Each probe is a two-layer feed-forward network that takes as input the hidden states from a single transformer layer of the wav2vec~2.0 encoder. The input size to each probe is 768, the dimension of each transformer block, and predicts a phoneme label for each frame. During probe training the wav2vec~2.0 encoder is kept frozen, and probes are trained with the Adam optimiser, a learning rate of \(1e-3\) and using cross-entropy loss.
 
-%%%%%%%%%%
+To construct training data for the probes, we segment each utterance into windows and extract frame-level features using the wav2vec~2.0 feature encoder. These features are paired with the aligned phoneme label for each frame and collated into a dataloader. For each pretrained model, we pass the features through the encoder and record the output of each of the 12 transformer layers. We then train 12 separate probes per model, one for each layer, to predict phoneme labels for each frame.
 
-To train the probes, we separate each utterance into windowed audio and extract the features with the model's feature extractor. The extracted features are then collated into a dataloader alongside the phoneme in that frame. Each set of extracted features is iteratively fed into the encoder of each model, and the output of each layer is extracted. The outputs of each of the 12 wav2v2ec 2.0 layers are then used to train 12 separate probes, one for each layer. Cross entropy loss is then used to match the phoneme at that frame with the output of each probe. 
-
-For testing, we will use both a small 10 hour subset of LibriSpeech and a larger 100 hour subset of LibriSpeech. We found that both datasets started to overfit after 5 epochs of training. We also found that when the probes were trained on the 100 hour subset of LibriSpeech, that the average phoneme accuracy was higher but the training time was longer. When training the probes on the 10 hour subset the training time was drastically reduced and while the overall accuracy was lower, the relationship between the accuracy of each category of phoneme was unchanged. Due to these findings we used 10 hours subsets of each of the larger datasets as a compromise for time and accuracy for training our probes.
+We experimented with training probes on both a 10-hour subset and a 100-hour subset of LibriSpeech. In both cases, probes begin to overfit after five epochs, so we fix the number of training epochs to five. Probes trained on the 100-hour subset achieve higher absolute phoneme accuracy but require substantially longer training time. Probes trained on the 10-hour subset converge much faster, and although their absolute accuracy is lower, the relative accuracy between different phoneme categories is unchanged. As a compromise, we therefore use 10-hour subsets of each corpus to train all probes.
 
 \begin{table}[h]
 \centering
@@ -411,12 +405,95 @@ For testing, we will use both a small 10 hour subset of LibriSpeech and a larger
 0 / 920 & Layer 4 & 34.1\% & Layer 5 & 62.2\% \\
 \bottomrule
 \end{tabular}
-\caption{Table of the layers with the highest average accuracy after probing and the phoneme accuracy found on this layer for both English and Spanish. The wav2vec 2.0 encoder has 12 transformer layers with the first being layer 0 and the 12th being layer 11.}
+\caption{Layers with the highest average accuracy after probing and the phoneme accuracy found on this layer for both English and Spanish. The wav2vec 2.0 encoder has 12 transformer layers, layer 0 to 11.}
 \label{ed_tab:best_layer_average_accuracy}
 \end{table}
+\hl{is this correct? the values seem very low for english??}
 
-Table \ref{ed_tab:best_layer_average_accuracy} shows the layers with the highest mean average accuracy for each model when tested on the two pretraining languages, English and Spanish. We see in Table \ref{ed_tab:best_layer_average_accuracy} that the most common layer with the highest accuracy for the English dataset is layer 7 with the second most common being layer 6. For the Spanish dataset, the most common highest accuracy layer is layer 5 and the second most common is layer 7. These results are consistent with previous research that suggests that layers in this range have the highest accuracy for phoneme recognition \cite{english2022domain, pasad2021layer}. The probing results in the graphs in Section \ref{ed_sec:shared_vs_not_shared} and Section \ref{ed_sec:phonemes_classes} chose a single layer to take accuracy results from, in this case we chose layer 7 for all languages tested as it has consistently high accuracy for both datasets and is consistent with English et al. \cite{english2022domain}. 
+%\paragraph{Best-performing layers.}
+Table~\ref{ed_tab:best_layer_average_accuracy} shows, for each pretrained model, the encoder layer with the highest mean phoneme accuracy on English and Spanish, respectively. For English, the highest-accuracy layer is most often layer~7, with layer~6 as the second most frequent. For Spanish, layer~5 is most often best, followed by layer~7. This pattern is consistent with previous work, which also finds peak phoneme recognition performance in middle layers of wav2vec~2.0 \cite{pasad2021layer,english2022domain}. We therefore chose to report results from layer 7 for all phoneme accuracy results across all languages and models.
 
+\subsection{Language-Membership Phoneme Groups}\label{ed_subsec:lang_membership_groups}
+
+Our first set of probing experiments looks at how pretraining language balance affects phoneme recognition. We look at phonemes that English and Spanish share, and phonemes that are specific to one of the two languages. We obtain these groups by comparing the phoneme symbol lists defined in the English and Spanish MFA pronunciation dictionaries. First, we calculate the intersection of the two lists and treat this intersection as the set of phonemes shared by both languages. Symbols that are in the English list but not in the Spanish list are treated as English‑unique phonemes. Then, symbols that are in the Spanish list but not in the English list are treated as Spanish‑unique phonemes. The resulting groups are:
+
+\begin{itemize}
+    \item \textbf{Shared-English}: phonemes that are in both the English and Spanish dictionaries, evaluated on English speech.
+    \item \textbf{Shared-Spanish}: phonemes that are in both the English and Spanish dictionaries, evaluated on Spanish speech.
+    \item \textbf{English-unique}: phonemes that are in the English dictionaries but not in the Spanish dictionary, evaluated on English speech.
+    \item \textbf{Spanish-unique}: phonemes that are in the Spanish dictionaries but not in the English dictionary, evaluated on Spanish speech.
+\end{itemize}
+\thoughts{I will have to remember to regenerate the graphs for this section with this new naming convention}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l r r r r}
+        \hline
+        Set & Total & Shared (En+Es) & English-unique & Spanish-unique \\
+        \hline
+        Pretraining (En) & 80
+                         & 26 & 54 & -- \\
+        Pretraining (Es) & 36
+                         & 26 & --            & 10 \\
+        Probe train (En) & 80
+                         & 26 & 54 & -- \\
+        Probe test (En)  & 77 
+                         & 26 & 51 & -- \\
+        Probe train (Es) & 36
+                         & 26 & -- & 10 \\
+        Probe test (Es)  & 36
+                         & 26  & --               & 10 \\
+        \hline
+    \end{tabular}
+    \caption{Number of phoneme types per set and per group in the English and Spanish pretraining corpora and probe train/test sets. “Total” counts all phoneme types observed in that set; the remaining columns show how these totals divide into shared and language-unique groups.}
+    \label{tab:phoneme_group_sizes_en_es}
+\end{table}
+
+
+In the next step, we extend this analysis to French and Polish. For these languages, we first build a single reference inventory that reflects everything the model could have seen during pretraining. We do this by taking the union of the English and Spanish pretraining phoneme sets, which gives us one combined set containing all phonemes that appear in either English or Spanish pretraining data. This is different from the shared and language‑unique groups defined above, which separate phonemes into “in both languages” and “in only one language”. Here, we only care whether a phoneme was present in at least one of the pretraining languages.
+
+Using this combined English+Spanish inventory, we then define two types of groups for French and Polish. The first type captures phonemes that are already familiar from pretraining:
+\begin{itemize}
+    \item  \textbf{Overlap with En/Es (Fr)}: phonemes that appear both in the combined English+Spanish inventory and in the French inventory, evaluated on French speech.
+    \item  \textbf{Overlap with En/Es (Pl)}: phonemes that appear both in the combined English+Spanish inventory and in the Polish inventory, evaluated on Polish speech.
+\end{itemize}
+The second type captures phonemes that are absent from the English and Spanish pretraining data:
+\begin{itemize}
+    \item \textbf{French-unique}: phonemes that appear in the French inventory but in neither the English nor Spanish pretraining inventories, evaluated on French speech.
+    \item \textbf{Polish-unique}: phonemes that appear in the Polish inventory but in neither the English nor Spanish pretraining inventories, evaluated on Polish speech.
+\end{itemize}
+
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l r r r r}
+        \hline
+        Set & Total & Overlap with En/Es & French-unique & Polish-unique \\
+        \hline
+        Probe train (Fr) & 45
+                         & 35  & 10  & -- \\
+        Probe test (Fr)  & 45
+                         & 35  & 10  & -- \\
+        Probe train (Pl) & 51
+                         & 32  & --  & 19 \\
+        Probe test (Pl)  & 51
+                         & 32  & --  & 19 \\
+        \hline
+    \end{tabular}
+    \caption{Number of phoneme types per group in the French and Polish probe train/test sets. “Overlap with En/Es” counts phonemes that occur both in the combined English+Spanish pretraining inventory and in the French or Polish inventory; “French-unique” and “Polish-unique” count phonemes that occur only in the French or Polish inventory and not in the combined English+Spanish inventory.}
+    \label{tab:phoneme_group_sizes_fr_pl}
+\end{table}
+
+For French and Polish, the overlap group consists of phonemes that appear in the union of the English and Spanish pretraining phoneme sets and also appear in the French (or Polish) phoneme set; the language‑unique groups contain phonemes that appear only in French or only in Polish and not in the combined English+Spanish set.
+
+\hl{THIS IS THE NEXT SECTION TO REWRITE}
+
+Table \ref{ed_tab:phoneme_group_sizes} shows the number of phonemes in each group and, for the shared groups, how many of those phonemes occur in each evaluation language. For each pretrained model and each phoneme group, we calculate the accuracy in two steps. First, we get the probe accuracy for each individual phoneme in the group. Then we take the mean of these phoneme accuracies to obtain the average accuracy for that group. For English and Spanish, we evaluate both their shared and language-unique groups. For French and Polish, we compare the shared English Spanish group with the French-unique and Polish-unique groups.
+
+The shared English Spanish inventory contains many more phonemes than, for example, the Spanish-unique group, and the English MFA dictionary in general has a larger phoneme inventory than the other languages. This means that group accuracies are averaged over different numbers of phonemes, and small groups (such as Spanish-unique) may be more affected by noise or outlier results.\thoughts{I will need to rewrite this when I have the numbers in the above graph because I don't know how the absolute and potential number of phonemes interact}
+
+For French and Polish, we do not include “English-unique” or “Spanish-unique” groups in the analysis. None of the Spanish-unique phonemes appear in the French or Polish inventories, so these segments cannot be evaluated in those languages. English-unique phonemes do appear in French and Polish, so it would be possible to define “English-unique in French” and “English-unique in Polish” groups to study transfer of English-specific segments. In this chapter, we focus instead on two contrasts that are more directly tied to our pretraining setup: (i)\thoughts{I don't use (i) or (ii)} phonemes that are shared by the English–Spanish pretraining pair and reused in French and Polish, and (ii) phonemes that are unique to French or Polish and absent from the English and Spanish pretraining inventories.\thoughts{either I need to get rid of this paragraph or I need to re do the experiments with all English and Spanish phonemes rather than just the intersection phonemes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Metrics and Evaluation Criteria}
 Here we list out all for the metrics used to track loss and evaluation during and after pretraining, finetuning and training our probes. For SSL pretraining we monitor progress on the model through contrastive loss and every 10k updates we finetune to evaluate the Word Error Rate (WER) to keep consistent with the fairseq pretraining tutorial evaluation metrics. For all finetuning experiments we train using Connectionist Temporal Classification (CTC) Loss and evaluate after training using Character Error Rate (CER) to keep consistent with the FLEURs finetuning experiments in Chapter \ref{chapter4}. For training our layer-wise probes we train each probe using Cross-Entropy Loss and then evaluate the probes after training using phoneme accuracy to keep consistent with previous work \cite{english2022domain}.
 
@@ -493,6 +570,7 @@ In Figure \ref{ed_fig:multilingual_barchart} we see that the most positive chang
     \caption{Phoneme accuracy taken at layer 7 of each of our models for English and Spanish data. The phonemes are split into groups of phoneme that are either shared between Spanish and English languages or phonemes that are unique to either English or unique to Spanish.}
     \label{ed_fig:phonemes_shared_not_shared}
 \end{figure}
+\thoughts{need to regeneerate with number of phonemes in each group}
 
 Figure \ref{ed_fig:phonemes_shared_not_shared} shows the phoneme accuracy gathered from our probing experiments outlined in Section \ref{ed_seubsec:exp_des_probing} full lists of the phonemes measured and their accuracy for each language can be found in Appendix \ref{app_sec:chapter_5_appendix}. We separate our phonemes into four different groups of phonemes and take the average accuracy on each model for each group. The phoneme groups are: English-Only, English-Shared, Spanish-Only and Spanish-Shared. English-Only contains phonemes that are only found in the English dataset and Spanish-Only contains phonemes that are only found in the Spanish dataset. The phonemes in the English-Only and Spanish-Only groups are then phonemes that only exist in each language and are only tested on the relevant language, i.e. English-Only are only tested on English data. The values in Figure \ref{ed_fig:phonemes_shared_not_shared} are the mean average of all the phonemes in each group when tested on each of the models outlined in Section \ref{ed_subsec:datsets}. %A list of the phonemes found in the English-Only and Spanish-Only groups can be found in Appendix \ref{app_sec:chapter_5_appendix} Table \ref{app_tab:phonemes_only_groups}.
 
