@@ -272,7 +272,7 @@ Word identity and word meaning are both low in accuracy in the pretrained model 
 
 It is worth noting that De\naominote{It is worth noting that... [Done]} Heer Kloots et al. \cite{deheerkloots25_interspeech} undertook work published in the Interspeech 2025 proceedings that pretrained a monolingual Dutch wav2vec 2.0 model for analysis. They pretrain a wav2vec 2.0 model using fairseq \cite{ott-etal-2019-fairseq} for 100k steps on Dutch speech data from various sources. They compare this model with the \textbf{fb-en} model trained by meta on LibriSpeech for 400k steps and \textbf{fb-voxp-100k} a multilingual model trained on 100k hours of voxpopuli data \cite{wang-etal-2021-voxpopuli}. They then train probes to analyse for phonetic analysis and lexical analysis and compare these findings against downstream finetuned ASR performance. They found that pretraining on Dutch data gave higher accuracy for  both phonetic and lexical tasks, to varying degrees. Their work was undertaken in parallel with the research in this chapter and published after our work was completed.\naominote{Rephrase. Say in this chapter to distinguish [Done]} It did not influence any decisions made during our research. In Section \ref{ed_sec:discussion} we consider our results in the context of their findings.\thoughts{Don't forget this bit it may need rewording when the discussion is written} \naominote{In Section X, we consider our results in the context of their findings.[Done]}\naominote{Don't just ignore.}
 
-\subsection{Layer Probing for Phoneme Recognition}
+\subsection{Layer Probing for Phoneme Recognition}\label{bac_subsec:layer_probing_articulation}
 English et al. devise experiments to study what kind of phonetic information is encoded in the internal representations of wav2vec 2.0 \cite{english2022domain}. They train linear layer probes  \cite{immer2021probing, schneiderleveraging} for phoneme recognition on the outputs of each layer of the pretrained wav2vec 2.0. This model is pretrained on the LibriSpeech 960 dataset \cite{librispeech} but not finetuned on any data, and the phonemes are taken from the TIMIT dataset \cite{timit}. English et al. find that wav2vec 2.0’s internal representations encode rich phonetic information, and that this information is not uniformly distributed across layers. This is similar to Pasad et al. \cite{pasad2021layer} who found that the middle transformer layers of wav2vec 2.0 contained the highest accuracy for phonetic tasks. \summary{This paragraph covers cormac's discover of pretrained being good for phoneme accuracy and the discover of layer 7 as the best layer}
 
 English et al. split phonemes into domain-informed groups such as manner of articulation and place of articulation and then analyse probe performance across these groups. They find that classification accuracy for both manner and place peaks around intermediate transformer layers (around layer 7). Their confusion heatmaps and hierarchical clustering show that the model’s representations increasingly align with phonetic structure as depth increases, up until layer 7. \hl{Cormac papers}\thoughts{I don't know that we need to go into detail here about cormac's other papers maybe we can do that in the background section} \summary{This paragraph summarises cormac's phoneme classes }
@@ -485,13 +485,64 @@ The second type captures phonemes that are absent from the English and Spanish p
 
 For French and Polish, the overlap group consists of phonemes that appear in the union of the English and Spanish pretraining phoneme sets and also appear in the French (or Polish) phoneme set; the language‑unique groups contain phonemes that appear only in French or only in Polish and not in the combined English+Spanish set.
 
-\hl{THIS IS THE NEXT SECTION TO REWRITE}
+Tables~\ref{tab:phoneme_group_sizes_en_es} and~\ref{tab:phoneme_group_sizes_fr_pl} summarise how many MFA phoneme tokens belong to each group in the pretraining and probe sets. These tokens include modified symbols such as stress and length variants. For English and Spanish, we use the shared and language-unique groups defined relative to their pretraining inventories. The shared groups contain phoneme tokens that appear in both English and Spanish pretraining data, so they are present under all matched- and mismatched-language finetuning conditions. In contrast, the language-unique groups contain tokens that are missing from one of the monolingual pretraining conditions. Phonemes in this group then occur in much smaller in low‑resource match or mismatched pretraining settings for that language. 
 
-Table \ref{ed_tab:phoneme_group_sizes} shows the number of phonemes in each group and, for the shared groups, how many of those phonemes occur in each evaluation language. For each pretrained model and each phoneme group, we calculate the accuracy in two steps. First, we get the probe accuracy for each individual phoneme in the group. Then we take the mean of these phoneme accuracies to obtain the average accuracy for that group. For English and Spanish, we evaluate both their shared and language-unique groups. For French and Polish, we compare the shared English Spanish group with the French-unique and Polish-unique groups.
+For each pretrained model, we compute an average group-level accuracy. First, we will compute the probe accuracy for each individual MFA phoneme token in the group. Then we take the mean of these phoneme accuracies to obtain the overall accuracy for that group. 
 
-The shared English Spanish inventory contains many more phonemes than, for example, the Spanish-unique group, and the English MFA dictionary in general has a larger phoneme inventory than the other languages. This means that group accuracies are averaged over different numbers of phonemes, and small groups (such as Spanish-unique) may be more affected by noise or outlier results.\thoughts{I will need to rewrite this when I have the numbers in the above graph because I don't know how the absolute and potential number of phonemes interact}
+English has the largest number of MFA phoneme tokens, with 80 distinct tokens in the English pretraining and probe sets, with 54 English-unique tokens and 26 tokens that are shared between English and Spanish. Spanish has the smallest set, with 36 phoneme tokens in total, split into 26 shared tokens and 10 Spanish-unique tokens. This difference partly reflects how the MFA dictionaries represent each language: English includes more phonetic variants, such as stress markers or nasalisation etc., creating more token types, whereas Spanish represents a smaller core phoneme inventory with less variation. A full list of MFA phoneme tokens for each language, together with their frequency in the corpora, is provided in Table \ref{app_tab:phoneme_counts_per_language_vaid_1}. 
 
-For French and Polish, we do not include “English-unique” or “Spanish-unique” groups in the analysis. None of the Spanish-unique phonemes appear in the French or Polish inventories, so these segments cannot be evaluated in those languages. English-unique phonemes do appear in French and Polish, so it would be possible to define “English-unique in French” and “English-unique in Polish” groups to study transfer of English-specific segments. In this chapter, we focus instead on two contrasts that are more directly tied to our pretraining setup: (i)\thoughts{I don't use (i) or (ii)} phonemes that are shared by the English–Spanish pretraining pair and reused in French and Polish, and (ii) phonemes that are unique to French or Polish and absent from the English and Spanish pretraining inventories.\thoughts{either I need to get rid of this paragraph or I need to re do the experiments with all English and Spanish phonemes rather than just the intersection phonemes}
+As a result, group-level accuracies are averaged over different numbers of phonemes, and smaller groups such as Spanish-unique or French-unique are more sensitive to the behaviour of individual phonemes. These differences in coverage are taken into account when interpreting the probe results in later sections. 
+
+For French and Polish, we define groups that are related to, but not identical with, the English–Spanish shared and unique groups. Here the main distinction is whether a phoneme token has been seen in any of the English or Spanish pretraining data. To capture this, we first build a combined pretraining inventory by taking all MFA phoneme tokens that occur in either English or Spanish pretraining. 
+
+For French and Polish, we are interested in how well the model can recognise individual phoneme tokens that were seen during English or Spanish pretraining, compared with phoneme tokens that were never seen in pretraining at all. To capture this, we build a combined pretraining inventory from all MFA phoneme tokens that occur in either English or Spanish pretraining. The overlap groups contain French or Polish tokens that also occur in this combined English and Spanish inventory, while the language-unique groups contain tokens that occur only in French or only in Polish and never occur in English or Spanish. This lets us compare recognition of phonemes that are familiar from pretraining, but evaluated in different languages, with phonemes that are completely unseen in pretraining. In the probe train and test sets, French has 45 MFA phoneme tokens, with 35 in the overlap group and 10 in the French-unique group, while Polish has 51 tokens, with 32 in the overlap group and 19 in the Polish-unique group. The exact token lists and their frequencies are also included in Table \ref{app_tab:phoneme_counts_per_language_train_10h_1}. 
+
+These experiments show how pretraining language balance affects recognition of phonemes defined by their presence or absence in the pretraining languages. However, they still treat all phonemes within each group as if they behaved in the same way. The next subsection therefore focuses on manner-of-articulation groups, using the findings of English et al. as motivation for analysing these classes separately \cite{english2022domain}, seen in  Section \ref{bac_subsec:layer_probing_articulation} for background. This allows us to test whether pretraining language balance has class-specific effects on phoneme representations. We also examine how these effects play out in languages where particular manners of articulation are more frequent or occur only in one language. 
+
+\iffalse
+\begin{table}[t]
+    \centering
+    \begin{tabular}{lp{7cm}p{6cm}}
+        \hline
+        \textbf{Group} & \textbf{Logical definition} & \textbf{Description} \\
+        \hline
+        Shared-English 
+        & English AND Spanish
+        & Phonemes that appear in English and Spanish. \\[4pt]
+
+        Shared-Spanish 
+        & English AND Spanish
+        & Phonemes that appear in English and Spanish. \\[4pt]
+
+        English-Unique 
+        & NOT English AND Spanish
+        & Phonemes that appear only in English. \\[4pt]
+
+        Spanish-Unique 
+        & NOT Spanish AND English
+        & Phonemes that appear only in Spanish. \\[6pt]
+
+        Overlap with En/Es (Fr) 
+        & French AND (English OR Spanish)
+        & French phonemes that are also present in English or Spanish. \\[4pt]
+
+        Overlap with En/Es (Pl) 
+        & Polish AND (English OR Spanish)
+        & Polish phonemes that are also present in English or Spanish. \\[6pt]
+
+        French-Unique 
+        & NOT French AND (English OR Spanish)
+        & Phonemes that appear only in French. \\[4pt]
+
+        Polish-Unique 
+        & NOT Polish AND (English OR Spanish)
+        & Phonemes that appear only in Polish. \\
+        \hline
+    \end{tabular}
+    \caption{Logical definitions of phoneme groups used in our analysis across English (En), Spanish (Es), French (Fr) and Polish (Pl).}
+    \label{tab:phoneme-groups}
+\end{table}
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Metrics and Evaluation Criteria}
