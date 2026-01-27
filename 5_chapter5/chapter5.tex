@@ -548,8 +548,10 @@ This section presents the results from the experiments outlined in Section \ref{
 
 
 \subsection{Effect of Pretraining Composition on Finetuning}\label{ed_subsec:same_data_finetuning}
+We begin by evaluating matched-language finetuning for each of the pretrained models introduced in Section~\ref{ed_pretraining_configuration}. In this subsection, all models are finetuned on 100~hours of labelled speech drawn from the same corpora used during pretraining. For English, we use LibriSpeech \cite{librispeech}, and for Spanish we use MLS Spanish \cite{MLS}; these datasets are covered in more detail in Section~\ref{ed_subsec:datsets}. This setup mirrors the original wav2vec~2.0 configuration, where a model is pretrained on 960~hours of LibriSpeech and then finetuned on smaller LibriSpeech subsets \cite{wav2vec}. Here we extend that idea to all of our English–Spanish pretraining monolingual and mixed‑language settings. We compare how different pretraining compositions affect downstream CER under otherwise comparable finetuning conditions. For more detailed information on our finetuning setup, see Section~\ref{ed_subsec:finetuning}.
 
-In this section we will evaluate the applied character level recognition when each of the models outlined in Section \ref{ed_pretraining_configuration} are finetuned to data from the datasets that they were pretrained on LibriSpeech and the Spanish subset of Multilingual Librispeech. The original wav2vec 2.0 model trained by meta is evaluated by first pretraining on the entire 960 hour LibriSpeech dataset and then finetuning to various smaller subsets of the same dataset. Figure \ref{ed_fig:fine_tuning_100hours} shows the results of finetuning each of our pretrained models to 100 hours of the either LibriSpeech or MLS Spanish data, both sets of data had already been seen in the pretraining data.
+Figure~\ref{ed_fig:fine_tuning_100hours} shows the results of this matched-language finetuning experiment. It shows the CER obtained after finetuning each pretrained model on 100~hours of LibriSpeech or 100~hours of MLS Spanish. The x-axis lists the pretraining composition in hours of English and Spanish, and the y-axis shows the resulting CER. Separate lines indicate finetuning on English and on Spanish, allowing us to compare how each pretraining mixture behaves when finetuned to 100~hours of matched-language data.
+
 
 \begin{figure}[h]
     \centering
@@ -557,8 +559,22 @@ In this section we will evaluate the applied character level recognition when ea
     \caption{CER when models pretrained with varying ratios of English and Spanish data are finetuned to 100 hours of English or 100 hours of Spanish data }
     \label{ed_fig:fine_tuning_100hours}
 \end{figure}%\label{fine_tuning_100hours}
-
+\iffalse
 Figure \ref{ed_fig:fine_tuning_100hours} shows the Character Error Rate (CER) results obtained after finetuning each of our pretrained models on 100 hours of labelled data from the same datasets used during pretraining—LibriSpeech (English) and MLS Spanish. When finetuning to English data from the 100 hour LibriSpeech subset we see that the lowest CER is on the model trained only on English LibriSpeech data and the highest CER is on the model is found on the model trained only on Spanish MLS data. When finetuning to the Spanish MLS 100 hour subset the lowest error is found on the model trained on 800 hours of MLS Spanish and 100 hours of English LibriSpeech, while the highest error is found on the model trained on 800 hours of English LibriSpeech and 100 hours of Spanish MLS data. The model trained on only English data also has some of the highest error when finetuning to Spanish and inversely the model trained only on Spanish has some of the lowest.
+\fi
+
+We see in Figure~\ref{ed_fig:fine_tuning_100hours} that, for LibriSpeech finetuning, CER is lowest for the English monolingual model and highest for the Spanish monolingual model. Between these models, we see the following: 800/100 has higher CER than 960/0, 600/300 is higher than 800/100, 450/450 is higher than 600/300, 300/600 is higher than 450/450, and 100/800 is higher than 300/600. This is a gradual CER increase with each step from left to right, as English-matched pretraining is replaced by more Spanish-mismatched pretraining. Each increase in mismatched Spanish data during pretraining raises CER on English.
+
+For MLS Spanish finetuning, a similar gradual change appears in the opposite direction. CER decreases consistently as we move from English high-resource pretraining towards Spanish high-resource pretraining. The highest CER is on the 800/100 model, followed by slightly lower CER on the English monolingual model, and the lowest CER on the 100/800 and Spanish monolingual models. The lowest and highest Spanish CER values therefore occur at 100/800 and 800/100 rather than at the monolingual models, unlike English. However, both languages follow the same broader high-resource pattern: CER is lowest when pretraining is high-resource and matched to the finetuning language, and highest when pretraining is high-resource and mismatched.
+
+
+\hl{This section needs editing!!}
+Overall, these results show that ASR performance on matched-language finetuning data closely follows our high-resource pretraining conditions: CER is lowest when the pretraining language matches the finetuning language and has the most hours, and highest when pretraining is high-resource but fully mismatched. At the same time, all finetuning data in this subsection come from the same corpora that were used during pretraining, so we cannot yet tell whether these patterns reflect corpus-specific memorisation, language-specific phonetic information, or a combination of both. To separate these effects and test whether the same trends hold beyond seen pretraining corpora, we next examine finetuning on languages and datasets that were not used during pretraining.
+
+In the next subsection, we analyse how these pretrained models behave when finetuned on mismatched or unseen languages to test whether the advantages of matched high-resource pretraining extend beyond the pretraining corpora
+
+
+\hl{next paragraph is old and needs removing/replacing.}
 
 These results show that while SSL ASR pretraining only learns broad phonetic representations it still has an impact on how the model learns semantic information. However, since the models have been finetuned to subsets of the same data they were trained on we cannot at this stage determine if the pretraining has overfitted to the pretraining data or whether there is linguistic information specific to each language that is being learned during pretraining.
 
