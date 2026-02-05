@@ -5,6 +5,7 @@
 %*******************************************************************************
 %\chapter{Phonetic Understandings of Multilingual Self-Supervised Learning Automatic Speech recognition Models}
 \chapter{Analysing the Effect of Data Balance on the Learning of Multilingual Self-Supervised Learning\naominote{shorter title}}\label{chapter5}
+\hl{GO THROUGH AND MAKE SPASCING CONSISTENT ON MODEL NAMES EITHER "800 / 100" OR "800/100"}
 \section{Introduction}
 \perplexnote{[referencing whole section] There are multiple uses of “we then,” which makes the writing feel repetitive. Try varying sentence openers, e.g., “Subsequently,” “Next,”}In the previous chapter, we analysed the multilingual performance of a widely cited open-source multilingual self-supervised Learning (SSL) Automatic Speech Recognition (ASR) model XLS-R \cite{babu2021xlsr}. We found through pruning \cite{frankle2018LTH} that when finetuning the pretrained model to data from languages that were unseen in the XLS-R pretraining data, that weights learned from the English language were used as basis for learning.\perplexnote{[for previous sentence] Suggestion: Split into two sentences. Consider: [perplexity suggestion]} This effect was observed \thiswillnotshow{\naominote{[\textbf{Done}]"observed" I'm not sure exactly what Naomi meant by this}} even when the finetuned language was present but low-data in pretraining.\iffalse \thoughts{doesn't make sense needs completely rewording} When a related language was present and high-data, such as Catalan and Asturian using \thiswillnotshow{\naominote{[\textbf{Done}]Sentence too long.}}English weights rather than Spanish weights to learn from\cite{storeyedbiasSSL}.\perplexnote{[Previous sentence] This is very complex and would benefit from revision.} \fi This effect in XLS-R appears to stem from the imbalance of languages in the pretraining, with English having the most amount of hours when compared to all other languages. For this chapter, we explore in more depth how the balance of languages in pretraining affects SSL ASR.\thiswillnotshow{\naominote{* Is that your question for the chapter?\textbf{ED:} I could change this into more of a question or I could remove or move it}}
 \summary{This paragraph summarises the previous chapter}
@@ -399,14 +400,14 @@ These experiments show how pretraining language balance affects recognition of p
 %\newpage
 
 \subsection{Probing Phonemes by Articulatory Class}
-As seen in the Section \ref{ed_subsec:lang_membership_groups}, by grouping phonemes only into shared vs non‑shared sets we are comparing groups that differ greatly in how many total phonemes they contain. To analyse phoneme accuracy more precisely, we can look to dividing them into manner of articulation (MoA) classes. MoA classes provide widely used articulatory categories for grouping phonemes across languages \cite{ladefoged_johnson_phonetics_textbook,ipa1999} \thoughts{these are perplexity citations needs adding to bibliography}. The total number of phonemes in each of these categories is lower than the shared/non‑shared sets, giving more precision. The phoneme inventories are also more comparable in size between languages, allowing for more balanced cross-lingual comparison. In addition, they allow analysis of some language‑specific categories that may have been obscured in the previous groupings. 
+As seen in the Section \ref{ed_subsec:lang_membership_groups}, by grouping phonemes only into shared vs non‑shared sets we are comparing groups that differ greatly in how many total phonemes they contain. To analyse phoneme accuracy more precisely, we can look to dividing them into manner of articulation (MoA) classes. MoA classes provide widely used articulatory categories for grouping phonemes across languages \cite{international1999handbook}. The total number of phonemes in each of these categories is lower than the shared/non‑shared sets, giving more precision. The phoneme inventories are also more comparable in size between languages, allowing for more balanced cross-lingual comparison. In addition, they allow analysis of some language‑specific categories that may have been obscured in the previous groupings. 
 
-While most MoA classes follow standard articulatory categories, some of the groups in our experiments require additional explanation.\thoughts{Check ipa book to see how they classify and maybe make a reference here} We have separated diphthongs from monophthongs in the vowel category because they only occur in English in our data. Dipthongs are sounds formed by combining two vowels, so separating them may  also give some insight into coarticulation in mixed-language pretraining. Closures correspond to the \texttt{sil} token, which signifies silence in MFA, and are therefore treated as their own group rather than merged. 
+While most MoA classes follow standard articulatory categories, some of the groups in our experiments require additional explanation. We have separated diphthongs from monophthongs in the vowel category because they only occur in English in our data. Dipthongs are sounds formed by combining two vowels, so separating them may  also give some insight into coarticulation in mixed-language pretraining. Closures correspond to the \texttt{sil} token, which signifies silence in MFA, and are therefore treated as their own group rather than merged. 
 
-The Tap \& Trill class is present in English, Spanish and Polish. However, unlike English and Polish, Spanish has more than one phoneme in this group and has far more examples of both \textipa{r} and  \textipa{R} in the training data as seen in Appendix \ref{app_sec:chapter_5_appendix} Table \ref{app_tab:phoneme_counts_per_language_train_10h_1}. While this category is not language-specific, it is heavily weighted towards Spanish, which may affect the final accuracy of phonemes in this category. Due to this, we separated out phonemes from the wider sonorants group into vowels, nasals, approximants and Taps \& Trills. This allows us to observe the language-specific behaviour of all these groups separately. The number of occurrences of every available phoneme across the training data for all four languages tested can be found in Appendix \ref{app_sec:chapter_5_appendix}.\thoughts{Double check the sonorants thing with delphine}
+The Tap \& Trill class is present in English, Spanish and Polish. However, unlike English and Polish, Spanish has more than one phoneme in this group and has far more examples of both \textipa{r} and  \textipa{R} in the training data as seen in Table \ref{ed_tab:phoneme_token_class_counts_m}. While this category is not language-specific, it is heavily weighted towards Spanish, which may affect the final accuracy of phonemes in this category.\iffalse Due to this, we separated out phonemes from the wider sonorants group into vowels, nasals, approximants and Taps \& Trills. This allows us to observe the language-specific behaviour of all these groups separately.\fi The number of occurrences of every available phoneme across the training data for all four languages tested can be found in Appendix \ref{app_sec:chapter_5_appendix}.
 
 Table \ref{ed_tab:phoneme_groups_by_language} summarises the phonemes included in each MoA class for the four languages in our experiments: English, Spanish, French and Polish. The datasets used in this section are outlined in Section \ref{ed_subsec:datsets}, and, as in Section \ref{ed_subsec:lang_membership_groups}, we use the same phoneme‑level accuracy data for these four languages.
-
+\newpage
 The absolute number of phoneme tokens in the pretraining data for each MoA class for each of our models is shown in Table \ref{ed_tab:phoneme_token_class_counts_m}. MoA classes such as vowels, stops and approximants are well represented in all languages in both the pretraining and test data. Other classes, such as Taps \& Trills and Diphthongs, are language-specific or have much higher representation in a single pretraining language. These MoA groupings, therefore, define classes that we might expect to respond differently depending on how many examples were included in the pretraining data. On this basis, we can define several hypotheses for the experiments in this section.
 
 
@@ -559,36 +560,96 @@ Figure~\ref{ed_fig:fine_tuning_100hours} shows the results of this matched-langu
     \caption{CER when models pretrained with varying ratios of English and Spanish data are finetuned to 100 hours of English or 100 hours of Spanish data }
     \label{ed_fig:fine_tuning_100hours}
 \end{figure}%\label{fine_tuning_100hours}
-\iffalse
-Figure \ref{ed_fig:fine_tuning_100hours} shows the Character Error Rate (CER) results obtained after finetuning each of our pretrained models on 100 hours of labelled data from the same datasets used during pretraining—LibriSpeech (English) and MLS Spanish. When finetuning to English data from the 100 hour LibriSpeech subset we see that the lowest CER is on the model trained only on English LibriSpeech data and the highest CER is on the model is found on the model trained only on Spanish MLS data. When finetuning to the Spanish MLS 100 hour subset the lowest error is found on the model trained on 800 hours of MLS Spanish and 100 hours of English LibriSpeech, while the highest error is found on the model trained on 800 hours of English LibriSpeech and 100 hours of Spanish MLS data. The model trained on only English data also has some of the highest error when finetuning to Spanish and inversely the model trained only on Spanish has some of the lowest.
-\fi
 
 We see in Figure~\ref{ed_fig:fine_tuning_100hours} that, for LibriSpeech finetuning, CER is lowest for the English monolingual model and highest for the Spanish monolingual model. Between these models, we see the following: 800/100 has higher CER than 960/0, 600/300 is higher than 800/100, 450/450 is higher than 600/300, 300/600 is higher than 450/450, and 100/800 is higher than 300/600. This is a gradual CER increase with each step from left to right, as English-matched pretraining is replaced by more Spanish-mismatched pretraining. Each increase in mismatched Spanish data during pretraining raises CER on English.
 
-For MLS Spanish finetuning, a similar gradual change appears in the opposite direction. CER decreases consistently as we move from English high-resource pretraining towards Spanish high-resource pretraining. The highest CER is on the 800/100 model, followed by slightly lower CER on the English monolingual model, and the lowest CER on the 100/800 and Spanish monolingual models. The lowest and highest Spanish CER values therefore occur at 100/800 and 800/100 rather than at the monolingual models, unlike English. However, both languages follow the same broader high-resource pattern: CER is lowest when pretraining is high-resource and matched to the finetuning language, and highest when pretraining is high-resource and mismatched.
+For MLS Spanish finetuning, a similar gradual change in CER appears in the opposite direction. CER decreases consistently as we move from English high-resource pretraining towards Spanish high-resource pretraining. The highest CER is on the 800/100 model, followed by slightly lower CER on the English monolingual model, and the lowest CER on the 100/800 and Spanish monolingual models. The lowest and highest Spanish CER values therefore occur at 100/800 and 800/100 rather than at the monolingual models, unlike English. However, both languages follow the same broader high-resource pattern. CER is lowest when pretraining is high-resource and matched to the finetuning language, and highest when pretraining is high-resource and mismatched to the finetuning language.
+
+With this experiment, we have confirmed that finetuning CER is lowest on high-resource matched-language models and highest on high-resource mismatched-language models, as seen in previous research.\thoughts{reference needed?} However, we have also shown that intermediate mixed-language models exhibit a gradual change in CER that varies in proportion to how much of the finetuning language they have seen during pretraining. CER decreases with more matched-language pretraining and increases with more mismatched-language pretraining. 
+
+All the finetuning data in this subsection come from the same datasets used for pretraining.  Previous work has shown that related-language pretraining, even mixed multilingual related-language pretraining,\thoughts{do I need to add references?} can decrease CER on related unseen languages when compared to mismatched-language pretraining. For our experiments, it is not clear how our mixed-language models will behave on related and unrelated unseen languages. Neither is it currently clear whether the gradual change in CER will remain consistent in these conditions. Therefore, in Section~\ref{ed_subsec:gain_across_languages}, we test our models on unseen multilingual FLEURs~\cite{FLEURS} data.
 
 
-\hl{This section needs editing!!}
-Overall, these results show that ASR performance on matched-language finetuning data closely follows our high-resource pretraining conditions: CER is lowest when the pretraining language matches the finetuning language and has the most hours, and highest when pretraining is high-resource but fully mismatched. At the same time, all finetuning data in this subsection come from the same corpora that were used during pretraining, so we cannot yet tell whether these patterns reflect corpus-specific memorisation, language-specific phonetic information, or a combination of both. To separate these effects and test whether the same trends hold beyond seen pretraining corpora, we next examine finetuning on languages and datasets that were not used during pretraining.
-
-In the next subsection, we analyse how these pretrained models behave when finetuned on mismatched or unseen languages to test whether the advantages of matched high-resource pretraining extend beyond the pretraining corpora
-
-
-\hl{next paragraph is old and needs removing/replacing.}
-
-These results show that while SSL ASR pretraining only learns broad phonetic representations it still has an impact on how the model learns semantic information. However, since the models have been finetuned to subsets of the same data they were trained on we cannot at this stage determine if the pretraining has overfitted to the pretraining data or whether there is linguistic information specific to each language that is being learned during pretraining.
-
+\newpage
 \subsection{Multilingual and Cross Lingual Transfer Gains}\label{ed_subsec:gain_across_languages}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{5_chapter5/figures/linegraph_engspafleurs.pdf}
-    \caption{CER when each pretrained model is finetuned to unseen English and Spanish data, the finetuning data consists of 10 hours each from the FLEURs dataset}
-    \label{ed_fig:multilingual_linegraph}
+    \caption{CER after finetuning each model on 10 hours each of unseen FLEURS English and Spanish.}
+    \label{ed_fig:fleurs_engspa_linegraph}
 \end{figure}
-To test the impact the SSL ASR pretraining has on downstream language learning we design a new experiment. In this section we fine-tune each of our models to data from multiple different languages from several different language groups in order to observe the effect that learning broad speech representations from one or multiple languages affects the finetuned error rates of unseen data and unseen languages in pretraining. Figure \ref{ed_fig:multilingual_linegraph} shows the results of finetuning our models to 10 hour English and Spanish subsets for the FLEURs dataset, this data has not been seen in pretraining but are in the same languages the models was pretrained on. We see the same pattern replicated here as in Figure \ref{ed_fig:fine_tuning_100hours} with the CER when finetuning to English being lowest on the models with the most English data and the CER when finetuning to Spanish being lowest on the models with the most Spanish data. This shows that the phonetic information learned in pretraining is language-specific and affects the finetuning accuracy even when the finetuning data was unseen in pretraining. It should also be noted that the Spanish CER is lower at every point than the English CER, this is consistent with the results found with FLEURs in Section \ref{chapter4}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OLD CONTENT!!
+\iffalse
+To test the impact the SSL ASR pretraining has on downstream language learning we design a new experiment. In this section we fine-tune each of our models to data from multiple different languages from several different language groups in order to observe the effect that learning broad speech representations from one or multiple languages affects the finetuned error rates of unseen data and unseen languages in pretraining.
+
+Figure \ref{ed_fig:fleurs_engspa_linegraph} shows the results of finetuning our models to 10 hour English and Spanish subsets for the FLEURs dataset, this data has not been seen in pretraining but are in the same languages the models was pretrained on. We see the same pattern replicated here as in Figure \ref{ed_fig:fine_tuning_100hours} with the CER when finetuning to English being lowest on the models with the most English data and the CER when finetuning to Spanish being lowest on the models with the most Spanish data. This shows that the phonetic information learned in pretraining is language-specific and affects the finetuning accuracy even when the finetuning data was unseen in pretraining. It should also be noted that the Spanish CER is lower at every point than the English CER, this is consistent with the results found with FLEURs in Section \ref{chapter4}.
+\fi
 
 
+\iffalse
+Paragraph 1: Introduce unseen FLEURs data and multilingual transfer goal.
+
+Paragraph 2: Describe FLEURs En/Es line graph and main CER pattern.
+
+Paragraph 3: Interpret En/Es FLEURs result, link to language‑specific effects and Chapter 4.
+
+Paragraph 4: Set up monolingual CER‑difference bar chart and define signed difference (add brief justification here for using the bar chart instead of a multi‑language line graph, and mention that full multi‑language CER curves are shown in the appendix).
+
+Paragraph 5: Describe family‑level patterns in the bar chart (Germanic → English model, Romance → Spanish model, Slavic mixed), and add one sentence noting that mixed‑language models generally fall between the monolingual baselines with similar gradual CER changes (refer to appendix line graph).
+
+Paragraph 6: Interpret cross‑lingual patterns and limitations, emphasise that results are based on monolingual vs monolingual contrast and that mixed‑model details are available in the appendix figure.
+
+Paragraph 7: Bridge to probing as the next step to explain why these CER and family‑level patterns arise.
+\fi
+
+\hl{new version}
+
+In this subsection, we extend our analysis to unseen data and unseen languages using the FLEUR dataset \cite{FLEURS}. We finetune each of our pretrained models, as outlined in Section \ref{ed_subsec:datsets}, on 10~hours of English and 10~hours of Spanish from FLEURs. Then, we continue on to additional FLEURs languages from Germanic, Romance, and Slavic language families. This measures how the English and Spanish pretraining balance affects multilingual and cross-lingual transfer of CER. \hl{Do we need to say what we expect to happen here?}
+
+Figure~\ref{ed_fig:fleurs_engspa_linegraph} shows the CER obtained after finetuning each pretrained model on 10~hours of FLEURs English data and 10~hours of FLEURs Spanish data. We use the same axis as in Figure~\ref{ed_fig:fine_tuning_100hours}. Similarly to the previous seen data experiment, CER on English is lowest for high-resource English pretraining and CER on Spanish is lowest for high-resource Spanish pretraining. There is again a gradual shift in CER across the intermediate models as we move away from high-resource English pretraining. The gradual shift happens through moderately unbalanced and balanced-unrelated models, to high-resource Spanish pretraining. This again indicates that matched-language pretraining produces lower CER as seen in Section \ref{ed_subsec:same_data_finetuning}. However, we can now observe that even when the finetuning data is from unseen FLEURs data, the same relation between finetuning and pretraining data still exists.
+
+Prior work on multilingual ASR and cross-lingual transfer shows that pretraining on related languages produces lower finetuned CER than pretraining on unrelated languages~\cite{prasad-etal-2021-investigating, singh2020effects}\thoughts{update these references to be consistent wit the background section}. In our experiments so far, we have seen that increasing the ratio of a related language in pretraining to the finetuning language produces a gradual decrease in CER. Next, we must test whether the ratio of related-language pretraining affects finetuned CER. We will explore whether any shift in CER is still gradual or how much of an impact the ratio has when the pretraining language is related, but not matching, the finetuning language.
+
+\begin{figure}%[H]
+    \centering
+    \includegraphics[width=\linewidth]{appendix/figures/linegraph_allfleurslangs.pdf}
+    \caption{CER after finetuning each model on 10 hours of unseen FLEURS languages from Germanic, Romance, and Slavic families\hl{THIS FIGURE NEEDS REGENERATING WITH BETTER LANGAUGE NAMES AND NO ENG+SPA}}
+    \label{ed_fig:fleurs_multilingual_linegraph}
+\end{figure}
+
+
+Figure~\ref{ed_fig:fleurs_multilingual_linegraph} shows the CER for all of these languages across the range of English and Spanish pretraining balances. For many languages, we again see a gradual shift in CER across the intermediate mixed-language models between the high-resource English and high-resource Spanish models. Germanic languages have lower CER on the high-resource English models when compared to their CER on the high-resource Spanish models. Most of the Romance languages have lower CER on the high-resource Spanish models relative to their CER on the high-resource English models. French and the unrelated Slavic languages do not, however, appear to fit these family-level patterns. 
+
+In Figure~\ref{ed_fig:fleurs_multilingual_linegraph}, some languages show much lower CER across all models than other languages, and the lines are densely packed on the graph. This makes it difficult to ascertain which languages benefit most from English or from Spanish pretraining. To make these cross-lingual preferences clearer, we look to Figure~\ref{ed_fig:multilingual_barchart}. It shows the difference between the CER for each language on the English and Spanish monolingual models.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/barchart_abs_diff.pdf}
+    \caption{CER difference (English monolingual minus Spanish monolingual) after finetuning on each FLEURS language.}
+    \label{ed_fig:multilingual_barchart}
+\end{figure}
+
+Figure~\ref{ed_fig:multilingual_barchart} makes these cross-lingual effects more explicit. We plot the signed difference in CER between the English and Spanish monolingual models for each FLEURs language. Languages with negative values have lower CER on the Spanish monolingual model, while those with positive values have lower CER on the English monolingual model. Here, English shows the largest positive difference and Spanish shows the largest negative difference when compared to the other languages. This reflects that the gap in CER between the finetuned monolingual models is significantly bigger for matched-languages (English and Spanish), when compared to related and unrelated languages. 
+
+The Germanic languages, by comparison, cluster clearly on the English side, showing a positive CER difference with English pretraining. The Romance languages mostly show negative differences, having lower CER for Spanish pretraining. Both Germanic and Romance languages have lower differences than English and higher differences than Spanish. This shows that related language pretraining does not benefit finetuning to the extent that matched language pretraining does. French is an outlier among Romance languages with a positive difference. It is a smaller positive difference than for either of the Germanic languages, though, which may suggest weaker affiliation with English.\thoughts{Maybe I need to justify this better linguistically and/or suggest some sort of tie with the probing experiment} The Slavic languages are close to zero, with Russian having a negative difference, while Polish has a positive difference. This may indicate little consistent advantage from either pretraining language when finetuning on unrelated languages.
+
+Across these multilingual FLEURs experiments, we see a clear pattern for monolingual pretraining. Matched-language pretraining produces the lowest CER. Related-language pretraining gives low CER but with an increase over matched-language pretraining. Unrelated-language pretraining has no clear advantage. For mixed-language pretraining, we show a gradual shift in CER across the mixed English and Spanish models in Germanic and Romance languages. This shows that downstream error depends directly on how much related-language data is included in pretraining. Even small amounts of matched or related data can decrease CER when compared to monolingual unrelated-pretraining. However, we also find that incrementally replacing related data with an unrelated language steadily increases CER for any matched and related finetuning languages.
+
+The influence of SSL pretraining on finetuned CER has been shown to be extensive in this section. However, SSL pretraining learns acoustic and phonetic structure rather than lexical or semantic information, since no word or character level data is included in pretraining~\cite{pasad2021layer, english2022domain}. These patterns in CER after finetuning must therefore be driven by phonetic information learned during pretraining. To further explore how SSL ASR models learn multilingual information, we move from CER to phoneme-level probing. In the next subsection, we examine how pretraining language balance affects phoneme accuracy for related and unrelated phoneme sets. We split these phonemes into groups that appear in both pretraining languages and those unique to each.
+
+
+
+\hl{Start: for discussion}
+
+These findings verify previous research on single languages to be consistent across multiple languages and language groups. The results from our mixed-language models then expand on our understanding of multilingual pretraining.\thoughts{maybe these lines could be expanded on and thought through in the discussion.}
+
+This suggests that mixed language pretraining might be advantageous for specific low-data situations.
+
+\hl{End: for discussion}
+
+\hl{new version end}
 
 Having observed the same pattern when finetuning our SSL models on both seen and unseen English and Spanish data, next we can test whether the pretraining data affects the learning of different language families. Figure \ref{ed_fig:multilingual_barchart} shows the difference in CER for multiple languages from the FLEURs dataset. Each of the 2 monolingual are finetuned to the same language and the difference in CER is taken. A positive difference reflects higher CER on the English monolingual model and a negative difference reflects higher CER on the Spanish monolingual model.
 
@@ -599,16 +660,16 @@ Having observed the same pattern when finetuning our SSL models on both seen and
 
 All of the error rates on every model for each FLEURs language can be found on Figure \ref{app_fig:multilingual_linegraph} in Appendix \ref{app_sec:chapter_5_appendix}.
 
-\newpage
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{5_chapter5/figures/barchart_abs_diff.pdf}
     \caption{Absolute Character Error Rate (CER) change between the monolingual English model and the monolingual Spanish model when finetuned on multiple downstream languages}
     \label{ed_fig:multilingual_barchart}
 \end{figure}
+
 In Figure \ref{ed_fig:multilingual_barchart} we see that the most positive change in CER occurs in English whilst the most negative change in CER occurs in Spanish. These show that the monolingual models react most positively to the languages that they were originally pretrained in. The next most positive languages we tested were Danish and German, these are both Germanic languages the same language family as English. The languages that are most negative are Asturian, Catalan and Italian which are all Romance languages which is the same language family as Spanish. Of the three remaining languages Russian shows the smallest negative change in CER while French gives the lowest positive change and Polish shows lower CER on the English monolingual model but a smaller difference between the two monolingual models than all of the Germanic languages tested. The Slavic languages do not show a clear trend towards either language in the pretraining, with both positive and negative change in CERs. French acts as an outlier among the Romance languages, showing higher error on the English monolingual model. These results seem to suggest that the languages that our SSL ASR models are trained on affect the downstream error of languages within the family of original pretraining language. To investigate these results further we must measure exactly how SSL ASR models learn phonetic information and how language balance in pretraining may impact this. 
 
-\newpage
+%\newpage
 \subsection{Shared vs. Unique Phoneme Accuracy} \label{ed_sec:shared_vs_not_shared}
 
 \begin{figure}[h]
@@ -847,6 +908,14 @@ For French and Polish, we define groups that are related to, but not identical w
 For French and Polish, we are interested in how well the model can recognise individual phoneme tokens that were seen during English or Spanish pretraining, compared with phoneme tokens that were never seen in pretraining at all. To capture this, we build a combined pretraining inventory from all MFA phoneme tokens that occur in either English or Spanish pretraining. The overlap groups contain French or Polish tokens that also occur in this combined English and Spanish inventory, while the language-unique groups contain tokens that occur only in French or only in Polish and never occur in English or Spanish. This lets us compare recognition of phonemes that are familiar from pretraining, but evaluated in different languages, with phonemes that are completely unseen in pretraining. In the probe train and test sets, French has 45 MFA phoneme tokens, with 35 in the overlap group and 10 in the French-unique group, while Polish has 51 tokens, with 32 in the overlap group and 19 in the Polish-unique group. The exact token lists and their frequencies are also included in Table \ref{app_tab:phoneme_counts_per_language_train_10h_1}. 
 \fi
 
+\hl{Below are some deleted sentences from the experimental results multilingual finetuning section that could be used as talking points here:}
+
+These findings verify previous research on single languages to be consistent across multiple languages and language groups. The results from our mixed-language models then expand on our understanding of multilingual pretraining.\thoughts{maybe these lines could be expanded on and thought through in the discussion.}
+
+This suggests that mixed language pretraining might be advantageous for specific low-data situations.
+
+\hl{end of talking deleted sentences}
+
 This section started by training 7 models, one model trained only on the data from the LibriSpeech dataset \cite{librispeech}, one model trained only on the Spanish subset of Multilingual LibriSpeech \cite{MLS} and 5 models trained on different ratios of these 2 datasets, always adding up to 900 hours.The ratios of hours of speech data with English of the left and Spanish on the right (Eng / Spa) were as follows: 800 / 100, 600 / 300, 450 / 450, 300 / 600 and 100 / 800. As shown in previous work \cite{ashihara2023exploration, poncelet2021comparison}, we prove in Section \ref{ed_subsec:same_data_finetuning} that the languages in your pretraining affect downstream finetuning. Figure \ref{ed_fig:fine_tuning_100hours} shows that when there is more English data in pretraining the model has lower Character Error Rate (CER) after finetuning to English data. Similarly when more Spanish data is present in pretraining lower CER is found after finetuning to Spanish. This is then replicated with unseen FLEURs data in Section \ref{ed_subsec:gain_across_languages} Figure \ref{ed_fig:multilingual_linegraph}.
 
 We then confirm findings in \cite{zhang2023fast, gupta2021clsril} with our models that prove that languages that are closely related to the language most prominent in pretraining data for a model achieve lower CER when compared to finetuning them on models pretrained on a language that is unrelated to the finetuning data. Figure \ref{ed_fig:multilingual_barchart} Romance languages such as Catalan, Asturian and Italian have lower CER on the monolingual Spanish model when compared to their CER on the monolingual English model. We can also see in Figure \ref{ed_fig:multilingual_barchart} that the Germanic languages such as Danish and German have a lower CER on the monolingual English model when compared to their results on the monolingual Spanish model, showing that languages related to English benefit from more English in pretraining. 
@@ -930,7 +999,7 @@ The consistent themes that emerged from this chapter were that SSL ASR benefits 
 %%%% Key phrases
 \nomenclature[K]{\texbf{Matched-Language Pretraining: }}{Pretraining language is the same as the finetuning (evaluation) language.}
 \nomenclature[K]{Mismatched-Language Pretraining: }{Pretraining language is different from the finetuning (evaluation) language.}
-\nomenclature[K]{High-Resource Pretraining: }{Pretraining on a single dominant language or a strongly skewed mixture, referring to the following models in chapter \ref{chapter5}: 960 / 0, 800 / 100, 100 / 800, 0 / 920.}
+\nomenclature[K]{High-resource pretraining}{Pretraining on a single language or a clear imbalance towards one language (e.g., 960/0, 800/100, 100/800, 0/920 hours of English/Spanish).}
 \nomenclature[K]{Medium-Imbalance Pretraining: }{Models pretrained on English–Spanish mixtures with a moderate imbalance between languages, referring to the following models in chapter \ref{chapter5}: 600 / 300 and 300 / 600}
 
 %\nomenclature[K]{More balanced bilingual models}{Models pretrained on English–Spanish mixtures that are not strongly skewed towards one language (e.g., 600/300 and 300/600 hours).\hl{THIS NEEDS TO BE UPDATED}}
