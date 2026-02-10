@@ -684,21 +684,13 @@ The influence of SSL pretraining on finetuned CER has been shown to be extensive
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{5_chapter5/figures/linegraph_shared_not_shared_eng_spa.pdf}
-    %\caption{Phoneme accuracy taken at layer 7 of each of our models for English and Spanish data. The phonemes are split into groups of phoneme that are either shared between Spanish and English languages or phonemes that are unique to either English or unique to Spanish. \hl{needs a rewrite!!}}
     \caption{Mean phoneme accuracy at layer~7 for English-Shared, English-Unique, Spanish-Shared, and Spanish-Unique groups across English and Spanish pretraining mixtures. Shared groups contain phonemes that exist in both English and Spanish. English-Unique contains only phonemes unique to English and Spanish-Unique contains only phonemes unique to Spanish.}
     \label{ed_fig:phonemes_shared_not_shared}
 \end{figure}
-\thoughts{need to regeneerate with number of phonemes in each group}
-\iffalse
-%%%% OLD VERSOIN!
-Figure \ref{ed_fig:phonemes_shared_not_shared} shows the phoneme accuracy gathered from our probing experiments outlined in Section \ref{ed_seubsec:exp_des_probing} full lists of the phonemes measured and their accuracy for each language can be found in Appendix \ref{app_sec:chapter_5_appendix}. We separate our phonemes into four different groups of phonemes and take the average accuracy on each model for each group. The phoneme groups are: English-Only, English-Shared, Spanish-Only and Spanish-Shared. English-Only contains phonemes that are only found in the English dataset and Spanish-Only contains phonemes that are only found in the Spanish dataset. The phonemes in the English-Only and Spanish-Only groups are then phonemes that only exist in each language and are only tested on the relevant language, i.e. English-Only are only tested on English data. The values in Figure \ref{ed_fig:phonemes_shared_not_shared} are the mean average of all the phonemes in each group when tested on each of the models outlined in Section \ref{ed_subsec:datsets}. %A list of the phonemes found in the English-Only and Spanish-Only groups can be found in Appendix \ref{app_sec:chapter_5_appendix} Table \ref{app_tab:phonemes_only_groups}.
-\fi
-%\hl{New version from here}
+
 
 Following the multilingual FLEURs finetuning results (Section~\ref{ed_subsec:gain_across_languages}), we now examine phoneme-level representations in the pretrained models. We extract phoneme information using the MFA \cite{mcauliffe2017montreal} and train linear probes for phoneme recognition on the layer 7 outputs of each of our models, as detailed in Section~\ref{ed_seubsec:exp_des_probing}. These probes evaluate phonemes from English, Spanish, French, and Polish test data across all English and Spanish pretraining mixtures.  
-\iffalse
-In this subsection, we first determine whether phoneme representations reflect the matched-language advantages and related-language transfer patterns observed previously in CER.\thoughts{come back to this to see whether we did actually address this} Second, we test whether exposure to MFA phoneme tokens during pretraining predicts phoneme accuracy. We address this by comparing two types of groups. Language-shared and language-overlap groups appear across most pretraining models, so they have high exposure overall. Language-unique groups have the highest exposure in high-resource matched-language models, so they vary strongly with pretraining balance. All phoneme groups are defined in Section~\ref{ed_subsec:lang_membership_groups}.\thoughts{could be cut to save space}
-\fi
+
 Figure~\ref{ed_fig:phonemes_shared_not_shared} shows phoneme accuracy for English-Shared and English-unique groups across pretraining mixtures. English-Shared exhibits a similar high-resource pattern seen in finetuning in Section~\ref{ed_subsec:same_data_finetuning}. The highest accuracy is on the high-resource English models, a gradual decrease across mixed-language models, then the lowest accuracy on high-resource Spanish models. English-Shared accuracy drops 19.24\% from English monolingual to Spanish monolingual, whereas English-unique accuracy shows a similar 21\% drop between the same models. 
 
 English-unique phonemes have a high average difference in accuracy of 15.34\% across all models when compared to English-Shared. Unlike in previous experiments, accuracy for English-Unique on the 300/600 model falls below the accuracy on the 100/800 model, but does remain above the Spanish monolingual.\thoughts{talk of anomalous results could be moved to discussion} The accuracy for English-Unique does otherwise show a gradual-decline in accuracy from high-resource English models, across the other mixed-language models, to the monolingual Spanish model.
@@ -719,14 +711,7 @@ Figure~\ref{ed_fig:phonemes_shared_not_shared} also shows phoneme accuracy for S
 
 Despite some deviations from a consistent gradual increase in accuracy, all groups still show the same pattern from finetuning. We see the highest accuracy on high-resource matched-language pretraining and lowest on high-resource mismatched pretraining. Then, steadily decreasing accuracy across most mixed-language models as mismatched pretraining data increases. We also see in this experiment that shared phoneme groups have higher average accuracy on all models than unique groups. This is despite the greatly varying size of their phoneme inventories, as seen in Section~\ref{ed_subsec:lang_membership_groups}.\thoughts{possibly this sentence in discussion as well} \hl{This may suggest that shared phonemes can benefit from increased exposure in pretraining even when the pretraining data is mismatched. Language-unique phonemes, on the other hand, suffer in accuracy when mismatched-language pretraining limits exposure to phonemes in this group.}\thoughts{should this be moved to discussion? Or at least the end of the section.} Next, then, we can explore whether the exposure of individual phonemes is still a benefit when those phonemes are spoken in mismatched languages.
 
-\iffalse
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/linegraph_shared_not_shared_fre_pol.pdf}
-    \caption{PLACEHOLDER CAPTION}
-    \label{ed_fig:phonemes_shared_french_polish}
-\end{figure}
-\fi
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{5_chapter5/figures/linegraph_shared_not_shared_fre_pol.pdf}
@@ -759,8 +744,6 @@ A summary of the mean accuracy difference between Shared and Unique groups and t
 
 For all four languages, however, we see that for each model the Unique groups always have lower accuracy than the Shared groups. This pattern is consistent despite the large differences in phoneme inventory sizes, as described in Section~\ref{ed_subsec:lang_membership_groups}. These results suggest that individual phoneme exposure during pretraining has more correlation to phoneme accuracy than the ratio of mismatched languages when testing unseen languages.
 
-
-
 \begin{table}[h]
     \centering
     \begin{tabular}{lccc}
@@ -782,33 +765,8 @@ For all four languages, however, we see that for each model the Unique groups al
 
 While language-membership grouping reveals certain patterns across languages, it compares groups that differ greatly in total phoneme counts. This may be conflating multiple phonetic properties and obscuring more precise information. We therefore analyse phoneme accuracy by manner-of-articulation (MoA) classes in the next section. MoA classes are widely used in phonetics that we can use for more balanced group sizes, comparable inventories across languages, and clearer isolation of individual phonetic features~\cite{international1999handbook}.
 
-\iffalse
-%%% Old version!!
-In Figure \ref{ed_fig:phonemes_shared_not_shared} we first look at the English-Only group of phonemes, here we see a difference of 21\% between the phoneme accuracy recorded between the monolingual English model (960 / 0) and the Spanish monolingual model (0 / 920). While the accuracy does not consistently decrease from left to right of Figure \ref{ed_fig:phonemes_shared_not_shared} as the amount of English data in pretraining, we do see that the English-Only phonemes have the highest accuracy on the models with the most English data included in pretraining. For the Spanish-Only phoneme group we see the inverse trend with a difference of -14\% between the English monolingual and Spanish monolingual models, showing higher accuracy for Spanish-Only phonemes on the model only trained on Spanish pretraining data. Similarly, we see an increasing of accuracy from right to left of Figure \ref{ed_fig:phonemes_shared_not_shared} as more Spanish data is introduced in pretraining. 
 
-For the phoneme group English-Shared in Figure \ref{ed_fig:phonemes_shared_not_shared} there is an absolute difference of 19.24\% between the accuracy on the monolingual English model and the monolingual Spanish model. This group also exhibits the same behaviour as English-Only with accuracy increasing from right to left of the graph as more English data is introduced to the pretraining. Spanish-Only also exhibits the same pattern, having a change in accuracy of -5.32\% between the English and Spanish monolingual models and an increase in accuracy with models with more Spanish data in pretraining. This shows that even when phonemes exist in both languages they are not learned equally well and the models are learning more than discrete phoneme representations, such as coarticulations between phonemes that might only exist in one language. 
-
-Finally, we can note that in Figure \ref{ed_fig:phonemes_shared_not_shared} that the average phoneme accuracy for the English-Shared group is on every model higher than the average accuracy for the English-Only phoneme group. It is also true that the phoneme accuracy is higher on every model for the Spanish-Shared phoneme group when compared to the Spanish-Only phoneme group. This suggests that while shared phonemes are better recognised when they are spoken in a single language, phonemes that exist in both pretraining datasets still benefit from more examples in training.
-\fi
-\iffalse
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/barchart_shared_not_shared_fre_pol.pdf}
-    \caption{Average phoneme for French and Polish when tested for phonemes that exist in either English or French vs Phonemes that are unique to French or Polish}
-    \label{ed_fig:phonemes_shared_french_polish}
-\end{figure}
-
-Figure \ref{ed_fig:phonemes_shared_french_polish} shows the average phoneme accuracy for several different groups: phonemes that exist in both the French language and English or Spanish, Phonemes that exist in French but not in English or Spanish, then Phonemes that exist in Polish and also in English or Spanish and finally Phonemes that only exist in Polish but not in English or Spanish. Both languages were taken from the Multilingual LibriSpeech (MLS) dataset \cite{MLS} and phonemes found by using the Montreal Forced Aligner (MFA) \cite{mcauliffe2017montreal}. 
-
-In all models in Figure \ref{ed_fig:phonemes_shared_french_polish} the French language data has higher accuracy on phonemes that exist in both French and English or Spanish while having lower average accuracy on phonemes that are unique to French and do not exist in either of the pretraining languages, English or Spanish. This pattern stays true with the accuracy for Polish data with average accuracy for phonemes that exist in both Polish and English or Spanish having a higher average accuracy when compared to phonemes that only exist in Polish and not in English or Spanish.
-\iffalse
-Throughout this section we have shown that phonemes that overlap between the English phoneme sets and the Spanish phoneme sets have the highest accuracy due to them existing in all wav2vec 2.0 models we have pretrained. Phonemes that are unique to English have significant accuracy increases when tested on models with high ratios of English data in pretraining. The inverse is true for Spanish with the highest accuracy phonemes that are unique to Spanish being recorded on the model trained only on Spanish pretraining data. Figure \ref{ed_fig:phonemes_shared_french_polish} shows that for both the French language and Polish language phonemes that exist in either language as well as English or Spanish always achieve higher accuracy than phonemes that are unique to each language. We have seen in Section \ref{ed_subsec:gain_across_languages} that the best approach for low error transcription is to pretrain the model on the language you are finetuning or a language closely related to it.
-\fi
-
-The information in Figure \ref{ed_fig:phonemes_shared_french_polish} suggests that language is not the only factor in determining whether a phoneme will be recognised with high accuracy. The findings suggest that if we were carefully select pretraining data to include certain phonemes in high number we may be able to achieve higher accuracy even if our testing language was not included in or related to the languages in pretraining. To further dissect this idea we can evaluate performance across different phoneme groups and different languages. %\thoughts{This section could probably be moved to discussion LOOK HERE ED!!!}
-\fi
 %\newpage
-
 \subsection{Phoneme Accuracy in Phoneme Classes}\label{ed_sec:phonemes_classes}
 
  %%% FULL TABLE WITH ALL PHONEMES AND ALL VARIATIONS %%%%%%%%%
