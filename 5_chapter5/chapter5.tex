@@ -390,9 +390,39 @@ The second type captures phonemes that are absent from the English and Spanish p
     \label{tab:phoneme_group_sizes_fr_pl}
 \end{table}
 
-Tables \ref{ed_tab:phoneme_group_sizes_en_es} and \ref{tab:phoneme_group_sizes_fr_pl} show that English has a much larger MFA phoneme inventory than Spanish, 80 vs 36, and that the English‑unique and Spanish‑unique groups are therefore very different in size. Similarly, for French and Polish, the overlap groups are substantially larger than the language‑unique groups. As a result, group‑level accuracies are averaged over different numbers of phonemes, and smaller groups such as Spanish‑unique, French‑unique and Polish‑unique are more sensitive to the behaviour of individual phonemes, which is important to keep in mind when interpreting the probe results in later sections.
+Tables \ref{ed_tab:phoneme_group_sizes_en_es} and \ref{tab:phoneme_group_sizes_fr_pl} show that English has a much larger MFA phoneme inventory than Spanish, 80 vs 36, and that the English‑unique and Spanish‑unique groups are therefore very different in size. Similarly, for French and Polish, the overlap groups are substantially larger than the language‑unique groups. As a result, group‑level accuracies are averaged over different numbers of phonemes, and smaller groups such as Spanish‑unique, French‑unique and Polish‑unique are more sensitive to the behaviour of individual phonemes, which is important to keep in mind when interpreting the probe results in later sections.\thoughts{Could this be reduced to a single sentence somewhere, even is what we already have sufficient?}
 
-These experiments show how pretraining language balance affects recognition of phonemes defined by their presence or absence in the pretraining languages. However, they still treat all phonemes within each group as if they behaved in the same way. The next subsection therefore focuses on manner-of-articulation groups, using the findings of English et al. as motivation for analysing these classes separately \cite{english2022domain}; see Section \ref{bac_subsec:layer_probing_articulation} for background. This allows us to test whether pretraining language balance has class-specific effects on phoneme accuracy. We also examine how these effects play out in languages where particular manners of articulation are more frequent or occur only in one language. \thoughts{this isn't a good explanation, the first paragraph of the next section does this better!}
+The shared vs. unique groupings above capture whether a French or Polish phoneme was present at all in the combined English+Spanish pretraining inventory. To probe more directly how overlap with a specific pretraining language interacts with pretraining balance, we define additional groups based on pairwise overlap between each unseen test language and a single pretraining language. This allows us to ask whether phonemes that are unique to a particular unseen–pretraining pair behave differently depending on whether they overlap with English or with Spanish.
+
+Finally, to test pretraining phoneme representation, we will analyse phonemes that are unique to one pretraining language but tested in an unseen mismatched-language. Using French and Polish as our unseen languages, we select phonemes that appear in one pretraining language and one unseen language. This creates four groups that combine two languages each: French-English, French-Spanish, Polish-English and Polish-Spanish. French-English and Polish-English will contain English-unique phonemes that also exist in the respective unseen language. Similarly, French-Spanish and Polish-Spanish will contain Spanish-Unique phonemes that also exist in their respective unseen language. The two English groups may therefore have some overlap in phonemes, as will the two Spanish groups. Both French groups will have no overlapping phonemes, and both Polish groups will have none either.
+
+The test groups are described below:
+\begin{itemize}
+    \item \textbf{French--English}: phonemes that appear in both the French and English inventories, but not in the Spanish or Polish inventories, evaluated on French speech only.
+    \item \textbf{French--Spanish}: phonemes that appear in both the French and Spanish inventories, but not in the English or Polish inventories, evaluated on French speech only.
+    \item \textbf{Polish--English}: phonemes that appear in both the Polish and English inventories, but not in the Spanish or French inventories, evaluated on Polish speech only.
+    \item \textbf{Polish--Spanish}: phonemes that appear in both the Polish and Spanish inventories, but not in the English or French inventories, evaluated on Polish speech only.
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l r}
+        \hline
+        Overlap set      & Phoneme types \\
+        \hline
+        French--English  & 10 \\
+        French--Spanish  & 4  \\
+        Polish--English  & 9  \\
+        Polish--Spanish  & 4  \\
+        \hline
+    \end{tabular}
+    \caption{Number of phonemes per set for French and Polish. Each set contains phonemes that are shared between one unseen language and one pretraining language, and are also absent from the other pretraining and other unseen language.}
+    \label{ed_tab:cross_overlap_sizes_fr_pl}
+\end{table}
+
+Table~\ref{ed_tab:cross_overlap_sizes_fr_pl} show the inventory sizes for each test set. These sets are the smallest we have compared so far. This has the potential to affect variability of accuracy, and groups may be more sensitive to the behaviour of a single phoneme in their set. 
+
+These experiments aim to show how pretraining language balance affects recognition of phonemes defined by their presence or absence in the pretraining languages. However, the contents of these groupings are highly variable in size and the linguistic content of each group has not been closely analysed. The next subsection therefore focuses on manner-of-articulation groups, using the findings of English et al. as motivation for analysing these classes separately \cite{english2022domain}; see Section \ref{bac_subsec:layer_probing_articulation} for background. This allows us to test whether pretraining language balance has class-specific effects on phoneme accuracy. We also examine how these effects play out in languages where particular manners of articulation are more frequent or occur only in one language.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -402,15 +432,16 @@ These experiments show how pretraining language balance affects recognition of p
 
 \hl{DO NOT FORGET DELPHINE'S NOTES}
 
-As seen in the Section \ref{ed_subsec:lang_membership_groups}, by grouping phonemes only into shared vs non‑shared sets we are comparing groups that differ greatly in how many total phonemes they contain. To analyse phoneme accuracy more precisely, we can look to dividing them into manner of articulation (MoA) classes. MoA classes provide widely used articulatory categories for grouping phonemes across languages \cite{international1999handbook}. The total number of phonemes in each of these categories is lower than the shared/non‑shared sets, giving more precision. The phoneme inventories are also more comparable in size between languages, allowing for more balanced cross-lingual comparison.\delphinenote{Comparisons. The plural would be more appropriate.} In addition, they allow analysis of some language‑specific categories that may have been obscured in the previous groupings. 
+As seen in the Section \ref{ed_subsec:lang_membership_groups}, by grouping phonemes only into shared vs non‑shared sets we are comparing groups that differ greatly in how many total phonemes they contain. To analyse phoneme accuracy more precisely, we can look to dividing them into manner of articulation (MoA) classes. MoA classes provide widely used articulatory categories for grouping phonemes across languages \cite{international1999handbook}. The total number of phonemes in each of these categories is lower than the shared and non‑shared sets, giving more precision. The phoneme inventories are also more comparable in size between languages, allowing for more balanced cross-lingual comparison.\delphinenote{Comparisons. The plural would be more appropriate.} In addition, they allow analysis of some language‑specific categories that may have been obscured in the previous groupings. 
 
 While most MoA classes follow standard articulatory categories, some of the groups in our experiments require additional explanation. We have separated diphthongs from monophthongs in the vowel category because they only occur in English in our data. Dipthongs are sounds formed by combining two vowels, so separating them may  also give some insight into coarticulation in mixed-language pretraining. Closures correspond to the \texttt{sil} token, which signifies silence in MFA, and are therefore treated as their own group rather than merged. 
 
-The Tap \& Trill class\delphinenote{One concern I have is the grouping of tap and trill into a single “Tap \& Trill” category. These correspond to distinct manners of articulation, so it might be worth briefly justifying this choice here. Otherwise, reviewers may question the decision to merge them.} is present in English, Spanish and Polish. However, unlike English and Polish, Spanish has more than one phoneme in this group and has far more examples of both \textipa{r} and  \textipa{R} in the training data as seen in Table \ref{ed_tab:phoneme_token_class_counts_m}. While this category is not language-specific, it is heavily weighted towards Spanish, which may affect the final accuracy of phonemes in this category.\iffalse Due to this, we separated out phonemes from the wider sonorants group into vowels, nasals, approximants and Taps \& Trills. This allows us to observe the language-specific behaviour of all these groups separately.\fi The number of occurrences of every available phoneme across the training data for all four languages tested can be found in Appendix \ref{app_sec:chapter_5_appendix}.
+The Tap \& Trill class\delphinenote{One concern I have is the grouping of tap and trill into a single “Tap \& Trill” category.\ These correspond to distinct manners of articulation, so it might be worth briefly justifying this choice here. Otherwise, reviewers may question the decision to merge them.}\thoughts{Come back to this I may have seperated these classes.} is present in English, Spanish and Polish. However, unlike English and Polish, Spanish has more than one phoneme in this group and has far more examples of both \textipa{r} and  \textipa{R} in the training data as seen in Table \ref{ed_tab:phoneme_token_class_counts_m}. While this category is not language-specific, it is heavily weighted towards Spanish, which may affect the final accuracy of phonemes in this category.\iffalse Due to this, we separated out phonemes from the wider sonorants group into vowels, nasals, approximants and Taps \& Trills.\thoughts{Tap \& Trills} This allows us to observe the language-specific behaviour of all these groups separately.\fi The number of occurrences of every available phoneme across the training data for all four languages tested can be found in Appendix \ref{app_sec:chapter_5_appendix}.
 
 Table \ref{ed_tab:phoneme_groups_by_language} summarises the phonemes included in each MoA class for the four languages in our experiments: English, Spanish, French and Polish. The datasets used in this section are outlined in Section \ref{ed_subsec:datsets}, and, as in Section \ref{ed_subsec:lang_membership_groups}, we use the same phoneme‑level accuracy data for these four languages.
-\newpage
-The absolute number of phoneme tokens in the pretraining data for each MoA class for each of our models is shown in Table \ref{ed_tab:phoneme_token_class_counts_m}. MoA classes such as vowels, stops and approximants are well represented in all languages in both the pretraining and test data. Other classes, such as Taps \& Trills and Diphthongs, are language-specific or have much higher representation in a single pretraining language. These MoA groupings, therefore, define classes that we might expect to respond differently depending on how many examples were included in the pretraining data. On this basis, we can define several hypotheses for the experiments in this section.
+
+%\newpage
+The absolute number of phoneme tokens in the pretraining data for each MoA class for each of our models is shown in Table \ref{ed_tab:phoneme_token_class_counts_m}. MoA classes such as vowels, stops and approximants are well represented in all languages in both the pretraining and test data. Other classes, such as Taps \& Trills\thoughts{Change Taps \& Trills} and Diphthongs, are language-specific or have much higher representation in a single pretraining language. These MoA groupings, therefore, define classes that we might expect to respond differently depending on how many examples were included in the pretraining data. On this basis, we can define several hypotheses for the experiments in this section.
 
 
 We test the following hypotheses:
@@ -444,7 +475,7 @@ Tap \& Trill &  0.4 &  0.6 &  1.0 &  1.3 &  1.6 &  1.9 &  2.2 \\
 \textbf{Total} & 32.8 & 31.1 & 31.9 & 32.5 & 33.1 & 33.4 & 35.0 \\
 \bottomrule
 \end{tabular}
-\caption{Phoneme token counts (in millions, rounded to one decimal) grouped by phoneme class and model. For more precision, counts rounded to the closest thousand are provided in Appendix \ref{app_tab:phoneme_token_class_counts_k}.}
+\caption{Phoneme token counts (in millions, rounded to one decimal) grouped by phoneme class and model. For more precision, counts rounded to the closest thousand are provided in Appendix \ref{app_tab:phoneme_token_class_counts_k}. \hl{Tap \& Trills needs changing}}
 
 \label{ed_tab:phoneme_token_class_counts_m}
 \end{table}
@@ -503,7 +534,7 @@ Tap \& Trill &  0.4 &  0.6 &  1.0 &  1.3 &  1.6 &  1.9 &  2.2 \\
 \addlinespace
 \bottomrule
 \end{tabular}
-\caption{Phonemes per language grouped by articulatory class. This table lists one base symbol per MFA phoneme; a full inventory including all phonetic variants used in our experiments is given in Appendix~\ref{app_sec:chapter_5_appendix}, Table~\ref{app_tab:phoneme_groups_by_language}.}
+\caption{Phonemes per language grouped by articulatory class. This table lists one base symbol per MFA phoneme; a full inventory including all phonetic variants used in our experiments is given in Appendix~\ref{app_sec:chapter_5_appendix}, Table~\ref{app_tab:phoneme_groups_by_language}. \hl{Tap \& Trills needs changing}}
 \label{ed_tab:phoneme_groups_by_language}
 \end{table}
 
@@ -700,6 +731,13 @@ English-unique phonemes have a high average difference in accuracy of 15.34\% ac
 %% difference:   15.42, 12.46, 13.81, 14.91, 18.64, 14.95, 17.17
 %% average:    15.34
 
+\begin{figure}%[h]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/linegraph_shared_not_shared_fre_pol.pdf}
+    \caption{Mean phoneme accuracy at layer~7 for French-Shared, French-Unique, Polish-Shared, and Polish-Unique groups across English and Spanish pretraining mixtures. Shared groups overlap with the combined English and Spanish pretraining inventory; French-Unique and Polish-Unique phonemes are absent from both pretraining languages. }
+    \label{ed_fig:french_polish_phoneme_groups}
+\end{figure}
+
 Figure~\ref{ed_fig:phonemes_shared_not_shared} also shows phoneme accuracy for Spanish-shared and Spanish-unique groups across pretraining mixtures. Spanish-shared accuracy still shows an increase from English high-resource to Spanish high-resource models. However, the increase is less gradual here, plateauing after the high-resource English models, except for a drop on the 300/600 model.\thoughts{talk of anomalous results could be moved to discussion} Spanish-unique shows a clearer gradual increase in accuracy across all mixtures. However, it has a drop in accuracy on the 600/300 model that doesn't fit the overall gradual increase across other models.\thoughts{talk of anomalous results could be moved to discussion} Spanish-unique phonemes have consistently lower accuracy, with a large average difference of 18.7\%, across all models compared to Spanish-shared. Finally, Spanish-Shared shows a difference of 5.32\% between the Spanish-monolingual matched-language and English-monolingual mismatched models. Spanish-Unique has a much larger difference of 14.07\% difference in accuracy between monolingual models. 
 
 
@@ -712,12 +750,7 @@ Figure~\ref{ed_fig:phonemes_shared_not_shared} also shows phoneme accuracy for S
 Despite some deviations from a consistent gradual increase in accuracy, all groups still show the same pattern from finetuning. We see the highest accuracy on high-resource matched-language pretraining and lowest on high-resource mismatched pretraining. Then, steadily decreasing accuracy across most mixed-language models as mismatched pretraining data increases. We also see in this experiment that shared phoneme groups have higher average accuracy on all models than unique groups. This is despite the greatly varying size of their phoneme inventories, as seen in Section~\ref{ed_subsec:lang_membership_groups}.\thoughts{possibly this sentence in discussion as well} \hl{This may suggest that shared phonemes can benefit from increased exposure in pretraining even when the pretraining data is mismatched. Language-unique phonemes, on the other hand, suffer in accuracy when mismatched-language pretraining limits exposure to phonemes in this group.}\thoughts{should this be moved to discussion? Or at least the end of the section.} Next, then, we can explore whether the exposure of individual phonemes is still a benefit when those phonemes are spoken in mismatched languages.
 
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/linegraph_shared_not_shared_fre_pol.pdf}
-    \caption{Mean phoneme accuracy at layer~7 for French-Shared, French-Unique, Polish-Shared, and Polish-Unique groups across English and Spanish pretraining mixtures. Shared groups overlap with the combined English and Spanish pretraining inventory; French-Unique and Polish-Unique phonemes are absent from both pretraining languages. }
-    \label{fig:french_polish_phoneme_groups}
-\end{figure}
+
 
 
 %% linegraph values for French from monolingual en to monolingual spa
@@ -736,15 +769,17 @@ Despite some deviations from a consistent gradual increase in accuracy, all grou
 %% Polish Shared Monolingual difference: 8.78
 %% Polish Unique Monolingual difference: 4.38
 
-Figure~\ref{fig:french_polish_phoneme_groups} shows phoneme accuracy for French-shared, French-Unique, Polish-shared, and Polish-Unique groups across all of our English and Spanish pretraining mixtures. These groups are outlined in Section~\ref{ed_subsec:lang_membership_groups}.
+Figure~\ref{ed_fig:french_polish_phoneme_groups} shows phoneme accuracy for French-shared, French-Unique, Polish-shared, and Polish-Unique groups across all of our English and Spanish pretraining mixtures. These groups are outlined in Section~\ref{ed_subsec:lang_membership_groups}.
 
 For French, French-Shared consistently has higher accuracy than French-Unique, with an average difference of 13.56\%. Both French groups have higher accuracy on the English monolingual than the Spanish monolingual model, similarly to the finetuning results in Section~\ref{ed_subsec:gain_across_languages}. However, the difference in accuracy is smaller when compared to English and Spanish, with 5.46\% for French-Shared and 5.62\% for French-Unique. For Polish, the difference between the shared and unique group accuracies is smaller than for French, with an average difference of 6.34\%. The difference in accuracy between the English and Spanish monolingual models is larger, with 8.78\% for Polish-shared and 4.38\% for Polish-Unique.
 
-A summary of the mean accuracy difference between Shared and Unique groups and the accuracy difference between monolingual models for all four languages is given in Table~\ref{tab:shared_unique_summary}. While both French and Polish have higher accuracy on the English monolingual model, the gradual shift in accuracy seen previously is not as clear in either language. Both French groups peak in accuracy at the 600/300 model, and Polish groups show fluctuations in accuracy across mixed models. This suggests that mismatched-language balance correlates less with accuracy for unseen test languages.
 
-For all four languages, however, we see that for each model the Unique groups always have lower accuracy than the Shared groups. This pattern is consistent despite the large differences in phoneme inventory sizes, as described in Section~\ref{ed_subsec:lang_membership_groups}. These results suggest that individual phoneme exposure during pretraining has more correlation to phoneme accuracy than the ratio of mismatched languages when testing unseen languages.
 
-\begin{table}[h]
+
+A summary of the mean accuracy difference between Shared and Unique groups and the accuracy difference between monolingual models for all four languages is given in Table~\ref{ed_tab:shared_unique_summary}. While both French and Polish have higher accuracy on the English monolingual model, the gradual shift in accuracy seen previously is not as clear in either language. Both French groups peak in accuracy at the 600/300 model, and Polish groups show fluctuations in accuracy across mixed models. This suggests that mismatched-language balance correlates less with accuracy for unseen test languages.
+
+
+\begin{table}%[h]
     \centering
     \begin{tabular}{lccc}
         \hline
@@ -760,14 +795,82 @@ For all four languages, however, we see that for each model the Unique groups al
         \hline
     \end{tabular}
     \caption{Mean accuracy gap between shared and unique phoneme groups for each language, and accuracy differences between English-monolingual and Spanish-monolingual pretraining (English minus Spanish) for shared and unique groups.}
-    \label{tab:shared_unique_summary}
+    \label{ed_tab:shared_unique_summary}
 \end{table}
+For all four languages, however, we see that for each model the Unique groups always have lower accuracy than the Shared groups. This pattern is consistent despite the large differences in phoneme inventory sizes, as described in Section~\ref{ed_subsec:lang_membership_groups}. These results suggest that individual phoneme exposure during pretraining has more correlation to phoneme accuracy than the ratio of mismatched languages when testing unseen languages.
 
-While language-membership grouping reveals certain patterns across languages, it compares groups that differ greatly in total phoneme counts. This may be conflating multiple phonetic properties and obscuring more precise information. We therefore analyse phoneme accuracy by manner-of-articulation (MoA) classes in the next section. MoA classes are widely used in phonetics that we can use for more balanced group sizes, comparable inventories across languages, and clearer isolation of individual phonetic features~\cite{international1999handbook}.
+
+
+\begin{figure}%[t]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/linegraph_unseen_unique_fre_pol.pdf}
+    \caption{
+        Mean phoneme accuracy at layer~7 for French and Polish phonemes that are shared between an unseen language and either English or Spanish, but not with the other pretraining language. The grouped languages are as follows: French--English, French--Spanish, Polish--English, Polish-Spanish.
+    }
+    \label{ed_fig:cross_overlap_fre_pol}
+\end{figure}
+
+To test this idea directly for the unseen languages, we examine French and Polish phonemes that overlap with only one of the pretraining languages. Four sets of phonemes can be formed by taking phonemes that are exclusive to two languages at a time, one pretraining language and one unseen testing language, as detailed in Section~\ref{ed_subsec:lang_membership_groups}. We expect each group to perform best on the matching monolingual model and to show a gradual shift in accuracy towards the mismatched monolingual model, as seen in previous experiments.
+
+Figure~\ref{ed_fig:cross_overlap_fre_pol} shows mean phoneme accuracy across mixtures for these four overlap groups, French-English, French-Spanish, Polish-English, Polish-Spanish. We do not observe a clear gradual shift in accuracy for any of the groups, in some cases balanced mixed-language pretraining even produces the highest accuracy. French-English and Polish-English have mean accuracies of 48.92\% and 52.27\% respectively. In contrast, the French-Spanish and Polish-Spanish groups are at 62.31\% and 64.98\% mean accuracies. Thus, for both French and Polish, phonemes that exist only in Spanish and the respective unseen language have higher average accuracy than phonemes that exist only in English and the unseen language.
+
+The patterns observed in Figure~\ref{ed_fig:cross_overlap_fre_pol} do not seem to align with our gradual-shift hypothesis so far. However, the phonetic composition of these sets helps explain this difference. The Spanish-overlap groups for French and Polish each contain only four phonemes, with two overlapping across the two unseen languages. \hl{These phonemes include several Spanish vowels,} \textipa{u, e, o, a}, a Tap, \textipa{r}, and a common fricative consonant \textipa{x}. \hl{These phonemes cover all but one of the total number of vowels in the Spanish MFA dictionary and two more highly represented consonants in pretraining. By contrast, the English-overlap sets are larger with 11 and 9 phonemes total and more diverse: they include palatalised stops and fricatives (e.g.\ p\textsuperscript{j}, t\textsuperscript{j}, f\textsuperscript{j}, v\textsuperscript{j}), affricates such as} d\textipa{\textyogh}, central vowels \textipa{@}, plain stops and fricatives (t, d, v, z, \textipa{\textyogh}), \hl{and even glottal stop }\textipa{P}.\thoughts{1. Most of this can probably be moved to the discussion section!}\thoughts{2. These all need to be converted to \\textipa also put into IPA order} This group spans multiple MoA categories and includes several phonemes that are less represented in pretraining, such as several palatalised consonants. 
+
+While language-membership grouping reveals certain patterns across languages, these experiments compare sets that differ greatly in both total phoneme counts and phonetic diversity. In particular, grouping by language does not control for differences between broad classes such as vowels and consonants. Our current grouping may be conflating multiple phonetic properties and obscuring more precise patterns in our results. To investigate this we will analyse phoneme accuracy by manner-of-articulation (MoA) classes in the next section. MoA classes are widely used in phonetics that allow for more balanced group sizes, comparable inventories across languages, and clearer isolation of individual phonetic features~\cite{international1999handbook}.
+
+\hl{REMEMBER TO ADD THIS TO DESIGN SECTION!!!!}
 
 
 %\newpage
 \subsection{Phoneme Accuracy in Phoneme Classes}\label{ed_sec:phonemes_classes}
+
+\iffalse
+
+1. Introduce MoA results and briefly restate the three hypotheses (data quantity, seen-language trade-off, unseen-language impact).
+
+2. Present vowel results across languages, highlighting matched-language effects for English, stability for Spanish, and mixed-pretraining benefits for Polish.
+
+3. Present stop and nasal results as robust, high-resource classes that transfer well and are relatively insensitive to exact language balance.
+
+4. Present fricatives (and briefly affricates) as lower-accuracy, more mixture-sensitive classes that depend more on matched pretraining and inventory differences.
+
+5. Present rhotics (tap/trill or combined) as a strongly Spanish-skewed class showing clear matched-language benefits and trade-offs for unseen languages.
+
+6. Briefly note approximants and (if kept) diphthongs as intermediate cases that support, but do not change, the main patterns.
+
+7. Summarise how MoA patterns connect back to shared/unique and cross-overlap results, arguing that class type and data quantity largely determine how pretraining balance affects transfer.
+
+\fi
+
+\iffalse
+
+\begin{itemize}
+    \item Perplexity analysis thoughts 
+    \item \textbf{Vowels}: Claims accuracy is high adn Fre/Pol curves track English
+    \item I disagree Polish is quite different, Spanish shows clear preference for Spanish and French is not that averagely high
+    \item "more vowel examples in pretraining (from any language) help vowels in unseen languages" This would suggest that they all did best on Spanish monolignual which has the most, they do not do best on Spa monolingual
+    \item barchart supports these ideasm it uses phoneme inventory to justify the more vowel examples line
+    \item overall argument is the higher number of examples makes English high-resource models better for recognition. I would disagree with this reading
+
+    \item \textbf{Approximants}: data quantity effect plus a mild English advantage, but approximants are less fragile than fricatives and less skewed than diphthongs; balanced mixtures work nearly as well as monolingual for all languages, including unseen ones
+    \item Again disagree, there is a clear spanish advantage for spanish and what is it talking about with the mixed and balanced models
+
+    \item \textbf{Nasals} : "Themes: nasals exemplify a universal, well‑represented class where total examples matter more than which language they come from; balanced and high‑resource mixed pretraining reliably helps all languages."
+    \item I don't disagree completely, this class has almost the same number of examples across all models and the phoneme tokens overlap ~75\% across all languages 
+    \item although it doesn't mention that Spanish has higher accuracy on monolingual English than Spanish, which maybe should be noted.
+\end{itemize}
+
+\fi
+
+\hl{New version starts here}
+
+
+
+
+
+\hl{new version ends here}
+
+
 
  %%% FULL TABLE WITH ALL PHONEMES AND ALL VARIATIONS %%%%%%%%%
 \iffalse
@@ -830,7 +933,7 @@ While language-membership grouping reveals certain patterns across languages, it
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%% change layout to phoneme groups being in a separate column to language
-%\iffalse
+\iffalse
 %\newpage
 \begin{table}%[h]
 \centering
@@ -885,7 +988,7 @@ While language-membership grouping reveals certain patterns across languages, it
 \bottomrule
 \end{tabular}
 \caption{Phonemes per language grouped by articulatory class. This table lists one base symbol per MFA phoneme; a full inventory including all phonetic variants used in our experiments is given in Appendix~\ref{app_sec:chapter_5_appendix}, Table~\ref{app_tab:phoneme_groups_by_language}. \hl{THIS TABLE HAS BEEN MOVED TO EXPERIMENTAL DESIGN IT CAN PROBABLY BE REMOVED HERE}}
-
+\fi
 
 \iffalse
 \caption{Phonemes per language grouped by articulatory class. All of the available MFA tokens for all languages are used, including those reflecting phonetic variations such as extended duration of vowels (\textipa{i:, A:}), labialization (\textipa{\textObardotlessj\super w,  p\super w}), aspiration (\textipa{p\super h, k\super h}), palatalization (\textipa{R\super j, m\super j}), nasalisation (\textipa{\~{E}, \~{A}}), syllabification (\textipa{\textsyllabic{n}, \textsyllabic{\textltilde}}), dental placement \hl{noun?} (\textipa{\|[{d}, \|[{t}}) and rhotacization (\textipa{\textrhookschwa, \textrhookrevepsilon}). \hl{Extra variants} (\textipa{0, \textObardotlessj, \c{c}, \textltilde, \textbardotlessj J, 1, \:s, \textcommatailz, \textctz, d\textcommatailz, d\textctz, t\c{c}, t\:s, C})Phonetic variations are not included in the table, for full list of tokens used see Appendix table \ref{app:phoneme_groups_by_language} \hl{will have to revisit and reqrite this table description, still many variations included}}
