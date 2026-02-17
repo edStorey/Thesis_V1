@@ -428,7 +428,7 @@ These experiments aim to show how pretraining language balance affects recogniti
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\newpage
 
-\subsection{Probing Phonemes by Articulatory Class}
+\subsection{Probing Phonemes by Articulatory Class}\label{er_subsec:moa_classes}
 
 \hl{DO NOT FORGET DELPHINE'S NOTES}
 
@@ -864,13 +864,111 @@ While language-membership grouping reveals certain patterns across languages, th
 
 \hl{New version starts here}
 
+We now analyse phoneme accuracy by manner-of-articulation (MoA) to understand how pretraining language balance interacts with different phonetic classes. In this section, we highlight several specific classes. We first analyse the vowel and stop classes, which are highly represented in both pretraining languages. We then examine taps, trills, and diphthongs. These classes are either present, or heavily concentrated, in only a single pretraining language. We consider all of these classes in matched-language, mismatched-language, related-language, seen-language, and unseen-language settings. The languages used for analyses are again English, Spanish French and Polish. These results will show how much phoneme accuracy relates to phoneme representation in pretraining and explore the relationship between phoneme representation and articulation.\thoughts{Revisit this opening pargraph when I have written the whole section.}
+\iffalse
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/5_vowel_diphthong_language_colours.pdf}
+    \caption{Mean vowel phoneme accuracy at layer~7 for English, Spanish, French, and Polish across all pretraining mixtures. Each panel shows accuracy for vowel phonemes in a given language for different English and Spanish pretraining mixtures.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+\fi
+
+\subsubsection{Vowels and Diphthongs}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/5_vowel_diphthong_language_colours.pdf}
+    \caption{Mean vowel and diphthong phoneme accuracy at layer~7 for English, Spanish, French, and Polish across all pretraining mixtures. The figure shows accuracy for vowel phonemes in each language, together with English diphthongs, for different English and Spanish pretraining mixtures.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+
+In Figure~\ref{ed_fig:moa_class_vowel} we analyse the accuracy of vowel phonemes across our four languages for each pretraining language. Phoneme inventories and an overview of the experimental design can be found in Section~\ref{er_subsec:moa_classes}. Spanish vowel accuracy stays around 80\% for all models, with little variation across pretraining mixtures. English vowels are averagely lower, with 62.2\% at 960/0, and show a gradual decline with the lowest value of 44.0\% on the Spanish monolingual model. French vowels remain in the 50\% range across all models, again with little variation across mixed-language models. Polish vowels are notable for having the highest accuracy, of 70.2\%, on the balanced 450/450 balanced, mixed-language model. English diphthongs, which only occur in the English, reach higher accuracies than English vowels at all mixtures. They also achieve the highest accuracy of all groups in Figure~\ref{ed_fig:moa_class_vowel} for all models except the Spanish high-resource models.\thoughts{Does this need to be here? Could be cut down and moved to disucssion} They obtain 85.8\% on the monolingual English model and then remain above 80\% for most mixed models. English-Diphthongs only significantly decrease in accuracy on the Spanish high-resource models, reaching 69.6\% on the Spanish monolingual model.
+
+Previously, in Figure~\ref{ed_fig:cross_overlap_fre_pol}, French–Spanish and Polish–Spanish overlapping sets showed higher average accuracy than the corresponding French-English and Polish-English groups. English vowels have a larger and more diverse vowel inventory than Spanish, and vowels are also the highest‑resource MoA class in pretraining for both languages, Table~\ref{ed_tab:phoneme_token_class_counts_m}. Despite this, Spanish Vowels consistently have higher accuracy than vowels spoken in all other languages, even on the English monolingual model. Since the French–Spanish and Polish–Spanish sets contained several Spanish vowels in their small inventories, this may explain their high accuracy. Notably, neither of the French–English or Polish–English sets contain any diphthongs. English-overlap groups are more diverse and only contain a single vowel. This lack of vowels or diphthongs in the English overlap sets may have contributed to their averagely lower accuracy.\thoughts{Again, this could probably be cut down and moved to discussion or even the whole paragraph moved to the discussion}
+
+The English-Vowel, English-Dipthong and Spanish-Vowel sets show some matched-language correlation to pretraining in Figure~\ref{ed_fig:cross_overlap_fre_pol}. Although, none of these sets have a clear gradual shift as in previous experiments. With high mixed-language model accuracy relative to the monolingual models, the French and Polish vowel sets show a very different pattern. Next, therefore, we will evaluate MoA classes that are high-resource in a single pretraining language, to examine language-specific behaviours.\thoughts{come back to this ending sentence and make sure it still makes sense later.}
 
 
 
 
-\hl{new version ends here}
+\begin{figure}%[t]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/2_tap_trill_language_colours_upper_legend.pdf}
+    \caption{\hl{Taps and Trills are all included in this graph. UPDATE THIS CAPTION!!}}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+
+\hl{PLACEHOLDER TEXT IGNORE THIS}
+
+Previously, in Figure 2, French–Spanish and Polish–Spanish overlapping sets showed higher average accuracy than the corresponding French-English and Polish-English groups. English has a larger and more diverse vowel inventory, and vowels are also the highest‑resource MoA class in pretraining, Table 2. Despite this, Spanish Vowels consistently have higher accuracy than vowels spoken in all other languages, even on the English monolingual model. Since the French–Spanish and Polish–Spanish sets contained several Spanish vowels in their small inventories, this may explain their high accuracy. The decline in English vowel accuracy across mixtures shows a matched-language correlation to pretraining, but the French and Polish vowel results do not. Next, therefore, we evaluate a MoA class with less exposure in pretraining.
+
+\newpage
+\clearpage
+
+\begin{figure}%[h]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/5_vowel_diphthong_language_colours.pdf}
+    \caption{Diphthongs are all included in this graph.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+
+%\hl{testing tap trill and diphthongs}
+\newpage
+\clearpage
+
+\begin{figure}%[h]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_diphthong.pdf}
+    \caption{Diphthongs are all included in this graph.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+
+\newpage
+\clearpage
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_tap.pdf}
+    \caption{Taps are all included in this graph.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+\begin{figure}%[t]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_trill.pdf}
+    \caption{Trills are all included in this graph.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
 
 
+%\hl{new version ends here}
+\newpage
+\clearpage
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_diphthong.pdf}
+    \caption{Diphthongs are all included in this graph.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+\begin{figure}%[t]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/2_tap_trill_language_colours_upper_legend.pdf}
+    \caption{Taps and Trills are all included in this graph.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+
+
+\newpage
+\clearpage
+
+\begin{figure}%[t]
+    \centering
+    \includegraphics[width=\linewidth, height=0.45\textheight]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/4_tap_trill_diphthong_language_colours.pdf}
+    \caption{Diphthongs, Taps and Trills are all included in this graph.}
+    \label{ed_fig:moa_class_vowel}
+\end{figure}
+
+\newpage
+\clearpage
 
  %%% FULL TABLE WITH ALL PHONEMES AND ALL VARIATIONS %%%%%%%%%
 \iffalse
@@ -1082,6 +1180,16 @@ For French and Polish, we are interested in how well the model can recognise ind
     \item phrasing: shared phonemes benefit even when pretraining data is mismatched (because unique phonemes always have less accuracy), although they benefit more when pretraining is matched.
     \item Line taken from Section~\ref{ed_sec:shared_vs_not_shared}, could be used here instead:
     \item "We also see in this experiment that shared phoneme groups have higher average accuracy on all models than unique groups. This is despite the greatly varying size of their phoneme inventories, as seen in Section~\ref{ed_subsec:lang_membership_groups}.This may suggest that shared phonemes can benefit from increased exposure in pretraining even when the pretraining data is mismatched. Language-unique phonemes, on the other hand, suffer in accuracy when mismatched-language pretraining limits exposure to phonemes in this group."
+
+    \item \textbf{MoA Classes}: Discuss heavily where our average class accuracy lines up with previous work and whether the mixed models, in particular, still show the patterns of previous research on probing MoA classes. 
+    \item weighted averages for MoA: This should be mentioned in the discussion as we know that MoA will have more sensitivity to specific phonemes.
+    \item Discuss how we can't weight for pretraining phonemes (because the MFA dictionaries are different) so weighting would only control for probe sensitivity. 
+    \item I could mention that we tested this and it didn't change the results much.
+
+    \item \textbf{Vowels}: Previous work on vowels in probing as summarised by perlexity:
+    \item "Probing work on wav2vec‑style models has typically found that vowels are among the better‑represented phoneme classes, but that fine‑grained vowel quality contrasts (especially between closely related vowels) can still be harder to separate than broad consonant manner classes. Some studies report relatively smooth layer‑wise decoding curves for vowels and less dramatic cross‑lingual degradation than for more marked consonant types. That aligns reasonably well with your picture of vowels as a high‑resource, relatively robust class, though your results add more nuance by separating the languages and mixtures rather than treating vowels as a single pooled category."
+
+    
 \end{itemize}
 
 \hl{Below are some deleted sentences from the experimental results multilingual finetuning section that could be used as talking points here:}
