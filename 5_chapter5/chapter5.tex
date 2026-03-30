@@ -494,7 +494,7 @@ Trill        & 0    & 0.1  &  0.2  & 0.3  & 0.4  & 0.5  & 0.6 \\
 \multicolumn{3}{l}{\textbf{English}} \\
 %Vowel & \textipa{i, iː, æ, ɐ, ɑ, ɑː, ɒ, ɒː, ə, ɚ, ɛ, ɝ, ɪ, ʉ, ʉː, ʊ} \\
 & Vowel & \textipa{i, {\ae}, 5, A, 6, @, E, \textrevepsilon, \i, u, U} \\
-& Diphthong & \textipa{aj, aw, ej, ow, @w} \\
+& Diphthong & \textipa{aj, aw, ej, ow, Oj} \\
 & Stop & \textipa{b, c, d, k, p, t, \j, g, P} \\
 & Nasal & \textipa{m, n, N, M, \textltailn} \\
 & Fricative & \textipa{f, h, s, v, z, c, D, S, Z, T} \\
@@ -519,7 +519,7 @@ Trill        & 0    & 0.1  &  0.2  & 0.3  & 0.4  & 0.5  & 0.6 \\
 & Trill & \textipa{r} \\
 \addlinespace
 \multicolumn{3}{l}{\textbf{French}} \\
-& Vowel & \textipa{a, e, i, o, u, y, \o, \ae, A, O, \textschwa, E, \oe} \\
+& Vowel & \textipa{a, e, i, o, u, y, \o, A, O, \textschwa, E, \oe} \\
 & Stop & \textipa{b, c, d, k, p, t, \j, g} \\
 & Nasal & \textipa{m, n, N, \textltailn} \\
 & Fricative & \textipa{f, s, v, z, K, S, Z} \\
@@ -915,7 +915,7 @@ We now analyse phoneme accuracy by manner-of-articulation (MoA) to understand ho
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/5_vowel_diphthong_language_colours.pdf}
-    \caption{Mean vowel and diphthong phoneme accuracy at layer~7 for English, Spanish, French, and Polish across all pretraining mixtures. The figure shows accuracy for vowel phonemes in each language, together with English diphthongs, for different English and Spanish pretraining mixtures.}
+    \caption{Mean vowel and diphthong phoneme accuracy at layer~7 for English, Spanish, French, and Polish across all pretraining mixtures. The figure shows accuracy for vowel phonemes in each language, together with English diphthongs, for different English and Spanish pretraining mixtures. \hl{maybe shorten Dipthong to "Diphth"}}
     \label{ed_fig:moa_class_vowel}
 \end{figure}
 
@@ -940,7 +940,7 @@ In Figure~\ref{ed_fig:moa_class_tap_trill} we analyse the accuracy of taps and t
 
 
 
-These patterns reflect both pretraining exposure and probe data for this MoA class. Taps and trills are low‑resource in English pretraining, but their phone interval counts increase with Spanish data. As seen in Table~\ref{ed_tab:phoneme_token_class_counts_m}, Taps have 0.4M to 1.6M phone intervals in pretraining and trills have 0 to 0.6M phone intervals for English and Spanish monolingual models respectively. Both classes can be considered low resource across all models. In the probe validation sets, Spanish also has the most examples for these phonemes with 17431 \textipa{R} in taps and 5879 \textipa{r} for trills. This is compared to very few English taps with 290 \textipa{R}, 155 \textipa{r\super j} and 5 \textipa{\~R} and moderate Polish trills with 2403 \textipa{r} phone intervals and only 12 \textipa{r\super j}. This combination explains why Spanish taps and trills have higher accuracy than the English taps and Polish trills, despite the low-resource exposure in pretraining. Spanish also has only a single Tap phoneme, \textipa{R}, and a single Trill phoneme, \textipa{r}. With fewer distinct phone intervals to average across, phoneme accuracy in these groups may be more sensitive to anomalous results. With fewer phonemes to average across accuracy may be more sensitive to anomalous results. This could account for the fluctuations in accuracy and the less clear gradual increase in accuracy across mixtures when compared to previous results.\thoughts{This could all go in the discussion section almost certainly}
+These patterns reflect both pretraining exposure and probe data for this MoA class. Taps and trills are low‑resource in English pretraining, but their phone interval counts increase with Spanish data. As seen in Table~\ref{ed_tab:phoneme_token_class_counts_m}, Taps have 0.4M to 1.6M phone intervals in pretraining and trills have 0 to 0.6M phone intervals for English and Spanish monolingual models respectively. Both classes can be considered low resource across all models. In the probe validation sets, Spanish also has the most examples for these phonemes with 17431 \textipa{R} in taps and 5879 \textipa{r} for trills. This is compared to very few English taps with 290 \textipa{R}, 155 \textipa{r\super j} and 5 \textipa{\~R} and moderate Polish trills with 2403 \textipa{r} phone intervals and only 12 \textipa{r\super j}. This combination explains why Spanish taps and trills have higher accuracy than the English taps and Polish trills, despite the low-resource exposure in pretraining. Spanish also has only a single Tap phoneme, \textipa{R}, and a single Trill phoneme, \textipa{r}. With fewer distinct phone intervals to average across, phoneme accuracy in these groups may be more sensitive to anomalous results. This could account for the fluctuations in accuracy and the less clear gradual increase in accuracy across mixtures when compared to previous results.\thoughts{This could all go in the discussion section almost certainly. Also, I should change the language to interval coutns and phoneme categories}
 
 Taken together, these results suggest that low‑resource MoA classes in pretraining primarily benefit matched-language and seen-language data. While there are only limited gains for unmatched or unseen languages. This pattern is consistent with the high accuracy of English diphthongs relative to other English classes. As well as the relatively high accuracy of Spanish taps and trills compared with English taps and Polish trills. By contrast, vowels, which have the most exposure in pretraining of any class, have high average accuracies across all four languages. This indicates that higher overall pretraining exposure will result in higher accuracy for phonemes in both seen and unseen languages.
 
@@ -956,7 +956,7 @@ Taken together, these results suggest that low‑resource MoA classes in pretrai
 
 Next, we examine nasals and fricatives MoA clases. These groups are mid-resource in pretraining and have less phoneme exposure across both pretraining languages than the vowel class and more than any of the low-resource classes diphthongs, Taps and Trills. Both classes also have wide and shared phoneme inventories across the four languages. These factors will allow us to test whether the phoneme exposure in pretraining also correlates with accuracy for mid-resource MoA classes.
 
-In Figure~\ref{ed_fig:moa_class_fricative} we examine the accuracy of fricatives. English fricatives have an accuracy of 65.4\% on the English monolingual model. They then gradually decrease in accuracy across the mixed-language models to 60.2\% on the 100/800 model, before dropping to 49.8\% on the Spanish monolingual model. Spanish fricatives have the highest accuracy on the Spanish monolingual model at 56.5\%. Spanish shows fluctuations in accuracy of up to 6\% across mixed-language models, not showing a clear gradual decrease in accuracy. Spanish fricatives then drop in accuracy to 48.5\% on the English monolingual model. French has the highest fricative accuracy across all models when compared to the other test languages, with a peak of 82.6\% on the 600/300 model and the lowest accuracy on the Spanish monolingual model. For all models, Polish fricative accuracy is higher than English and Spanish accuracy but lower than French. Polish fricatives also show higher or equal accuracy on mixed-language models than on either monolingual models, with the highest accuracy of 72.4\% on the 800/100 model. 
+In Figure~\ref{ed_fig:moa_class_fricative} we examine the accuracy of fricatives. English fricatives have an accuracy of 65.4\% on the English monolingual model. They then gradually decrease in accuracy across the mixed-language models to 60.2\% on the 100/800 model, before dropping to 49.8\% on the Spanish monolingual model. Spanish fricatives have the highest accuracy on the Spanish monolingual model at 56.5\%. Spanish shows fluctuations in accuracy of up to 6\% across mixed-language models, not showing a clear gradual decrease in accuracy across all models. Spanish fricatives then drop in accuracy to 48.5\% on the English monolingual model. French has the highest fricative accuracy across all models when compared to the other test languages, with a peak of 82.6\% on the 600/300 model and the lowest accuracy on the Spanish monolingual model. For all models, Polish fricative accuracy is higher than English and Spanish accuracy but lower than French. Polish fricatives also show higher or equal accuracy on mixed-language models than on either monolingual models, with the highest accuracy of 72.4\% on the 800/100 model. 
 
 \begin{figure}%[t]
     \centering
@@ -971,7 +971,7 @@ Fricatives and nasals form mid‑resource classes in pretraining, ranging betwee
 
 
 %\hl{THIS COULD START THE NEXT SUBSECTION Need to highlight next that these mid-resource classes are both uncorrelated to pretraining data and show a wide range of accuracies. In discussion I would link this to previous findings that suggest that nassals are generally well represented and that it is surprising that the accuracy could be so low, especially for french. How do I link this here to weighted averages though?}
-
+\iffalse
 \begin{itemize}
     \item Notes for weighting section
     \item nasals
@@ -1008,7 +1008,7 @@ Fricatives and nasals form mid‑resource classes in pretraining, ranging betwee
     \item The lowest‑accuracy languages (Spanish for fricatives, French for nasals) are those where a larger share of the class consists of low‑resource or language‑specific phonemes that do not benefit as much from cross‑lingual sharing.
     
 \end{itemize}
-
+\fi
 
 \iffalse
 %%%% phoneme counts for fricatives:
@@ -1152,6 +1152,9 @@ polish = 960
 \fi
 
 \subsubsection{Weighted Averages}
+\hl{Iffalsed section here that could be used in discussion!!!}
+
+\iffalse
 
 Across both nasals and fricatives, the language averages are strongly shaped by how many phoneme categories fall on a few very frequent phonemes. For example, Polish nasal accuracy is high on every model when compared to the other three languages. This aligns with most of its nasal tokens coming from just four phonemes, especially \textipa{|[{n}} and \textipa{m}, each with well over ten thousand tokens, so low‑resource nasals contribute little to its mean. In contrast, French nasal accuracy is lowest even though it shares its main nasal phonemes with English, because its average is pulled down by very rare segments such as \textipa{N} and \textipa{m\super j} with only a handful of tokens. A similar pattern appears for fricatives: French fricative accuracy is highest, reflecting that most of its tokens are concentrated on a small set of high‑frequency phonemes like \textipa{K} and \textipa{s}, whereas Spanish fricatives look weaker unweighted because mid‑ and low‑token count phonemes such as \textipa{J}, \textipa{S}, and \textipa{\c{c}} drag down the mean despite strong performance on very common fricatives like \textipa{s}, \textipa{D}, and \textipa{B}.\thoughts{This could be simplified and moved to the discussion section}
 
@@ -1159,25 +1162,89 @@ When analysing both nasal and fricative classes, we see that several languages s
 
 To control for the number of time-aligned phone intervals in each phoneme category, we can weight our accuracy by as described in Section~\ref{EXPERIMENTAL_DESIGN_WEIGHTED_ACCURACY}.\thoughts{Need to write this section} This technique will weight phoneme accuracy towards high-resource phoneme categories and away from low-resource ones.
 
-%\newpage
-%\clearpage
-\begin{figure}[t!]
+--------------------------------------- REWRITE NEEDS EDITING ------------------------------------------
+\fi
+
+
+
+High and low-resource MoA classes in pretraining showed clear matched-language accuracy increases. Spanish taps and Spanish trills are high or very high-resource in test data and have high accuracy, especially in matched-language settings. English taps and Polish trills have low accuracy across all models and each contains at least one very low-resource phoneme category in the test data. Vowels are high-resource in pretraining and the matched-language Spanish has the highest accuracy across all pretraining mixtures. While all languages in the vowel class contain very few low-resource phoneme categories, Spanish vowels only contain high-resource categories.
+
+\begin{figure}%[t!]
     \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/standard_deviation/vowel_nasal_Fricative_increase_font.pdf}
-    \caption{Cross‑language range of accuracies for MoA classes: vowel, nasal, and fricative. Accuracy is taken from layer 7 across each English–Spanish pretraining mixtures. Solid blue lines and bands show the unweighted mean and range across English, Spanish, French, and Polish, while dashed red lines and bands show the corresponding values when language accuracies are weighted by phoneme token counts in test data.}%\hl{NEEDS EDITING!!!}}
-    \label{ed_fig:moa_class_nasal}
+    \includegraphics[width=\linewidth]{5_chapter5/figures/weighted_accuracy/weighted_unweighted_nasal.pdf}
+    \caption{Mean nasal accuracy across English and Spanish pretraining mixtures. The left panel shows the unweighted average across phoneme categories within each language. The right panel shows the same averages, but weighted by the number of phoneme interval counts per phoneme category in the test data.}
+    \label{ed_fig:moa_class_nasal_weighted}
 \end{figure}
 
+For both mid-resource MoA classes, nasals and fricatives, the languages with the highest average accuracy across all models are the unseen languages, Polish and French. As seen previously, phoneme inventories in these classes do not explain this deviation from the results for high-resource and low-resource MoA classes. Instead, here we can examine the distribution of interval counts across phoneme categories in the test data.\thoughts{this is a bit of a leap but I think it's fine, I can go into detail in the discussion} Polish nasals have the highest accuracy across all pretraining mixtures and contain five phoneme categories: three high-resource, one low-resource, and one very low-resource in test data. French nasals have the lowest average accuracy across all mixtures and contain more low-resource categories than high or very high-resource categories. For fricatives, French contains only high and very high-resource phonemes and has the highest average accuracy across all mixtures, whereas English, Spanish, and Polish fricatives each contain multiple low or very low-resource phoneme categories in the test data. 
+
+Compared to high and low-resource MoA classes examined previously, these mid-resource classes show greater variation in interval counts across phoneme categories within each language. The results suggest a correlation between high phoneme accuracy and languages with more high-resource phoneme categories. We test this correlation by weighting phoneme accuracy by test data interval counts in Figure~\ref{ed_fig:moa_class_nasal_weighted}, as outlined in Section~\ref{experimental_design}\info{Haven't written yet}.
 
 
-\clearpage
+
+
+\hl{there is an iffalsed here that could be used in discussion}
+\iffalse
+The largest change is seen for French, whose mean weighted accuracy is about 29 percentage points higher than its mean unweighted accuracy. This is consistent with the French nasal inventory containing two very high-resource categories, one low-resource category, and two very low-resource categories, so that sparse categories may have had a disproportionately large effect on the unweighted mean. Spanish also increases strongly, by about 20 percentage points on average, rising from the mid-50s unweighted to the high-70s weighted. This fits with the Spanish nasal distribution, which contains two very high-resource categories, two low-resource categories, and no very low-resource categories. English also shows a substantial increase of about 18 percentage points, moving from roughly 41–56\% unweighted to about 60–73\% weighted across mixtures. English has a more mixed resource profile, with two very high-resource categories, one high-resource category, two low-resource categories, and two very low-resource categories, so weighting reduces the influence of several sparse nasal categories while still preserving some instability at the lowest-English mixture. Polish changes least, increasing by only about 8 percentage points on average. This is in line with Polish already having three high-resource categories, one low-resource category, and only one very low-resource category, meaning that its unweighted mean was less exposed to sparse-category effects from the start.\thoughts{This paragraph is much more detailed and covers each language individually, specifically relating how many H/L classes are in each language and how much the accuracy changes in numbers. This again still needs rewording, numbers are vague and descriptions are still a little vague. This paragraph goes into quite a lot of detail and maybe could be moved to discussion.}
+
+Weighting also strongly compresses the spread between languages. Across mixtures, the average range between the highest and lowest unweighted nasal accuracies is about 27 percentage points, whereas the weighted range falls to about 10 percentage points. In other words, much of the cross-language separation visible in the unweighted graph disappears once phoneme categories with more interval counts are given more influence. This is particularly important for the earlier nasal analysis, because it suggests that part of the apparent gap between Polish and French is tied to the distribution of interval counts across phoneme categories rather than simply to inventory overlap or matched-language effects.\thoughts{This paragraph covers the range of the accuracies and how its changed after weighting. This information is important to mention but the details could go with the next set of graphs.}
+
+The weighted results also change how stable each language appears across pretraining mixtures. In the unweighted graph, English and Polish show relatively steep declines as Spanish pretraining increases, while Spanish and French are somewhat flatter. After weighting, Spanish becomes especially stable across mixtures, remaining in a narrow band around the mid- to high-70s, while English still drops at the 0/920 mixture and French continues a gradual downward trend. This suggests that the weighting procedure reduces some mixture sensitivity by emphasising better-represented phoneme categories, although it does not remove all differences between languages or all sensitivity to the pretraining mixture.\thoughts{This refers to the gradual shift and relations to pretraining. However, the points made here are confusing and poorly worded. This needs to be reanalysed, but it needs to be included in some way.}
+
+There is also a notable shift in how the results can be interpreted. In the unweighted nasal results, Polish appears far stronger than French across all mixtures. In the weighted results, Polish still leads, but French moves much closer to English and in some Spanish-heavy mixtures its weighted scores approach the lower end of Polish’s unweighted range. This indicates that low- and very low-resource nasal phoneme categories were masking stronger performance on French’s better-represented categories. More broadly, the weighted nasal results support the idea that the number of high-resource phoneme categories in a language is related to average accuracy, while also showing that unweighted means may exaggerate cross-language differences when a class contains several sparse phoneme categories.\thoughts{This is higher level overview again, it needs a lot of rewording and better analysis. We can refer to the weighting biasing towards high-resource phonemes.}
+\fi
+
+
+
+Figure~\ref{ed_fig:moa_class_nasal_weighted} shows that all four languages increase in average accuracy after weighting. For each pretraining mixture, weighting by interval count greatly reduces the range of accuracies between the language with the highest nasal accuracy and the language with the lowest nasal accuracy. This suggests that the low-resource phoneme categories are more likely to have low accuracy and that giving them an equal weighting disproportionately reduces the final unweighted accuracy. This is most evident for French, in the unweighted mean French nasals average at approximately 40\% accuracy across all pretraining mixtures, whereas in the weighted results they average at approximately 70\%. The unweighted mean, therefore, suggests that all models recognise French nasal phonemes poorly, but the weighted mean shows that high-resource French nasal categories are recognised much more accurately. Polish nasals are also no longer the highest accuracy in every pretraining model with Spanish nasals surpassing them for the high-resource Spanish pretraining mixtures. This suggests that the relationship between matched-language pretraining and high downstream accuracy, seen in previous classes, becomes more visible when weighting towards high-resource phoneme categoriess. 
 
 \begin{figure}%[h]
     \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/standard_deviation/vowel_nasal_Fricative_2.pdf}
-    \caption{Mean nasal phoneme accuracy at layer~7 for English, Spanish, and Polish across all pretraining mixtures. The figure shows accuracy for nasal phonemes in English and Spanish, French and Polish, for different English and Spanish pretraining mixtures. \hl{NEEDS EDITING!!!}}
-    \label{ed_fig:moa_class_nasal}
+    \includegraphics[width=\linewidth]{5_chapter5/figures/weighted_accuracy/weighted_unweighted_fricative.pdf}
+    \caption{Mean fricative accuracy across English and Spanish pretraining mixtures. The left panel shows the unweighted average across phoneme categories within each language. The right panel shows the same averages, but weighted by the number of phoneme interval counts per phoneme category in the test data.}
+    \label{ed_fig:moa_class_fricative_weighted}
 \end{figure}
+
+Figure~\ref{ed_fig:moa_class_fricative_weighted} shows a similar broad pattern to the nasal results, as weighting increases average fricative accuracy for all four languages and reduces the range of accuracies. This again suggests that low-resource phoneme categories are more likely to be low in accuracy and disproportionally reduce overall mean accuracy. However, the fricative results also provide an important contrast with nasals. English, Spanish, and Polish all increase in average accuracy by between approximately 6\%-16\% after weighting. French however, only increases by 1.7\% on average and is the highest accuracy language in every pretraining mixture in both the unweighted and weighted means. This small increase in accuracy is consistent with the French fricative resource distribution, which contains only very high and high-resource categories. All other languages have several low and very low-resource categories that, when unweighted, may reduce their average accuracy by a larger margin.
+
+In the unweighted fricative mean, English and Spanish already show a gradual shift from lower to higher accuracy between high-resource mismatched-pretraining and high-resource matched-language mixtures. French and Polish do not show a clear gradual shift in either weighting. This pattern is consistent with the other unweighted MoA classes, with nasals as the exception. Unlike nasals, weighting the average does not change the matched-language behaviour of fricatives for any of the four languages. Instead, it suggests that weighting reveals that nasals also follow the same pattern, but that low-resource, low-accuracy phoneme categories were obscuring it in the unweighted mean. The consistent effect of weighting in the mid-resource classes is therefore, a rise in accuracy across all languages. The low unweighted accuracy of French nasals and Polish fricatives initially suggests that there may be a relationship between the pretraining languages and the lower accuracy of unseen languages. However, weighting the accuracy towards high-resource phonemes substantially increases their average accuracy. This effect mitigates the apparent importance of the relationship between the pretraining and the test languages, when measuring downstream accuracy. Instead, it suggests that phoneme-level representation in the data is a major factor shaping downstream accuracy.\thoughts{it may be possible to move this to after the ranges graph}
+
+\iffalse
+\begin{figure}%[h]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/weighted_accuracy/weighted_unweighted_vowel.pdf}
+    \caption{Mean vowel accuracy across English and Spanish pretraining mixtures. The left panel shows the unweighted average across phoneme categories within each language. The right panel shows the same averages, but weighted by the number of phoneme interval counts per phoneme category in the test data.}
+    \label{ed_fig:moa_class_vowel_weighted}
+\end{figure}
+\fi
+
+\begin{figure}%[h]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/weighted_accuracy/weighted_unweighted_vowel_diphtong.pdf}
+    \caption{Mean vowel and diphthong accuracy across English and Spanish pretraining mixtures. The left panel shows the unweighted average across phoneme categories within each language, and the right panel shows the corresponding averages weighted by phoneme interval counts in the test data. Solid lines indicate vowels, while the dashed line indicates diphthongs. Diphthongs are only present in English.}
+    \label{ed_fig:moa_class_vowel_diphthong_weighted}
+\end{figure}
+
+Figure~\ref{ed_fig:moa_class_vowel_diphthong_weighted} shows a much smaller weighting effect than was observed for the nasal and fricative classes, although all four languages still increase in average vowel accuracy after weighting. These increases are smallest for Spanish, at approximately 1.3\%, and remain relatively modest for English and French, at approximately 4.9\% and 5.3\% respectively, while Polish shows the largest increase at approximately 8.5\%. These increases are still small however, compared to the mid-resource classes. Weighting also reduces the range of accuracies, with the unweighted range at approximately 30.2\% and the weighted range at 26.2\%. This is consistent with the vowel phoneme categories being distributed much more heavily in the very high and high-resource categories, particularly for Spanish and French. 
+
+Weighting the average does not alter the matched-language behaviour of any language within the vowel class. English still shows a gradual shift towards higher accuracy in the high-resource English models in both cases. Spanish remains consistently high across all pretraining mixtures before and after weighting, with little change between matched and mismatched pretraining languages. Polish shows less variation between models when the average is weighted, but still does not show a large difference in accuracy between Spanish and English models. French, similarly, increases in average accuracy without showing a clear increase on either pretraining language. While each language increases marginally in average accuracy, no single language substantially changes its behaviour within the class between weighting strategies. Spanish remains the highest average accuracy language and French the lowest, with Polish and English in between. These results suggest that vowel accuracy, as a high-resource MoA class, is less sensitive to test-data interval counts than the mid-resource nasal and fricative classes.
+
+Diphthongs, only found in English, also show only a modest increase in average accuracy after weighting, rising from approximately 81.6\% to 83.6\%. Weighting does not alter the matched-language pattern, as diphthong accuracy remains highest in the high-resource English pretraining mixtures before and after weighting. Although English diphthongs include three high-resource, one low-resource and one very-low-resource phoneme category, weighting raises the class mean by only 2.0\%. This suggests that the low-resource diphthong phoneme categories do not lower the unweighted average accuracy as much as low-resource phonemes do in the nasal and fricative classes. The other low-resource classes must therefore also be considered before drawing broader conclusions about the effect of weighting on low-resource MoA categories.
+
+\hl{WRITE NEXT TAPS AND TRILLS SECTION NEXT FIRST DRAFT DONE IN PERPLEXITY}
+
+\begin{figure}%[h]
+    \centering
+    \includegraphics[width=\linewidth]{5_chapter5/figures/weighted_accuracy/weighted_unweighted_tap_trill.pdf}
+    \caption{Mean tap and trill accuracy across English and Spanish pretraining mixtures. The left panel shows the unweighted average across phoneme categories within each language, and the right panel shows the corresponding averages weighted by phoneme interval counts in the test data. Solid lines indicate taps, while the dashed line indicates trills. Taps are found in Spanish and English, whilst trills are found in Spanish and Polish.}
+    \label{ed_fig:moa_class_tap_trill_weighted}
+\end{figure}
+
+Taps and trills show a more limited weighting effect than the other classes. As noted in Section~\ref{...}, Spanish taps and Spanish trills each contain only a single phoneme category therefore their class averages are identical before and after weighting. The main effect of weighting therefore appears in English taps and Polish trills. For English taps, weighting raises the average class accuracy from 27.34\% to 33.80\%, an increase of 6.47\%, even though all three English tap phoneme categories are very low-resource. For Polish trills, weighting raises the average from 17.56\% to 30.23\%, an increase of 12.67\%. Unlike the Spanish tap and trill categories, however, the English tap and Polish trill results do not show a clear gradual increase in accuracy toward the high-resource Spanish pretraining mixtures, that Spanish taps and Spanish trills do. This indicates that overlap with Spanish phoneme categories does not produce the same matched-language pattern in these low-resource classes. 
+
+This is especially evident for Polish trills, which only contain two phoneme categories: \textipa{r} and \textipa{r\super j}. For Polish trills the weighted average is almost entirely determined by \textipa{r}, which has 2403 intervals counted in test, compared with only 12 for \textipa{r\super j}. This means \textipa{r} contributes approximately 99.5\% of the weighted class mean. Since Spanish trills also contain only one phoneme category, the weighted trill results are therefore almost a one-to-one comparison between \textipa{r} spoken in Polish and Spanish. The weighted average for Polish trill accuracy is low in average accuracy, when compared to other MoA classes and the Spanish trill. It also does not gradually increase in accuracy as more Spanish data is included in a model's pretraining data. This is despite \textipa{r} only existing in the Spanish pretraining data and not in English. This suggests that the presence of a phoneme category in pretraining is not, by itself, sufficient to produce high accuracy for the corresponding category in an unseen language. \hl{Need a way to end this that either wraps things up or leads to next section.}
+
+
 
 
 \clearpage
@@ -1199,75 +1266,7 @@ To control for the number of time-aligned phone intervals in each phoneme catego
 
 
 \hl{New section ends here}
-\iffalse
-\newpage
-\clearpage
 
-\begin{figure}%[h]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/5_vowel_diphthong_language_colours.pdf}
-    \caption{Diphthongs are all included in this graph.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-
-%\hl{testing tap trill and diphthongs}
-\newpage
-\clearpage
-
-\begin{figure}%[h]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_diphthong.pdf}
-    \caption{Diphthongs are all included in this graph.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-
-\newpage
-\clearpage
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_tap.pdf}
-    \caption{Taps are all included in this graph.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-\begin{figure}%[t]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_trill.pdf}
-    \caption{Trills are all included in this graph.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-
-
-%\hl{new version ends here}
-\newpage
-\clearpage
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/3_diphthong.pdf}
-    \caption{Diphthongs are all included in this graph.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-\begin{figure}%[t]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/2_tap_trill_language_colours_upper_legend.pdf}
-    \caption{Taps and Trills are all included in this graph.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-
-
-\newpage
-\clearpage
-
-\begin{figure}%[t]
-    \centering
-    \includegraphics[width=\linewidth, height=0.45\textheight]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/4_tap_trill_diphthong_language_colours.pdf}
-    \caption{Diphthongs, Taps and Trills are all included in this graph.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-
-\newpage
-\clearpage
-\fi
  %%% FULL TABLE WITH ALL PHONEMES AND ALL VARIATIONS %%%%%%%%%
 \iffalse
 \begin{table}%[h]
