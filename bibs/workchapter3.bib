@@ -39,6 +39,22 @@
   organization={IEEE}
 }
 
+%%%% This paper tries to quantify how well English SSL models transfer across languages
+%%%% They use the entire encoders of several SSL ASR models as feature extractors for a conformer model which they use to evaluate WER. One intersting results is that French performs better than German on ost English models, they explain this by talking about the French influence on English, which they also have a reference for.
+%%% They take the weighted sum of all of the encoder layers as the input to the conformer ASR model.
+%%% One intersting takeaway is their "PSR" score which measure phonetic and semantic similarity from the language to the SSL models output features is higher with French than with German or Spanish. They don't however address that Russian has the highest score...
+%%% The highest PSRs are on layer 4, 11 and 12 of the models, suggesting these contain the most relevant information for the extracted features. I think, the phonetic score of the PSR relates to a comparison of extracted features at a layer when compared to teh mel-spectrograms of the same data, although it's not entirely clear.
+%%% The graph would make sense then since SSL creates an autoencoder, so early layers are more like a feature extractor and the final layers are recreating these features. 
+%% The only relevant point to me is that different languages have the same behaviour in the model but not the same scores i.e. unrelated languages still have the best features at layer 4 but a lower PSR
+%%% I can kind of see why this isn't that highly cited, the PSR score is not that useful, but the findings might be worth referencing.
+@inproceedings{li2023quantitative,
+  title={A quantitative approach to understand self-supervised models as cross-lingual feature extracters},
+  author={Li, Shuyue Stella and Xu, Beining and Zhang, Xiangyu and Liu, Hexin and Chao, Wenhan and Garcia, Paola},
+  booktitle={Proceedings of the 6th International Conference on Natural Language and Speech Processing (ICNLSP 2023)},
+  pages={200--211},
+  year={2023}
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                                   Probing and Layer Analysis
@@ -74,6 +90,19 @@
   year={2021},
   organization={IEEE}
 }
+
+
+%%%% Pasad's second paper that examine's similar things plus explicitly phoneme label recognition. They compare multiple models.
+%%% For our work: They find that wav2vec 2.0 and XLSR-53 have the best phoneme recognition in intermediate layers, similar to what we have done already in this study
+@inproceedings{pasad2023comparative,
+  title={Comparative layer-wise analysis of self-supervised speech models},
+  author={Pasad, Ankita and Shi, Bowen and Livescu, Karen},
+  booktitle={ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2023},
+  organization={IEEE}
+}
+
 
 %%%%%% Layer analysis of deepspeech
 @article{belinkov2017analyzing,

@@ -22,7 +22,6 @@ SSL ASR models learn speech representations in two stages: an SSL pretraining st
 
 Pasad et al. \cite{pasad2021layer} show that the SSL pretrained wav2vec 2.0 model learns local acoustic features and phone identity without needing finetuning. English et al. \cite{english2022domain} show through layer probing that a pretrained wav2vec 2.0 is not only effective at learning phoneme representations, but that the models cluster phonemes by articulatory and positional relationships. With this information, we can gauge firstly that SSL pretraining alone is effective for learning phonetic information. Then secondly, that the phonetic knowledge information it learns has a significant impact on the final ASR performance of the model. However, since both papers experiment with a monolingual English wav2vec 2.0, there are some gaps in our knowledge on what and how these models are learning. This is especially apparent in a multilingual setting where phoneme relations and accuracy have not been measured.
 
-
 For example, what happens when the ratios of unrelated languages in a multilingual SSL ASR model are not imbalanced? Do languages rely on a different language in pretraining data if English is not the most abundant? \thoughts{dunno if I should keep this in} Are individual phonemes learned as effectively when the pretraining data is multilingual compared to when it is monolingual? \summary{chapter questions} %\hl{DOI WE NEED ANYTHING AFTER THIS / I could end it here OR I CAN HAVE A SHORT EXPLANATION!! AND THEN COVER IT IN THE BACKGROUND}
 
 %\hl{THEN WE NEED TO EXPLAIN WHAT IS MISSING HERE}
@@ -34,125 +33,9 @@ In this chapter, we answer these question by pretraining multiple iterations of 
 
 Overall, our findings show that language-specific information is encoded during pretraining. However, individual groups of phonemes can benefit when they are highly represented in pretraining data even when the languages they are sourced from are unrelated. Through testing we provide evidence that by designing your pretraining dataset by phoneme content instead of language content, phoneme accuracy can improve with SSL training. This is true for phoneme groups even when the testing language is unrelated to the pretraining languages. 
 
-\begin{itemize}
-    \item \textbf{The Story of the chapter to keep consistent}
-    \item \textbf{Intro and Background:}
-    \item Popular SSL ASR are pretrained on a single language OR pretrained on multiple languages but imbalanced towards one or two
-    \item We have no examples on scale for models trained with balanced hours or controlled ratios
-    \item We know that SSL ASR models perform best when the pretraining language is monolingual and matches or is closely related to the finetuning language
-    \item How do SSL ASR models learn their pretraining data then?
-    \item They learn acoustic and phonetic information in the intermediate layers \cite{pasad2021layer}
-    \item They learn articulatory features in the early layers and fully realised phonemes in the intermediate layers \cite{english2022domain}
-    \item They learn phonemes, therefore the information that affects the final performance is their performance on phoneme accuracy, not word accuracy
-    \item Since we saw in the previous chapter that multilingual XLS-R is overly reliant on it's most abundant source of data English, we need to know how multilingual data affects phoneme accuracy as this will give insight into how models learn
-    \item \textbf{Experiments to test these ideas}
-    \item We pretrain multiple multilingual models with varying ratios of mutlilingual data
-    \item as expected, monolingual models do best when finetuned to the same language
-    \item However, it is notable that error decreases is high-resource match pretraining and decreases in low-resource match pretraining
-    \item This effect with matched pretraining languages is recreated when finetuning is in FLEURS and is unseen data
-    \item With related-language setting, we see a similar situation to the matched setting
-    \item with unrelated language we also see the same effect as the matched monolingual, high resource and low resource pretraining
-    \item when the finetuning language does not match either monolingual or any high-resource languages in pretraining, this effect is less clear.
-    \item Here we see that the ratios of languages effect downstream performance and that the more high-resource a language is in pretraining the lower the final error rates are, inversely the error rates increase as the matching language becomes more low-resource
-    \item Given that our SSL models are learning phonemes, how are multilingual pretraining effecting this.
-    \item We introduce our probing experiments here first we want to see the difference between phonemes that exist in both languages vs phonemes that only exist in English and phonemes that only exist in Spanish.
-    \item \hl{\textbf{For the background section we may need to mention the limit on datasets that MFA could handle and the pipeline I used for MFA and the OOV words}}
-    \item Given the overlapping phonemes will be in high quantities no matter the ratio we would expect to see more significant changes in accuracy between the low to high resource changes for phonemes that exist in the matching language.
-    \item We also test these groups when spoken in other languages, French and Polish.
-    \item French is related to Spanish and has lots of phonetic overlap with English. While Polish is unrelated
-    \item these experiments show us that even when the phonemes are spoken in another language the shared phonemes have higher accuracy 
-    \item So we know at this stage that phoneme accuracy can be language-specific but that phonemes that occurr in all models have higher average accuracy even when spoken in an unrelated language
-    \item \textbf{Do I need to mention amounts here? Probably I would wait until the next section}
-    \item Next, We split our phonemes into multiple sub groups by POA and MOA like in \cite{english2022domain} and then also into two language-specific groups
-    \item These tests allow us to separate phonemes into smaller groups and test how MOA and POA affect language-specific accuracy are phonemes 
-    \item we can also test here how representation of phonemes (i.e. the total number) affect accuracy, some phonemes have less overall phonemes and other have high numbers on one language but not the other
-    \item we also test all of these different angles on French and Polish as well to see if the same patterns hold true for different languages
-    \item \textbf{Discussion and Conclusion}
-\end{itemize}
-
-\newpage
-\textbf{From Perplexity}
-A good way to keep this clear and consistent is to define a small set of terms once, then reuse them. For example:
-
-\textbf{1) Pretraining / finetuning language match}
-\begin{itemize}
-    \item “Matched-language setting”: Pretraining and finetuning use the same language.
-    \item “Mismatched-language setting”: Pretraining and finetuning use different languages.
-    \item “Related-language setting”: Pretraining and finetuning languages are different but linguistically related (e.g. English → German).
-    \item “Unrelated-language setting”: Pretraining and finetuning languages are different and not closely related (e.g. English → Polish).
-\end{itemize}
-
-\textbf{2) Amount of matching language in pretraining (for your mixed-ratio models)
-You can define thresholds once, then refer back to them:}
-\begin{itemize}
-    \item “Monolingual pretraining”: 100% of the pretraining data is the finetuning language.
-    \item “High-resource match pretraining”: The finetuning language is the majority of the pretraining data (e.g. >50%).
-    \item “Low-resource match pretraining”: The finetuning language is present but only a small fraction of the pretraining data (e.g. <30%).
-    \item “No-match pretraining”: The finetuning language is absent from the pretraining data.
-\end{itemize}
-
-Then you can write short, clean sentences like:
-\begin{itemize}
-    \item “We compare matched-language and mismatched-language settings.”
-    \item “For English finetuning, we test monolingual, high-resource match, and low-resource match pretraining conditions.”
-    \item “Spanish finetuning is evaluated under related-language, unrelated-language, and no-match pretraining.” 
-\end{itemize}
-If you like, paste a short methods paragraph and these labels can be woven in explicitly.
-
-\newpage
-\textbf{When we have multilingual pretraining dataset with many languages that have very different numbers of hours per language.}
-
-A short, standard-sounding phrase here is:
-\begin{itemize}
-    \item “imbalanced multilingual pretraining data”
-    \item or more explicitly: “heavily imbalanced multilingual pretraining distribution
-\end{itemize}
-
-\textbf{When the languages are unrelated but have an equal number of hours in pretraining how would I refer to this situation.}
-
-A short label plus a brief definition will keep this tidy. For the case you describe, something like:
-\begin{itemize}
-    \item “Balanced-unrelated pretraining”: the pretraining data consists of two (or more) unrelated languages, each contributing an equal number of hours, and the finetuning language is one of these.
-    \item If the finetuning language is not one of them, you could call it “balanced-unrelated, no‑match pretraining”.
-\end{itemize}
-
-\textbf{The ideas as a whole, like the concept of studying the different number of hours in languages in pretraining whether that is monolingual high or low resource or unrelated or related.}
-
-A compact, umbrella phrase you can use is something like:
-\begin{itemize}
-    \item “Pretraining language data balance and match conditions”
-\end{itemize}
-
-After defining it once that, you can shorten it in running text to:
-\begin{itemize}
-    \item “different pretraining language conditions”
-    \item “pretraining data balance conditions”
-    \item “pretraining language balance and match”
-\end{itemize}
-
-Example uses:
-\begin{itemize}
-    \item “We analyse how different pretraining language conditions affect downstream ASR performance.”
-    \item “These experiments compare pretraining data balance conditions (monolingual, high-resource match, low-resource match, balanced-unrelated) for English and Spanish.”
-\end{itemize}
-
-
-
-
-
-
-
-
-
 \newpage
 To answer these questions, we first pretrain multiple versions of the wav2vec 2.0 \cite{wav2vec} model on two different datasets: LibriSpeech \cite{librispeech} and the Spanish subset of Multilingual LibriSpeech (MLS) \cite{MLS}. In total, we pretrain seven different models, two are monolingual models in English and Spanish. We then pretrain five more models with different ratios of the two datasets, always adding up to a total of 900 hours. We then finetune each of the models to English and Spanish data. This tests whether ASR error rate is related to pretraining data and how introducing varying amounts of a new language affects the final error rate. Further finetuning is undertaken with multiple languages from multiple language groups, each language is a  subset of the FLEURs dataset \cite{FLEURS}. These languages include languages related to English or Spanish, Germanic or Romance languages, and unrelated Slavic languages are also tested. These experiments test the impact of related and unrelated pretraining data has on the final error rate. They also reveal the impact missing unrelated data in pretraining has on this affect.\summary{this paragraph covers our pretraining ratios and datasets and the FLEURs experiments}
 
-\iffalse
-We then finetune each of these models to smaller 100 hour subsets of LibriSpeech and MLS Spanish to test whether ASR error rate is related to pretraining data. We then finetune each of the models to English and Spanish subsets of the FLEURs dataset \cite{FLEURS} to confirm whether the same patterns are observed with unseen data. Further finetuning is undertaken with multiple languages from multiple language groups. These languages are either related to English or Spanish, Germanic or Romance languages, and unrelated Slavic languages are also tested. \summary{this paragraph covers FLEURs experiments} 
-\fi
-\iffalse
-Next,\thoughts{this paragraph needs some rewriting with our new narative and further exploration of Cormac's stuff} we analyse how our pretrained SSL speech models learn phonetic information by training probes for phoneme recognition. Analysing phoneme accuracy at this stage allows us to understand how SSL ASR models learn multilingual speech. If phonemes shared across English and Spanish are well understood across all models, then SSL pretraining is language independent. If phonemes are learned independently of the languages they are spoken in, better pretraining data can be designed. However, if phonemes accuracy is lower for phonemes shared by both languages when the pretraining data contains multiple languages, then SSL pretraining is language dependant. This outcome may shed light on why monolingual pretraining is so effective. Phonemes spoken in English, Spanish, French and Polish will be tested in these experiments.\summary{This chapter explains the shared/ not shared work}
-\fi
 %\newpage  
 Next,\thoughts{this paragraph needs some rewriting with our new narative and further exploration of Cormac's stuff} we analyse how our pretrained SSL speech models learn phonetic information by training probes for phoneme recognition. We analyse the relationship between phonemes that exist in both of our pretraining languages and phonemes that only exist in either English or Spanish as separate groups.\thoughts{may need rewording} Analysing phoneme accuracy at this stage allows us to shed light on why monolingual pretraining is so effective. \summary{This chapter explains the shared/ not shared work}
 
@@ -167,7 +50,7 @@ Overall, our findings in this chapter gives new insight into how SSL pretraining
 In this section, we will investigate the background of how SSL ASR learns language. We will use previous research to understand which factors may have contributed to the findings in Chapter \ref{chapter4}. Then, finally, we identify the gaps in the current knowledge on multilingual SSL ASR. \thoughts{revist this I think}
 
 \subsection{Multilingual and Cross-Lingual SSL ASR}
-Wav2vec 2.0 is an SSL ASR model that has been pretrained on multiple languages, usually in a monolingual setting, and achieves low error when finetuned \cite{wav2vec}. XLS-R \cite{babu2021xlsr} is a large SSL ASR model with the same but expanded architecture as wav2vec 2.0 \cite{vaswani2017attention} and is pretrained on 128 different languages. XLS-R performs well across various languages \cite{FLEURS_XLSR_WHISPER}. However, it has been found that the model relies heavily on weights learned from the most high-resource language, a language with a high number of hours when compared to others, in pretraining \cite{storeyedbiasSSL}. The most high-resource language in pretraining is, in this case, English. English is often the most high-resource language in multilingual SSL ASR pretraining data due to its abundant data sources \cite{librispeech, librilight, MLS, wang-etal-2021-voxpopuli}. \summary{This paragraph introduces XLS-R and compares in to wav2vec 2.0, we also introduce English as the high-resource language and the concept of imbalanced data (although doesn't use the word balance)}
+Wav2vec 2.0 is an SSL ASR model that has been pretrained on multiple languages, usually in a monolingual setting, and achieves low error when finetuned \cite{wav2vec}. XLS-R \cite{babu2021xlsr} is a large SSL ASR model with the same but expanded architecture as wav2vec 2.0 \cite{vaswani2017attention} and is pretrained on 128 different languages. XLS-R performs well across various languages \cite{FLEURS_XLSR_WHISPER}. However, it has been found that the model relies heavily on weights learned from the most high-resource language, a language with a high number of hours when compared to others, in pretraining \cite{storeyedbiasSSL}. The most high-resource language in pretraining is, in this case, English. English is often the most high-resource language in multilingual SSL ASR pretraining data due to its abundant data sources \cite{librispeech, librilight, MLS, wang-etal-2021-voxpopuli}.
 
 %----------------------------------------------------------------------------------------------------------
 
@@ -175,9 +58,9 @@ Due to the neural scaling principle, we know that the performance of Deep Neural
 
 %----------------------------------------------------------------------------------------------------------
 
-However, studies have shown that monolingual pretraining and finetuning on a matching language, the same language as used in pretraining, can yield low error rates. This can be done with fewer parameters than large models pretrained with large multilingual datasets, often with lower finetuned error rates \cite{ashihara2023exploration, poncelet2021comparison}. Other studies have shown that pretraining on related-language datasets, data containing two or more related languages, yields similar low error results for related-language, languages related to those included in pretraining, finetuning \cite{zhang2023fast, gupta2021clsril}. \summary{this paragraph tells the benefits of monolingual and related-language pretraining}
+However, studies have shown that monolingual pretraining and finetuning on a matching language, the same language as used in pretraining, can yield low error rates. This can be done with fewer parameters than large models pretrained with large multilingual datasets, often with lower finetuned error rates \cite{ashihara2023exploration, poncelet2021comparison}. Other studies have shown that pretraining on related-language datasets, data containing two or more related languages, yields similar low error results for related-language, languages related to those included in pretraining, finetuning \cite{zhang2023fast, gupta2021clsril}.
 
-There are examples in literature of monolingual pretraining, multilingual related-language pretraining and multilingual unrelated and imbalanced, the number of hours vary per language, pretraining data. However, to date, there has been no research studying the effect of data balance, how many hours of each language are included in pretraining, for unrelated multilingual SSL pretraining. Neither has there been an extensive study into the effect on accuracy, when an SSL ASR model is pretrained on unrelated but balanced languages, when compared to any other pretraining strategies. In order to investigate these open areas of study in SSL ASR, we will first need to understand how the wav2vec 2.0 family of models learn. \summary{this paragraph covers what research has yet to be done, where the holes in research are}
+There are examples in literature of monolingual pretraining, multilingual related-language pretraining and multilingual unrelated and imbalanced, the number of hours vary per language, pretraining data. However, to date, there has been no research studying the effect of data balance, how many hours of each language are included in pretraining, for unrelated multilingual SSL pretraining. Neither has there been an extensive study into the effect on accuracy, when an SSL ASR model is pretrained on unrelated but balanced languages, when compared to any other pretraining strategies. In order to investigate these open areas of study in SSL ASR, we will first need to understand how the wav2vec 2.0 family of models learn.
 
 %\newpage
 \subsection{Wav2vec 2.0 and Self-Supervised Speech Pretraining}\label{ed_subsec:background_wav2vec}
@@ -188,18 +71,18 @@ Contrastive loss pits the output of the pretrained feature extractor against the
 For deployment in downstream tasks, wav2vec 2.0 will then be finetuned to a smaller dataset.\naominote{[Done] I have split this into 2 sentences} For ASR, Connectionist Temporal Classification (CTC) Loss \cite{graves2006connectionist} applied to transcribed speech audio data is the most common approach. There is a dissonance between the pretraining loss objective and the final task, autoencoder to transcription. It is therefore important to understand what wav2vec 2.0 learns during the contrastive pretraining stage and what information it is learning\naominote{[for this final sentence] Rephrase}
 
 \subsection{Layer-Wise Analysis of Pretrained Wav2vec 2.0}
-Previous studies show significant difference between the tasks learned on each layer\cite{belinkov2017analyzing} for DeepSpeech2 \cite{amodei2016deep}, a previous supervised ASR model. They also show that different categories of phonemes are learned with higher accuracy at different layers. Choi et al. \cite{choi2024self} have found that SSL ASR speech representations exhibit more phonetic similarity than semantic similarity \cite{choi2024self}. \summary{this paragraph introduces layer analysis with deepspeech}
+Previous studies show significant difference between the tasks learned on each layer\cite{belinkov2017analyzing} for DeepSpeech2 \cite{amodei2016deep}, a previous supervised ASR model. They also show that different categories of phonemes are learned with higher accuracy at different layers. Choi et al. \cite{choi2024self} have found that SSL ASR speech representations exhibit more phonetic similarity than semantic similarity \cite{choi2024self}. 
 
-Pasad et al. \cite{pasad2021layer} take these ideas further by assessing the performance of each layer of wav2vec 2.0  in multiple domains: local acoustic features, phone identity, word identity and word meaning. Pasad et al. find that local acoustic features are best represented in the earliest layers of the pretrained but not finetuned wav2vec 2.0. For both the small and large wav2vec 2.0 models, shallow layers represent local acoustic features best. Accuracy then lowers significantly for the middle layers of the  models. They then see a rise in accuracy again in the later layers. Phonetic information is best recognised in the middle layers of the pretrained models, without an increase in the deep layers. \summary{this paragraph give an overview of the phonetic and acoustic findings from Pasad et al.}
+Pasad et al. \cite{pasad2021layer} take these ideas further by assessing the performance of each layer of wav2vec 2.0  in multiple domains: local acoustic features, phone identity, word identity and word meaning. Pasad et al. find that local acoustic features are best represented in the earliest layers of the pretrained but not finetuned wav2vec 2.0. For both the small and large wav2vec 2.0 models, shallow layers represent local acoustic features best. Accuracy then lowers significantly for the middle layers of the  models. They then see a rise in accuracy again in the later layers. Phonetic information is best recognised in the middle layers of the pretrained models, without an increase in the deep layers.
 
-Word identity and word meaning are both low in accuracy in the pretrained model when compared to the finetuned model. This suggests that the pretrained model does not learn semantic tasks well during the SSL pretraining stage. \naominote{[referencing whole section] Sentences too long and complex simple technical style needed.} Shallow layers that learn phonetic and acoustic tasks are also shown \hl{to change in accuracy the least}\naominote{This suggests change the least... [Ed: that's correct?]} when comparing the pretrained and finetuned models. Given that this information learned in pretraining affects finetuned ASR performance, we next need to understand how phonetic information is being learned during pretraining.\naominote{use commas![Done]}\summary{this paragraph give an overview of the semantic findings from Pasad et al. and links this to the next section}
+Word identity and word meaning are both low in accuracy in the pretrained model when compared to the finetuned model. This suggests that the pretrained model does not learn semantic tasks well during the SSL pretraining stage. \naominote{[referencing whole section] Sentences too long and complex simple technical style needed.} Shallow layers that learn phonetic and acoustic tasks are also shown \hl{to change in accuracy the least}\naominote{This suggests change the least... [Ed: that's correct?]} when comparing the pretrained and finetuned models. Given that this information learned in pretraining affects finetuned ASR performance, we next need to understand how phonetic information is being learned during pretraining.\naominote{use commas![Done]}
 
 It is worth noting that De\naominote{It is worth noting that... [Done]} Heer Kloots et al. \cite{deheerkloots25_interspeech} undertook work published in the Interspeech 2025 proceedings that pretrained a monolingual Dutch wav2vec 2.0 model for analysis. They pretrain a wav2vec 2.0 model using fairseq \cite{ott-etal-2019-fairseq} for 100k steps on Dutch speech data from various sources. They compare this model with the \textbf{fb-en} model trained by meta on LibriSpeech for 400k steps and \textbf{fb-voxp-100k} a multilingual model trained on 100k hours of voxpopuli data \cite{wang-etal-2021-voxpopuli}. They then train probes to analyse for phonetic analysis and lexical analysis and compare these findings against downstream finetuned ASR performance. They found that pretraining on Dutch data gave higher accuracy for  both phonetic and lexical tasks, to varying degrees. Their work was undertaken in parallel with the research in this chapter and published after our work was completed.\naominote{Rephrase. Say in this chapter to distinguish [Done]} It did not influence any decisions made during our research. In Section \ref{ed_sec:discussion} we consider our results in the context of their findings.\thoughts{Don't forget this bit it may need rewording when the discussion is written} \naominote{In Section X, we consider our results in the context of their findings.[Done]}\naominote{Don't just ignore.}
 
 \subsection{Layer Probing for Phoneme Recognition}\label{bac_subsec:layer_probing_articulation}
-English et al. devise experiments to study what kind of phonetic information is encoded in the internal representations of wav2vec 2.0 \cite{english2022domain}. They train linear layer probes  \cite{immer2021probing, schneiderleveraging} for phoneme recognition on the outputs of each layer of the pretrained wav2vec 2.0. This model is pretrained on the LibriSpeech 960 dataset \cite{librispeech} but not finetuned on any data, and the phonemes are taken from the TIMIT dataset \cite{timit}. English et al. find that wav2vec 2.0’s internal representations encode rich phonetic information, and that this information is not uniformly distributed across layers. This is similar to Pasad et al. \cite{pasad2021layer} who found that the middle transformer layers of wav2vec 2.0 contained the highest accuracy for phonetic tasks. \summary{This paragraph covers cormac's discover of pretrained being good for phoneme accuracy and the discover of layer 7 as the best layer}
+English et al. devise experiments to study what kind of phonetic information is encoded in the internal representations of wav2vec 2.0 \cite{english2022domain}. They train linear layer probes  \cite{immer2021probing, schneiderleveraging} for phoneme recognition on the outputs of each layer of the pretrained wav2vec 2.0. This model is pretrained on the LibriSpeech 960 dataset \cite{librispeech} but not finetuned on any data, and the phonemes are taken from the TIMIT dataset \cite{timit}. English et al. find that wav2vec 2.0’s internal representations encode rich phonetic information, and that this information is not uniformly distributed across layers. This is similar to Pasad et al. \cite{pasad2021layer} who found that the middle transformer layers of wav2vec 2.0 contained the highest accuracy for phonetic tasks. 
 
-English et al. split phonemes into domain-informed groups such as manner of articulation and place of articulation and then analyse probe performance across these groups. They find that classification accuracy for both manner and place peaks around intermediate transformer layers (around layer 7). Their confusion heatmaps and hierarchical clustering show that the model’s representations increasingly align with phonetic structure as depth increases, up until layer 7. \hl{Cormac papers}\thoughts{I don't know that we need to go into detail here about cormac's other papers maybe we can do that in the background section} \summary{This paragraph summarises cormac's phoneme classes }
+English et al. split phonemes into domain-informed groups such as manner of articulation and place of articulation and then analyse probe performance across these groups. They find that classification accuracy for both manner and place peaks around intermediate transformer layers (around layer 7). Their confusion heatmaps and hierarchical clustering show that the model’s representations increasingly align with phonetic structure as depth increases, up until layer 7. \hl{Cormac papers}\thoughts{I don't know that we need to go into detail here about cormac's other papers maybe we can do that in the background section} 
 
 \begin{itemize}
     \item For paper 1 \cite{english2024following}
@@ -422,7 +305,7 @@ The test groups are described below:
 
 Table~\ref{ed_tab:cross_overlap_sizes_fr_pl} show the inventory sizes for each test set. These sets are the smallest we have compared so far. This has the potential to affect variability of accuracy, and groups may be more sensitive to the behaviour of a single phoneme in their set. 
 
-These experiments aim to show how pretraining language balance affects recognition of phonemes defined by their presence or absence in the pretraining languages. However, the contents of these groupings are highly variable in size and the linguistic content of each group has not been closely analysed. The next subsection therefore focuses on manner-of-articulation groups, using the findings of English et al. as motivation for analysing these classes separately \cite{english2022domain}; see Section \ref{bac_subsec:layer_probing_articulation} for background. This allows us to test whether pretraining language balance has class-specific effects on phoneme accuracy. We also examine how these effects play out in languages where particular manners of articulation are more frequent or occur only in one language.
+These experiments aim to show how pretraining language balance affects recognition of phonemes defined by their presence or absence in the pretraining languages. However, the contents of these groupings are highly variable in size and the linguistic content of each group has not been closely analysed. The next subsection therefore focuses on manner-of-articulation groups, using the findings of English et al. as motivation for analysing these classes separately \cite{english2022domain}; see Section \ref{bac_subsec:layer_probing_articulation} for background. This allows us to test whether pretraining language balance has class-specific effects on phoneme accuracy. We also examine how these effects play out in languages where particular manners of articulation are more frequent or occur only in one language.\thoughts{We may not need the reference to cormac here also, no need to mention the phonetic content has not been examined.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -644,9 +527,6 @@ All the finetuning data in this subsection come from the same datasets used for 
 %\newpage
 \subsection{Multilingual and Cross Lingual Transfer Gains}\label{ed_subsec:gain_across_languages}
 
-
-
-
 In this subsection, we extend our analysis to unseen data and unseen languages using the FLEUR dataset \cite{FLEURS}. We finetune each of our pretrained models, as outlined in Section \ref{ed_subsec:datsets}, on 10~hours of English and 10~hours of Spanish from FLEURs. Then, we continue on to additional FLEURs languages from Germanic, Romance, and Slavic language families. This measures how the English and Spanish pretraining balance affects multilingual and cross-lingual transfer of CER.
 
 Figure~\ref{ed_fig:fleurs_engspa_linegraph} shows the CER obtained after finetuning each pretrained model on 10~hours of FLEURs English data and 10~hours of FLEURs Spanish data. We use the same axis as in Figure~\ref{ed_fig:fine_tuning_100hours}. Similarly to the previous seen data experiment, CER on English is lowest for high-resource English pretraining and CER on Spanish is lowest for high-resource Spanish pretraining. There is again a gradual shift in CER across the intermediate models as we move away from high-resource English pretraining. The gradual shift happens through moderately unbalanced and balanced-unrelated models, to high-resource Spanish pretraining. This again indicates that matched-language pretraining produces lower CER as seen in Section \ref{ed_subsec:same_data_finetuning}. However, we can now observe that even when the finetuning data is from unseen FLEURs data, the same relation between finetuning and pretraining data still exists.
@@ -659,11 +539,6 @@ Figure~\ref{ed_fig:fleurs_engspa_linegraph} shows the CER obtained after finetun
 \end{figure}
 
 Prior work on multilingual ASR and cross-lingual transfer shows that pretraining on related languages produces lower finetuned CER than pretraining on unrelated languages~\cite{prasad-etal-2021-investigating, singh2020effects}\thoughts{update these references to be consistent wit the background section}. In our experiments so far, we have seen that increasing the ratio of a related language in pretraining to the finetuning language produces a gradual decrease in CER. Next, we must test whether the ratio of related-language pretraining affects finetuned CER. We will explore whether any shift in CER is still gradual or how much of an impact the ratio has when the pretraining language is related, but not matching, the finetuning language.\thoughts{this para could probably be shortened}
-
-%%% Shortened verion of the previous paragraph for if I want it later
-\iffalse
-"Prior multilingual ASR work shows related-language pretraining lowers CER more than unrelated~\cite{prasad-etal-2021-investigating, singh2020effects}. Our results confirm a gradual CER decrease with increasing related-language ratio; next we test non-matching related ratios."
-\fi
 
 Figure~\ref{ed_fig:fleurs_multilingual_linegraph} shows the CER for all of these languages across the range of English and Spanish pretraining balances. For many languages, we again see a gradual shift in CER across the intermediate mixed-language models between the high-resource English and high-resource Spanish models. Germanic languages have lower CER on the high-resource English models when compared to their CER on the high-resource Spanish models. Most of the Romance languages have lower CER on the high-resource Spanish models relative to their CER on the high-resource English models. French and the unrelated Slavic languages do not, however, appear to fit these family-level patterns. \thoughts{I could cut down on the explanation of the graphs}
 
@@ -698,26 +573,6 @@ The influence of SSL pretraining on finetuned CER has been shown to be extensive
 \newpage
 %\newpage
 \subsection{Shared vs. Unique Phoneme Accuracy} \label{ed_sec:shared_vs_not_shared}
-
-\iffalse
-1. Short recap and aim: Link language-membership probes to prior CER results and state goal of comparing accuracy across pretraining mixtures and languages.
-
-2. English results: Report accuracy patterns for English-Shared vs English-unique across pretraining mixtures.
-
-3. Spanish results: Report accuracy patterns for Spanish-Shared vs Spanish-unique across pretraining mixtures.
-
-4. English/Spanish interpretation: Connect shared vs unique accuracy to pretraining exposure and CER patterns.
-
-5. French results: Report accuracy patterns for Overlap with En/Es (Fr) vs French-unique across pretraining mixtures.
-
-6. Polish results: Report accuracy patterns for Overlap with En/Es (Pl) vs Polish-unique across pretraining mixtures.
-
-7. French/Polish interpretation: Link overlap vs unique accuracy to "seen vs unseen" phonemes and FLEURS family patterns.
-
-8. Cross-language summary: Synthesise shared/overlap robustness vs unique sensitivity across all four languages.
-
-9. Transition to MoA: Note limitations of language-membership grouping and introduce manner-of-articulation analysis.
-\fi
 
 \begin{figure}[h]
     \centering
@@ -831,48 +686,6 @@ While language-membership grouping reveals certain patterns across languages, th
 %\newpage
 \subsection{Phoneme Accuracy in Phoneme Classes}\label{ed_sec:phonemes_classes}
 
-\iffalse
-
-1. Introduce MoA results and briefly restate the three hypotheses (data quantity, seen-language trade-off, unseen-language impact).
-
-2. Present vowel results across languages, highlighting matched-language effects for English, stability for Spanish, and mixed-pretraining benefits for Polish.
-
-3. Present stop and nasal results as robust, high-resource classes that transfer well and are relatively insensitive to exact language balance.
-
-4. Present fricatives (and briefly affricates) as lower-accuracy, more mixture-sensitive classes that depend more on matched pretraining and inventory differences.
-
-5. Present rhotics (tap/trill or combined) as a strongly Spanish-skewed class showing clear matched-language benefits and trade-offs for unseen languages.
-
-6. Briefly note approximants and (if kept) diphthongs as intermediate cases that support, but do not change, the main patterns.
-
-7. Summarise how MoA patterns connect back to shared/unique and cross-overlap results, arguing that class type and data quantity largely determine how pretraining balance affects transfer.
-
-8. Make comparison of weighted averages then lead on to final subsection
-
-\fi
-
-\iffalse
-
-\begin{itemize}
-    \item Perplexity analysis thoughts 
-    \item \textbf{Vowels}: Claims accuracy is high adn Fre/Pol curves track English
-    \item I disagree Polish is quite different, Spanish shows clear preference for Spanish and French is not that averagely high
-    \item "more vowel examples in pretraining (from any language) help vowels in unseen languages" This would suggest that they all did best on Spanish monolignual which has the most, they do not do best on Spa monolingual
-    \item barchart supports these ideasm it uses phoneme inventory to justify the more vowel examples line
-    \item overall argument is the higher number of examples makes English high-resource models better for recognition. I would disagree with this reading
-
-    \item \textbf{Approximants}: data quantity effect plus a mild English advantage, but approximants are less fragile than fricatives and less skewed than diphthongs; balanced mixtures work nearly as well as monolingual for all languages, including unseen ones
-    \item Again disagree, there is a clear spanish advantage for spanish and what is it talking about with the mixed and balanced models
-
-    \item \textbf{Nasals} : "Themes: nasals exemplify a universal, well‑represented class where total examples matter more than which language they come from; balanced and high‑resource mixed pretraining reliably helps all languages."
-    \item I don't disagree completely, this class has almost the same number of examples across all models and the phoneme tokens overlap ~75\% across all languages 
-    \item although it doesn't mention that Spanish has higher accuracy on monolingual English than Spanish, which maybe should be noted.
-\end{itemize}
-
-\fi
-
-\hl{New version starts here}
-
 \begin{table}
 \centering
 \small
@@ -896,20 +709,11 @@ Trill        & 0    & 0.1  &  0.2  & 0.3  & 0.4  & 0.5  & 0.6 \\
 \bottomrule
 \end{tabular}
 \caption{Number of time-aligned phone intervals (in millions, rounded to one decimal) identified by the Montreal Forced Aligner in the pretraining data, grouped by phoneme class and model. More precise token counts, rounded to the nearest thousand, are provided elsewhere.}
-%\caption{Phoneme token counts (in millions, rounded to one decimal) grouped by phoneme class and model. For more precision, counts rounded to the closest thousand are provided in Appendix \ref{app_tab:phoneme_token_class_counts_k}. hl{IF THIS STAYS HERE IT NEEDS ADDRESSING IN TEXT!!}}
 
 \label{ed_tab:phoneme_token_class_counts_m}
 \end{table}
 
-We now analyse phoneme accuracy by manner-of-articulation (MoA) to understand how pretraining language balance interacts with different phonetic classes. In this section, we highlight several specific classes. We first analyse the vowel and stop classes, which are highly represented in both pretraining languages. We then examine taps, trills, and diphthongs. These classes are either present, or heavily concentrated, in only a single pretraining language. We consider all of these classes in matched-language, mismatched-language, related-language, seen-language, and unseen-language settings. The languages used for analyses are again English, Spanish French and Polish. These results will show how much phoneme accuracy relates to phoneme representation in pretraining and explore the relationship between phoneme representation and articulation.\thoughts{Revisit this opening pargraph when I have written the whole section.}
-\iffalse
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/moa_single_plots/test_tap_trill_diphthongs/5_vowel_diphthong_language_colours.pdf}
-    \caption{Mean vowel phoneme accuracy at layer~7 for English, Spanish, French, and Polish across all pretraining mixtures. Each panel shows accuracy for vowel phonemes in a given language for different English and Spanish pretraining mixtures.}
-    \label{ed_fig:moa_class_vowel}
-\end{figure}
-\fi
+We now analyse phoneme accuracy by manner-of-articulation (MoA) to understand how pretraining language balance interacts with different phonetic classes. In this section, we highlight several specific classes. We first analyse the vowel and stop classes, which are highly represented in both pretraining languages. We then examine taps, trills, and diphthongs. These classes are either present, or heavily concentrated, in only a single pretraining language. We consider all of these classes in matched-language, mismatched-language, related-language, seen-language, and unseen-language settings. The languages used for analyses are again English, Spanish French and Polish. These results will show how much phoneme accuracy relates to phoneme representation in pretraining and explore the relationship between phoneme representation and articulation.\thoughts{Revisit this opening paragraph when I have written the whole section.}
 
 \subsubsection{Vowels and Diphthongs}
 \begin{figure}[t]
@@ -936,8 +740,7 @@ The English-Vowel, English-Dipthong and Spanish-Vowel sets show some matched-lan
 \end{figure}
 
 
-In Figure~\ref{ed_fig:moa_class_tap_trill} we analyse the accuracy of taps and trills for English, Spanish, and Polish across all pretraining mixtures. English taps have a low average accuracy across all mixtures, with 33.5\% accuracy on the English monolingual model and 18.2\% on the Spanish monolingual model. Spanish taps are higher in accuracy, with 37.6\% for 960/0 and increasing with a gradual shift to 58.6\% on the 300/600 model. Spanish Tap accuracy then drops to 42.8\% at 100/800, deviating from the gradual increase in accuracy and then rises to 48.5\% at 0/920. Spanish trills have the highest average accuracy of these groups, with accuracies between 59.1\% and 71.0\% across all mixtures. Spanish trills show some fluctuation in accuracy across mixed-language models, but do show a gradual increase from high-resource English to high-resource Spanish models. Polish trills remain consistently low in accuracy, fluctuating between 13.6\% and 21.4\% with no clear increase in accuracy with any pretraining mixture.
-
+In Figure~\ref{ed_fig:moa_class_tap_trill} we analyse the accuracy of taps and trills for English, Spanish, and Polish across all pretraining mixtures. English taps have a low average accuracy across all mixtures, with 33.5\% accuracy on the English monolingual model and 18.2\% on the Spanish monolingual model. Spanish taps are higher in accuracy, with 37.6\% for 960/0 and increasing with a gradual shift to 58.6\% on the 300/600 model. Spanish Tap accuracy then drops to 42.8\% at 100/800, deviating from the gradual increase in accuracy and then rises to 48.5\% at 0/920. Spanish trills have the highest average accuracy of these groups, with accuracies between 59.1\% and 71.0\% across all mixtures. Spanish trills show some fluctuation in accuracy across mixed-language models, but do show a gradual increase from high-resource English to high-resource Spanish models. Polish trills remain consistently low in accuracy, fluctuating between 13.6\% and 21.4\% with no clear increase in accuracy with any pretraining mixture.\thoughts{maybe this could be moved to discussion}
 
 
 These patterns reflect both pretraining exposure and probe data for this MoA class. Taps and trills are low‑resource in English pretraining, but their phone interval counts increase with Spanish data. As seen in Table~\ref{ed_tab:phoneme_token_class_counts_m}, Taps have 0.4M to 1.6M phone intervals in pretraining and trills have 0 to 0.6M phone intervals for English and Spanish monolingual models respectively. Both classes can be considered low resource across all models. In the probe validation sets, Spanish also has the most examples for these phonemes with 17431 \textipa{R} in taps and 5879 \textipa{r} for trills. This is compared to very few English taps with 290 \textipa{R}, 155 \textipa{r\super j} and 5 \textipa{\~R} and moderate Polish trills with 2403 \textipa{r} phone intervals and only 12 \textipa{r\super j}. This combination explains why Spanish taps and trills have higher accuracy than the English taps and Polish trills, despite the low-resource exposure in pretraining. Spanish also has only a single Tap phoneme, \textipa{R}, and a single Trill phoneme, \textipa{r}. With fewer distinct phone intervals to average across, phoneme accuracy in these groups may be more sensitive to anomalous results. This could account for the fluctuations in accuracy and the less clear gradual increase in accuracy across mixtures when compared to previous results.\thoughts{This could all go in the discussion section almost certainly. Also, I should change the language to interval coutns and phoneme categories}
@@ -951,7 +754,6 @@ Taken together, these results suggest that low‑resource MoA classes in pretrai
     \caption{Mean fricative phoneme accuracy at layer~7 for English, Spanish, and Polish across all pretraining mixtures. The figure shows accuracy for fricative phonemes in English and Spanish, French and Polish, for different English and Spanish pretraining mixtures. \hl{come back to this to check}}
     \label{ed_fig:moa_class_fricative}
 \end{figure}
-
 
 
 Next, we examine nasals and fricatives MoA clases. These groups are mid-resource in pretraining and have less phoneme exposure across both pretraining languages than the vowel class and more than any of the low-resource classes diphthongs, Taps and Trills. Both classes also have wide and shared phoneme inventories across the four languages. These factors will allow us to test whether the phoneme exposure in pretraining also correlates with accuracy for mid-resource MoA classes.
@@ -1209,15 +1011,6 @@ Figure~\ref{ed_fig:moa_class_fricative_weighted} shows a similar broad pattern t
 
 In the unweighted fricative mean, English and Spanish already show a gradual shift from lower to higher accuracy between high-resource mismatched-pretraining and high-resource matched-language mixtures. French and Polish do not show a clear gradual shift in either weighting. This pattern is consistent with the other unweighted MoA classes, with nasals as the exception. Unlike nasals, weighting the average does not change the matched-language behaviour of fricatives for any of the four languages. Instead, it suggests that weighting reveals that nasals also follow the same pattern, but that low-resource, low-accuracy phoneme categories were obscuring it in the unweighted mean. The consistent effect of weighting in the mid-resource classes is therefore, a rise in accuracy across all languages. The low unweighted accuracy of French nasals and Polish fricatives initially suggests that there may be a relationship between the pretraining languages and the lower accuracy of unseen languages. However, weighting the accuracy towards high-resource phonemes substantially increases their average accuracy. This effect mitigates the apparent importance of the relationship between the pretraining and the test languages, when measuring downstream accuracy. Instead, it suggests that phoneme-level representation in the data is a major factor shaping downstream accuracy.\thoughts{it may be possible to move this to after the ranges graph}
 
-\iffalse
-\begin{figure}%[h]
-    \centering
-    \includegraphics[width=\linewidth]{5_chapter5/figures/weighted_accuracy/weighted_unweighted_vowel.pdf}
-    \caption{Mean vowel accuracy across English and Spanish pretraining mixtures. The left panel shows the unweighted average across phoneme categories within each language. The right panel shows the same averages, but weighted by the number of phoneme interval counts per phoneme category in the test data.}
-    \label{ed_fig:moa_class_vowel_weighted}
-\end{figure}
-\fi
-
 \begin{figure}%[h]
     \centering
     \includegraphics[width=\linewidth]{5_chapter5/figures/weighted_accuracy/weighted_unweighted_vowel_diphtong.pdf}
@@ -1230,8 +1023,6 @@ Figure~\ref{ed_fig:moa_class_vowel_diphthong_weighted} shows a much smaller weig
 Weighting the average does not alter the matched-language behaviour of any language within the vowel class. English still shows a gradual shift towards higher accuracy in the high-resource English models in both cases. Spanish remains consistently high across all pretraining mixtures before and after weighting, with little change between matched and mismatched pretraining languages. Polish shows less variation between models when the average is weighted, but still does not show a large difference in accuracy between Spanish and English models. French, similarly, increases in average accuracy without showing a clear increase on either pretraining language. While each language increases marginally in average accuracy, no single language substantially changes its behaviour within the class between weighting strategies. Spanish remains the highest average accuracy language and French the lowest, with Polish and English in between. These results suggest that vowel accuracy, as a high-resource MoA class, is less sensitive to test-data interval counts than the mid-resource nasal and fricative classes.
 
 Diphthongs, only found in English, also show only a modest increase in average accuracy after weighting, rising from approximately 81.6\% to 83.6\%. Weighting does not alter the matched-language pattern, as diphthong accuracy remains highest in the high-resource English pretraining mixtures before and after weighting. Although English diphthongs include three high-resource, one low-resource and one very-low-resource phoneme category, weighting raises the class mean by only 2.0\%. This suggests that the low-resource diphthong phoneme categories do not lower the unweighted average accuracy as much as low-resource phonemes do in the nasal and fricative classes. The other low-resource classes must therefore also be considered before drawing broader conclusions about the effect of weighting on low-resource MoA categories.
-
-\hl{WRITE NEXT TAPS AND TRILLS SECTION NEXT FIRST DRAFT DONE IN PERPLEXITY}
 
 \begin{figure}%[h]
     \centering
@@ -1247,25 +1038,8 @@ This is especially evident for Polish trills, which only contain two phoneme cat
 
 
 
-\clearpage
-\begin{figure}%[p]
-  \centering
-  \includegraphics[width=0.85\textwidth]{5_chapter5/figures/standard_deviation/vowel.pdf}
-  \caption{Vowels \hl{Change!}}
-  \label{fig:lab1}
-  \centering
-  \includegraphics[width=0.85\textwidth]{5_chapter5/figures/standard_deviation/fricative.pdf}
-  \caption{Fricative \hl{Change!}}
-  \label{fig:lab2}
-  \centering
-  \includegraphics[width=0.85\textwidth]{5_chapter5/figures/standard_deviation/nasal.pdf}
-  \caption{Nasal \hl{Change!}}
-  \label{fig:lab3}
-\end{figure}
 
 
-
-\hl{New section ends here}
 
  %%% FULL TABLE WITH ALL PHONEMES AND ALL VARIATIONS %%%%%%%%%
 \iffalse
@@ -1449,16 +1223,115 @@ These findings show that when the testing language is not in pretraining they do
 
 \newpage
 \section{Discussion}\label{ed_sec:discussion}
+
+\hl{new version starts here}
+
+\hl{maybe we should go into more detail either here or in the bbackground section about XLSR's claims about multilingual data being helpful for learning representations. They claim that their model does better when learning multiple languages, the compare a model pretrained on 1350h of English vs a model pretrained on 1350h of multilingual and claim their multilingual one does better. However, a lot of the multilingual data is english and the rest is very imbalanced. Their high-data monolingual models do by far the best, however their large multilingual model does the best for low-data languages. Same-size models do better on multilngual data (1350 hours) than English monolingual models (1350h) but for models with 90h or more (it fr es) they have the lowest PER. So 1/10th of the data on the small model in italian can get better results than the multilingual large model but the monolingual English model does worse. The multilingual data is very imbalanced so how can we test how multilingual pretraining is actually influencing anything?}
+
+Prior work established that for SSL ASR models, matched-language pretraining outperforms mismatched multilingual pretraining, while related-language mixtures can reduce error rates for unseen related languages \ref{wav2vec, ashihara2023exploration, gupta2021clsril}\thoughts{there are more examples}. Chapter~\ref{chapter4} showed that XLS-R's large-scale multilingual pretraining is heavily imbalanced toward English, this means we have a limited understanding of balanced and imbalanced mismatched languages in pretraining \ref{storeyedbiasSSL}. To examine how different ratios of mismatched-language data affect matched-language and related-language downstream accuracy, this chapter pretrained multiple wav2vec~2.0 models. We pretrain two monolingual models, one with 960 hours of English data and one with 920 hours of Spanish. We also pretrain multiple mixed-language mixtures, including both English and Spanish data in various ratios. The full list of models with mixed English and Spanish (Eng/Spa) is: 960/0 800/100, 600/300, 450/450, 300/600, 100/800, 0/920. We tested the performance of these models for phoneme accuracy and CER in multiple languages in order to understand how multilingual SSL ASR models learn multiple languages.
+
+For finetuning in Sections~\ref{ed_subsec:same_data_finetuning} and \ref{ed_subsec:gain_across_languages}, high-resource matched-language pretraining produces the lowest CER, while high-resource mismatched-language pretraining produces the highest CER. For 100-hour finetuning on LibriSpeech and MLS Spanish, English CER shows a gradual increase from the lowest value on the 960/0 high-resource English model to the highest value on the 0/920 high-resource Spanish model. Spanish CER shows the opposite gradual decrease across the same models. This pattern holds for 10-hour FLEURS English and Spanish subsets after joint finetuning. This first confirms findings in previous studies that finetuned languages benefit from matched-language monolingual pretraining. For our mixed-language models we see the gradual shift from low to high CER shows that the final downstream performance correlates to the ratio of matched-language data a model is pretrained on.
+
+For the mismatched languages, Germanic languages have lower CER on high-resource English models and the highest on high-resource Spanish models. Most Romance languages have lower CER on high-resource Spanish models compared to high-resource English models. In both cases, we see that the related-language benefit seen in previous work \cite{...} is true for most languages, although less beneficial than matched-language pretraining. We also showed that most related-languages show a gradual increase in accuracy from high-resource unrelated to high-resource related languages. This shows that the effect of incrementally increasing mismatched data correlates with an incremental decrease in finetuned CER. 
+
+\hl{I haven't mentioned slavic languages here...}
+
+SSL pretraining learns primarily phonetic and acoustic structure \cite{pasad2021layer}. Spanish and English share many phonemes and manners of articulation. It is reasonable, therefore, to expect some degree of language-independent learning of these shared features. However, the gradual CER increase across mixed-language models shows that pretraining composition has a direct and proportional effect on downstream performance. If cross-lingual features were being jointly learned, we not expect to see such direct correlation to the ratio of matched to mismatched pretraining data and CER. The models therefore are learning sub-lexical features that are specific to each of the languages in pretraining.
+
+\hl{A lot up to here is repetition and could probably be removed.}
+
+Languages do not always have the same realisation for an individual phoneme so, language-specific realisations could be learned during pretraining \cite{international1999handbook}. Each language also has language-specific coarticulations as speakers transition between phonemes \cite{international1999handbook}. Wav2vec~2.0's transformer blocks would be well suited to learn these transitions through self-attention over multiple extracted audio frames \cite{vaswani2017attention}. Similarities in pretraining languages have also been shown to improve downstream performance \ref{zhang2023fast, poncelet2021comparison, gupta2021clsril, zhao2022improving}.\thoughts{Maybe I should make this more specific to the references, most of them don't explicitly say that the phonemes are the same, just that the languages are similar. zhang2023fast specifically uses extracted features as a basis for language/utterance similarity.} Pretraining on languages with many overlapping phonemes and articulations to the downstream language could be the reason for improved finetuned CER. \thoughts{Maybe could use this reference: \cite{li2023quantitative} they show that English monolingual models do use phonetic features to learn other languages and that French has higher correlation than German or Spanish.}
+
+\hl{notes}
+
+zhang's interval version -  they don't try to match the number of each type of feature but they do choose overlapping features. They don't seem to quantify how much of the overlapping stuff is 
+
+To test these categories we next use the montreal forced alignedWe can analyse how phonemes overlap and how many of them exist in pretraining compared to the downstream languages.  
+
+, contain similar phonemes in similar quantities
+
+To test which of these cause the observed finetuning patterns, we next examine phoneme probing results from our mixed-language models \cite{english2022domain}.
+
+
+\begin{itemize}
+    \item coarticulation - transformers
+    \item interval frequency - data dsitributions
+    \item phoneme inventory composition - data dsitributions \ref{zhao2022improving}
+    \item phoneme realisation? - language comparisons?
+\end{itemize}
+
+
+
+
+\hl{new version ends here}
+
+\begin{itemize}
+    \item We need to transition into the shared non shared section
+    \item describe in detail the size of the groups phoneme inventories
+    \item I should also describe the datasets and why I chose these datasets and languages
+    \item mention that not all of the phoneme categories are taken from a source but listed based on what MFA includes
+    
+    
+    \item Describe the behaviour of the groups, with more references to coarticulation and realisations
+    
+    
+    \item Comment on why this is problematic, I probably also shoudl list the phonemes in at least the Spanish-unique group.
+    \item I should comment on the very different sizes of English-unique and Spanish-unique, but how they still seem to have similar behaviour.
+    \item Then address the French and Polish shared/unique
+    \item I should look at the phoneme inventories of these groups, although even the unique groups are >10 each, so maybe not all the specific phonemes.
+    \item Should I talk about average accuracies of shared unseen groups compared to shared seen
+\end{itemize}
+
+\hl{new shared unique discussion section}
+
+\hl{The next two paragraphs need some rereading and rewriting}
+
+In Section~\ref{ed_sec:shared_vs_not_shared}, we tested how pretraining composition affects downstream performance by collecting phoneme accuracy data from each pretrained model across four languages. Pasad et al. \cite{pasad2021layer} show that pretrained wav2vec 2.0 models can accurately recognise phonetic and acoustic features but not semantic or lexical features. With these findings, we can surmise that phonetic features learned by SSL ASR models are influencing our finetuning findings.\thoughts{useful addition and citation but most of the rest is repetition} Unlike acoustic or articulatory features, accurate phoneme recognition is available through use of the Montreal Forced Aligner (MFA). With a text-normalised dataset, we can identify time-aligned phoneme intervals in each utterance. Using a similar method to English et al. \cite{english2022domain}\thoughts{again useful citation, but it has been cited before and this is mostly repetition}, we use the MFA phoneme intervals to train linear layer probes for phoneme recognition, on the output of transformer layer 7 of the pretrained wav2vec 2.0 models. By probing the pretrained models before finetuning, we can evaluate how well an SSL model recognises phonemes without introducing any new data during finetuning. \thoughts{Or I could use \cite{li2023quantitative} here maybe.} \thoughts{Pasad's other paper is somewhat relevant, maybe should go in the probing section earlier though \cite{pasad2023comparative}}
+
+For this experiment, we use subsets of MLS as the FLEURs data is not text-normalised. We created 10-hour subsets of four MLS languages to train our probes and then four more 10-hour subsets to test them. The languages were: English, Spanish, French and Polish. English and Spanish both appear in the pretraining data, so they allow us to test how well the models recognise seen matched-language phonemes. French was chosen due to its unusual behaviour in finetuning. It is a Romance language, so linguistically related to Spanish, but was shown in the finetuning tests to have higher accuracy on English high-resource models. Polish is a Slavic language, so not related to either pretraining language. Polish allows us to test unseen, unrelated-language phoneme accuracy. \thoughts{this and the previous paragraph repeat a lot of the design section, but also add some comments. Possibly we could move the comments to later on and delete these pragraphs.}
+
+To explain the relationship between the finetuned CER of each of our languages and the pretraining mixture, we first group our phonemes by overlap between pretraining languages. For mixed language pretraining, we want to evaluate whether the same phoneme realised in different languages is equally well recognised by a multilingual model. For example, if phoneme /\textipa{a}/ is a common phoneme in both English and Spanish, does the SSL model learn this phoneme equally from both languages? In theory if the number of examples of the phoneme are consistent across all multilingual pretrianing mixtures phoneme accuracy for any language should stay consistent. However, if the model learns two separate instances of /\textipa{a}/, one English/\textipa{a}/ and one Spanish /\textipa{a}/, then matched-language test accuracy would be highest on the monolingual models, since they have the most examples of the language-specific phoneme. To test this we first group seen language, English and Spanish, phonemes into two groups: Shared and Unique. Shared phonemes are phonemes that are shared across both English and Spanish and therefore will appear in the pretraining data for all models. Unique phonemes are phonemes that are unique to either language so will appear in higher quantities in monolingual and high-resource mixed models. We then split shared and unique phonemes into two further set of the language they were spoken in, this allows us to test whether the language a phoneme realised in is related to the pretraining data. The final four sets are: English-Shared, Spanish-Shared, English-Unique and Spanish-Unique. \thoughts{this needs some rethinking and rewriting} \thoughts{this could be an immediate follow on paragraph from the previous finetuning section without the last. Do I need to specifically talk about /a/?} 
+
+The results in Section~\ref{ed_sec:shared_vs_not_shared} show us that shared phonemes have a higher average accuracy than unique phonemes for both languages. Simultaeneously we see that all groups show a gradual shift in accuracy, accuracy is low on the monolingual and high-resource mismatched language models but incrementally increases as more matched-language data is added to pretraining, with the highest accuracy on high-resource or monolingual matched-language models.\thoughts{very long sentence, has been explained before} These results suggest that the models may be learning some joint features across languages. However, given the gradual shifts apparent in all matched-language results and the higher accuracy of the shared phoneme groups, the models also appear to be learning language-specific features.\thoughts{some repetition still but a little more additional information.}
+
+Next we test phonemes spoken in unseen languages, French and Polish, by dividing them into Unseen-Shared groups and Unseen-Unique groups. French-Shared and Polish shared are phonemes spoken in the respective languages but that overlap with the English or Spanish phoneme inventories. The French-Unique and Polish-Unique groups contain phonemes that do not appear in  the English or Spanish. Both shared groups have a higher average accuracy across all models when compared to their language's unique group. This appears to show that enough features have been learned by the SSL ASR models for phonemes realised in a unseen language to have an advantage over completely unseen phonemes. It is also notable that none of the groups have clearly higher accuracy on either high-resource English models or high-resource Spanish models. This shows that unseen languages benefit less from monolingual pretraining. Since any language-specific features to English or Spanish are less likely to appear in an unseen, unrelated language, only shared features \cite{li2023quantitative, XLSR-53}\thoughts{need to cover \cite{li2023quantitative} in the background section } can be used to recognise French and Polish. \thoughts{needs rewording and rethinking, xls-r paper talks about cross-lingual representations, I need to read it again, but it probably doesn't justify them}
+
+Something, notable about the phoneme groups for both seen and unseen languages is the variety in phoneme inventory size for each group. English-Shared and Spanish-Shared have an inventory size of 26 phonemes, while English-Unique has 54 and Spanish-Unique has 10. For the unseen languages, French-Shared and Polish-Shared have an inventory of 35 phonemes whereas French-Unique has only 10 and Polish-Unique has 19. We might expect smaller inventory sizes to be more susceptible to the values of a single phoneme, since one outlier phoneme with an extreme accuracy, close to 0\% or 100\%, will have more impact on the average. We might also expect less consistent behaviour for groups with small phoneme inventories. It is therefore notable that despite the large difference in inventory sizes between Spanish-Unique and English-Unique their behaviour is still comparable. Both classes have a clear gradual shift between matched and mismatched models and both groups have low accuracy relative to their Shared group couterparts. This could imply that the behaviour is consistent across groups, regardless of how many phonemes are included in an inventory. 
+
+French-Unique does however, have notably low accuracy even when compared to another Polish-Unique with an average accuracy of 45.78\%. Examining the French-Unique, we find that the phonemes included are: \textipa{\~A,  O, \~O, \o, \~E, ts, \oe, 4, K, y}. While \textipa{ts} is very low-resource, as outlined in section \ref{DESIGN_SECTION_HL_RESOURCE}\info{update reference to section}, the others in this group would be high or very high-resource, so a single phoneme is unlikely to affect the overall behaviour. Having mostly high-resource phonemes in test also implies that the behaviour exhibited by French-Unique is consistent with the large shared and unique groups for unseen languages. It is also notable that the phonemes in French-Unique are very varied, containing phonemes from multiple articulation groups. If French were to perform badly in one MoA group this could also affect the final outcome, possibly averaging out any accuracy increase for either pretraining language. \thoughts{bnot sure if the info in the paragraph is very useful}
+
+The phonem inventory for Spanish-Unique is also small and, on examination, only 6 of the 9 possible phonemes in the MFA dictionary are found in the test data. The phonemes in Spanish-Unique are:\textipa{x, r, \textbardotlessj J, G, B, J}. Here we have two low-resource phonemes, and the rest are high or very high-resource. Two of six phonemes being low-resource may add some variability and could explain lower accuracy of Spanish unique on the 600/300 model when compared to 800/100 model. However, with four high-resource groups and similar overall behaviour to the English-Unique group, we cannot make any assertions about the phoneme inventory in this group. Again, we see a small group with a wide variety of phonemes from multiple MoA groups. \thoughts{maybe these two paragraphs could be shortened and combined.}
+
+Finally, in this section, we analyse the behaviour of phonemes found in English-Unique and Spanish-Unique when spoken in the unseen languages French and Polish. To analyse whether phonemes have higher accuracy on models pretrained with more examples of that phoneme we look at the English-Unique and Spanish-Unique groups. Phonemes from these groups will only exist in models that include the matched-language and will exist in much higher numbers on high-resource and monolingual models. For phonemes that exist in only one pretraining language but also an unseen language we can test how much an unseen phoneme benefits from exposure in pretraining. The results in Figure \ref{ed_fig:cross_overlap_fre_pol} show us that phonemes in the French-Spanish-Shared and Polish-Spanish-Shared groups have higher accuracy for every model than the French and Polish English-Shared groups. We also see that Spanish-Shared phonemes do not have higher accuracy on high-resource Spanish models. Neither do English-Shared phonemes have higher accuracy on high-resource English models. These results suggest that unseen phonemes do not benefit directly from representation in pretraining.
+
+However, these groups have significantly smaller phoneme inventories when compared to the previous groups. Both French-Spanish and Polish-Spanish only have four phonemes in their phoneme inventories; French-English has ten and Polish-English has nine. 
+
+\begin{itemize}
+    
+    \item go back and explain some of the groups in the previous two experiments
+    \item Explain the different group sizes of previous groups and what those implications are
+    \item Spanish-shared is a small group which we can analyse the phoneme inventory for, also French-unique could be worth analysing
+    \item The small groups still having the same behaviour says they are probably means it's consistent behaviour
+    \item interval counts here are harder to compare because the groups are big and smalelr groups conform to expected behaviour
+    \item go to the unseen overlapping final experiments and analyse the phonemes in them in more detail.
+    \item give more detailed analysis of the interval counts and types of phonemes in each group. 
+    \item link the high number of Spanish phonemes to articulation and realisation in different languages, or how the multingual models are learning higher level articulations. Such as do these language-agnostic articulations benefit unseen data
+    \item link certain phonemes to higher interval counts
+    \item use this to transition to MoA
+    
+\end{itemize}
+
+
 \hl{HERE IS A DELETED DRAFT FOR THE SHARED NOT SHARED EXPERIMENTAL DESIGN SECTION THAT COULD BE USED IN DISCUSSION BUT IS CURRENTLY IFFALSE}
 
 \iffalse
-For French and Polish, the overlap group consists of phonemes that appear in the union of the English and Spanish pretraining phoneme sets and also appear in the French (or Polish) phoneme set; the language‑unique groups contain phonemes that appear only in French or only in Polish and not in the combined English+Spanish set.
+For French and Polish, the overlap group consists of phonemes that appear in the union of the English and Spanish pretraining phoneme sets and also appear in the French (or Polish) phoneme set; the language‑unique groups contain phonemes that appear only in French or only in Polish and not in the combined English+Spanish set. 
 
 Tables~\ref{tab:phoneme_group_sizes_en_es} and~\ref{tab:phoneme_group_sizes_fr_pl} summarise how many MFA phoneme tokens belong to each group in the pretraining and probe sets. These tokens include modified symbols such as stress and length variants. For English and Spanish, we use the shared and language-unique groups defined relative to their pretraining inventories. The shared groups contain phoneme tokens that appear in both English and Spanish pretraining data, so they are present under all matched- and mismatched-language finetuning conditions. In contrast, the language-unique groups contain tokens that are missing from one of the monolingual pretraining conditions. Phonemes in this group then occur in much smaller in low‑resource match or mismatched pretraining settings for that language. 
 
 For each pretrained model, we compute an average group-level accuracy. First, we will compute the probe accuracy for each individual MFA phoneme token in the group. Then we take the mean of these phoneme accuracies to obtain the overall accuracy for that group. 
 
-English has the largest number of MFA phoneme tokens, with 80 distinct tokens in the English pretraining and probe sets, with 54 English-unique tokens and 26 tokens that are shared between English and Spanish. Spanish has the smallest set, with 36 phoneme tokens in total, split into 26 shared tokens and 10 Spanish-unique tokens. This difference partly reflects how the MFA dictionaries represent each language: English includes more phonetic variants, such as stress markers or nasalisation etc., creating more token types, whereas Spanish represents a smaller core phoneme inventory with less variation. A full list of MFA phoneme tokens for each language, together with their frequency in the corpora, is provided in Table \ref{app_tab:phoneme_counts_per_language_vaid_1}. 
+English has the largest number of MFA phoneme tokens, with 80 distinct tokens in the English pretraining and probe sets, with 54 English-unique tokens and 26 tokens that are shared between English and Spanish. Spanish has the smallest set, with 36 phoneme tokens in total, split into 26 shared tokens and 10 Spanish-unique tokens. This difference partly reflects how the MFA dictionaries represent each language: English includes more phonetic variants, such as stress markers or nasalisation etc., creating more token types, whereas Spanish represents a smaller core phoneme inventory with less variation. A full list of MFA phoneme tokens for each language, together with their frequency in the corpora, is provided in Table \ref{app_tab:phoneme_counts_per_language_vaid_1}.
 
 As a result, group-level accuracies are averaged over different numbers of phonemes, and smaller groups such as Spanish-unique or French-unique are more sensitive to the behaviour of individual phonemes. These differences in coverage are taken into account when interpreting the probe results in later sections. 
 
@@ -1473,7 +1346,7 @@ For French and Polish, we are interested in how well the model can recognise ind
     \item notice how there is variability in accuracy (300/600 having lower accuracy than 100/800)
     \item this does not relate to phoneme inventory size
     \item note this is surprising but the variability of inventories means we cannot best analyse this data.
-    \item more obviously talk abotu how all of the shared groups have higher accuracy than the unique groups despite English-unique having 54 phonemes and Spanish-unique having 10 and shared having 26
+    \item more obviously talks about how all of the shared groups have higher accuracy than the unique groups despite English-unique having 54 phonemes and Spanish-unique having 10 and shared having 26
     \item phrasing: shared phonemes benefit even when pretraining data is mismatched (because unique phonemes always have less accuracy), although they benefit more when pretraining is matched.
     \item Line taken from Section~\ref{ed_sec:shared_vs_not_shared}, could be used here instead:
     \item "We also see in this experiment that shared phoneme groups have higher average accuracy on all models than unique groups. This is despite the greatly varying size of their phoneme inventories, as seen in Section~\ref{ed_subsec:lang_membership_groups}.This may suggest that shared phonemes can benefit from increased exposure in pretraining even when the pretraining data is mismatched. Language-unique phonemes, on the other hand, suffer in accuracy when mismatched-language pretraining limits exposure to phonemes in this group."
@@ -1492,13 +1365,14 @@ For French and Polish, we are interested in how well the model can recognise ind
 
     %\item \textbf{Nasals}: Give this a proper read https://www.isca-archive.org/interspeech\_2024/kim24l\_interspeech.pdf
     \item the above paper looks into nasal representations in wav2vec 2.0
-
     
+    \item For the weighted section it may be worth mentioning the phoneme \textipa{M} which has a count of 6 in the probe training data, but 0 in the test. This means it has an output in the probe output layer, but if it ever used it will always be wrong in test.
+    \item This is due to how the number of outputs for each probe was decided, i.e. decided at the training stage. This should be explained here, but also maybe made more clear in the deisgn section.
 \end{itemize}
 
 \hl{Below are some deleted sentences from the experimental results multilingual finetuning section that could be used as talking points here:}
 
-These findings verify previous research on single languages to be consistent across multiple languages and language groups. The results from our mixed-language models then expand on our understanding of multilingual pretraining.\thoughts{maybe these lines could be expanded on and thought through in the discussion.}
+These findings verify previous research on single languages to be consistent across multiple languages and language groups. The results from our mixed-language models then expand on our understanding of multilingual pretraining. \thoughts{maybe these lines could be expanded on and thought through in the discussion.} 
 
 This suggests that mixed language pretraining might be advantageous for specific low-data situations.
 
