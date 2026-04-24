@@ -1,0 +1,210 @@
+%%% from shared nto shared
+\iffalse
+A summary of the mean accuracy difference between Shared and Unique groups and the accuracy difference between monolingual models for all four languages is given in Table~\ref{ed_tab:shared_unique_summary}. 
+
+Both French groups peak in accuracy at the 600/300 model, and Polish groups show fluctuations in accuracy across mixed models. This suggests that mismatched-language balance correlates less with accuracy for unseen test languages.
+
+
+\begin{table}%[h]
+    \centering
+    \begin{tabular}{lccc}
+        \hline
+        Language &
+        Mean gap &
+        Mono.\ diff.\ (shared) &
+        Mono.\ diff.\ (unique) \\
+        \hline
+        English & 15.34\% & +19.24\% & +21\% \\
+        Spanish & 18.68\% & -5.32\%  & -14.07\% \\
+        French  & 13.56\% & +5.46\%  & +5.62\% \\
+        Polish  & 6.34\%  & +8.78\%  & +4.38\% \\
+        \hline
+    \end{tabular}
+    \caption{Mean accuracy gap between shared and unique phoneme groups for each language, and accuracy differences between English-monolingual and Spanish-monolingual pretraining (English minus Spanish) for shared and unique groups.\hl{These values are now wrong!!}}
+    \label{ed_tab:shared_unique_summary}
+\end{table}
+\fi
+
+
+%%% From MoA weighted aveages section
+\iffalse
+\begin{itemize}
+    \item Notes for weighting section
+    \item nasals
+    \item in test Spanish has 2 phonemes that are high-resource and 2 that are low
+    \item high-resource: \\textipa{m}, \\textipa{n}. Low-resource: \\textipa{N}, \\textipa{\\textltailn}
+    \item Spanish sees a large increase in accuracy
+    \item English has 9 nasals, only one of which is low-resource: \\textipa{M}
+    \item English sees a large increase in accuracy
+    \item Roughly speaking, these same high/low resource patterns for the individual nasal phonemes are true of the pretraining data as well
+    \item French has 2 high-resource nasal: \textipa(m, n) and 3 low-resource nasals: \\textipa{m\\super j}, \\textipa{N} and \\textipa{\\textltailn},
+    \item All of the French nasals exist in English and are all high-resource in English.
+    \item French sees a large increase in accuracy
+    \item Polish includes 5 phoneme tokens 1 of which is low-resource: \\textipa{N}. Though this phoneme has 618 tokens, which is less low-resource than the others
+    \item All but 1 Polish phoneme exists in English: \textipa{\|[{n}}
+    \begin{itemize}
+        \item Remeber \textipa{\|[{n}}, this couldbe a good candidate for unique phoneme analysis later
+    \end{itemize}
+    \item Polish sees the smallest increase in accuracy
+    \item ----------------------
+    \item \textbf{Fricatives}
+    \item All languages gain from weighting, especially Spanish.
+    \item French has one very very high-resource unique fricative phoneme \textipa{K}
+    \item French also has no clear preference to a pretraining language
+    \item Polish shares several high-resource phonemes with English
+    \item Polish has a clear preference for English, expecially when weighted
+    \item English and SPnish prefer their own languages
+    \item Spanish has 3 unique phonemes at least 2 of which are high-resource
+    \item Spanish prefers Spanish pretraining especially when weighted
+    \item English prefers English phonemes when weighted
+
+    \item ------------------------------------------------
+    \item Perplexity notes on broad trends
+    \item In both classes, the language with highest unweighted accuracy is the one whose inventory combines: strong frequency concentration on a few phonemes, and good overlap with English (Polish nasals: all but high‑resource \textipa{|[{n}} occur in English; French fricatives: most are shared with English).
+    \item The lowest‑accuracy languages (Spanish for fricatives, French for nasals) are those where a larger share of the class consists of low‑resource or language‑specific phonemes that do not benefit as much from cross‑lingual sharing.
+    
+\end{itemize}
+\fi
+
+
+
+\iffalse
+%%%% phoneme counts for fricatives:
+
+\\textbf{{Phoneme}} & \\textbf{English} & \\textbf{Spanish} & \\textbf{French} & \\textbf{Polish} \\\\
+\\textipa{f} & 3214 & 1788 & 4242 & 712 \\\\
+\\textipa{f\\super j} & 419 & 0 & 0 & 164 \\\\
+\\textipa{h} & 2133 & 0 & 0 & 0 \\\\
+\\textipa{s} & 9153 & 27401 & 16637 & 0 \\\\
+\\textipa{\\|[{s}} & 0 & 0 & 0 & 2183 \\\\
+\\textipa{v} & 3537 & 0 & 6963 & 1770 \\\\
+\\textipa{v\\super j} & 314 & 0 & 0 & 739 \\\\
+\\textipa{x} & 0 & 1958 & 0 & 960 \\\\
+\\textipa{z} & 5375 & 0 & 2351 & 0 \\\\
+\\textipa{\\|[{z}} & 0 & 0 & 0 & 1430 \\\\
+\\textipa{\\c{c}} & 1828 & 766 & 0 & 12 \\\\
+\\textipa{\\textcommatailz} & 0 & 0 & 0 & 936 \\\\
+\\textipa{\\textctz} & 0 & 0 & 0 & 116 \\\\
+\\textipa{C} & 0 & 0 & 0 & 1394 \\\\
+\\textipa{D} & 773 & 7171 & 0 & 0 \\\\
+\\textipa{G} & 0 & 2433 & 0 & 0 \\\\
+\\textipa{S} & 1515 & 24 & 1728 & 0 \\\\
+\\textipa{\\:s} & 0 & 0 & 0 & 1644 \\\\
+\\textipa{J} & 0 & 534 & 0 & 0 \\\\
+\\textipa{K} & 0 & 0 & 23440 & 0 \\\\
+\\textipa{B} & 0 & 5653 & 0 & 0 \\\\
+\\textipa{T} & 753 & 5259 & 0 & 0 \\\\
+\\textipa{Z} & 94 & 0 & 4184 & 0 \\\\
+
+\fi
+
+\iffalse
+
+Nasals!
+English-\\textipa{n}: 			18157
+Polish-\\textipa{\\|[{n}}: 		16301
+Polish-\\textipa{m}: 			13027
+polish-\\textipa{\\textltailn}  	9756
+Spanish-\\textipa{n}			9658
+English-\\textipa{m}			7283
+Spanish-\\textipa{m}			5543
+French-\\textipa{m}			4815
+English-\\textipa{\\textsyllabic{n}}	4352
+French-\\textipa{n}			3791
+Polish-\\textipa{m\\super j}		3114
+English-\\textipa{N}			2328
+English-\\textipa{\\textltailn}		2163
+English-\\textipa{m\\super j}		1536
+English-\\textipa{\\textsyllabic{m}}	1282
+Polish-\\textipa{N}			618
+Spanish-\\textipa{\\textltailn}		577
+French-\\textipa{\\textltailn}		524
+Spanish-\\textipa{N}			285
+French-\\textipa{m\\super j}		80
+English-\\textipa{M}			6
+French-\\textipa{N}			3
+
+sum
+English total = 37107
+Polish = 20033
+Spanish = 16063
+French = 9213
+
+
+mean
+polish = 6677.66
+english = 4638.38
+spanish = 4015.75
+french = 1842.6
+
+median
+polish = 3114
+spanish = 5543 / 577 = 3060
+english = 2328 / 2163 = 2245.5
+french = 524
+
+\fi
+
+\iffalse
+
+Fricatives
+Spanish-\\textipa{s}			27401
+French-\\textipa{K}			23440
+French-\\textipa{s}			16637
+English-\\textipa{s}			9153
+Spanish-\\textipa{D}			7171
+French-\\textipa{v}			6963
+Spanish-\\textipa{B}			5653
+English-\\textipa{z}			5375
+Spanish-\\textipa{T}			5259
+French-\\textipa{f}			4242
+French-\\textipa{Z}			4184
+English-\\textipa{v}			3537
+English-\\textipa{f}			3214
+Spanish-\\textipa{G}			2433
+French-\\textipa{z}			2351
+Polish-\\textipa{\\|[{s}}		2183
+English-\\textipa{h}			2133
+Spanish-\\textipa{x}			1958
+English-\\textipa{\\c{c}}		1828
+Spanish-\\textipa{f}			1788
+Polish-\\textipa{v}			1770
+Polish-\\textipa{S}			1728
+Polish-\\textipa{\\:s}			1644
+English-\\textipa{S}			1515
+Polish-\\textipa{\\|[{z}}		1430
+Polish-\\textipa{C}			1394
+Polish-\\textipa{x}			960
+Polish-\\textipa{\\textcommatailz}	936
+English-\\textipa{D}			773
+Spanish-\\textipa{\\c{c}}		766
+English-\\textipa{T}			753
+Polish-\\textipa{v\\super j}		739
+Polish-\\textipa{f}			712
+Spanish-\\textipa{J}			534
+English-\\textipa{f\\super j}		419
+English-\\textipa{v\\super j}		314
+Polish-\\textipa{f\\super j}		164
+Polish-\\textipa{\\textctz}		116
+English-\\textipa{Z}			94
+Spanish-\\textipa{S}			24
+Polish-\\textipa{\\c{c}}		12
+
+sum
+french = 57,817
+spanish = 52,987
+English = 29,108
+polish = 13,788
+
+mean
+french = 9,636.17
+spanish = 5,298.7
+english = 2,425.67
+polish = 1,060.62
+
+median
+french = 6963+4242 / 2 = 5,602.5
+spanish = 2433+1958 / 2 = 2,195.5
+english = 1828+1515 / 2 = 1,671.5
+polish = 960
+\fi
