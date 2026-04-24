@@ -11,8 +11,516 @@
     \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
 \fi
 
+%\section{Introduction}
+\begin{itemize}
+    \item short introduction, no more than the first page, just to set this section up
+\end{itemize}
+
+\section{Automatic Speech Recognition in DSP}
+\begin{itemize}
+    %\item Working title, not married to it
+    \item sets up pre-deep learning ASR techniques
+    %\item here we can cover very early ASR
+    \item The FFT, spectrograms and mel-spectrograms
+    \item Spectrograms, EMGs and other tools used in linguistics.
+    \item HMMs
+    \begin{itemize}
+        \item for HMMs we should set up best pre-deep learning WER
+        \item we could also set up the idea of the limited datasets available
+    \end{itemize}
+\end{itemize}
+
+
+
+\subsection{The Fourier Transform and Mel-Spectrograms}
+\begin{itemize}
+    \item Cover the maths of the FFT
+    \item Introduce the spectrogram
+    \item Cover the mel-spectrogram and the linguistic theory behind it
+    %\item I can put a figure of a mel-spectrogram here 
+\end{itemize}
+
+\subsection{Engineering and Linguistics}
+\begin{itemize}
+    \item How the spectrogram changed linguistics
+    \item Measuring F1 through the FFT and the cepstrum spectrum
+    \item Manners of articulation
+    \item Graphing formants and mapping them to phonemes
+    \item I should also cover diphthongs directly and their relationship to MoA, formants and phonemes
+    \item Maybe a mel-spectrogram figure here for a specific phoneme, with labels to the formants and MoA
+\end{itemize}
+
+\subsection{Hidden Markov Models}\naominote{I do not need a whole section on HMMs!}
+\begin{itemize}
+    \item HMMs (and their relationship with mel-spectrograms)
+    \item Cover the maths of HMMs and their linguistic theory
+    \item Training an HMM model
+    \item Datasets prior to 2015: WSJ, TIMIT (Irish TIMIT? for the shoutout), switchboard
+    \item It may be worth mentioning the size in hours of all of these datasets and how a lot of accents and languages were quite limited in the data.
+    \item Cover HMM best WERs on pre 2015 datasets
+        \begin{itemize}
+            \item for HMMs we should set up best pre-deep learning WER
+            \item we could also set up the idea of the limited datsets available
+        \end{itemize}
+    %\item LibriSpeech was 2015, deepspeech was 2014 and used 5000 hours of their own unbpublished data deepspeech 2 was 2016
+\end{itemize}
+
+\hl{Maybe I could cover other machine learning techniques here, like k-means for later BERT discussion}\thoughts{The issue here is the only ML technique that is relevant is k-means and that is only relevant to HuBERT pretraining, which I don't use in any of my experiments.}
+
+%\hl{I could possibly put a linguistics section here covering some of the things pasad et al. find in wav2vec plus MoA}
+
+
+\section{Deep Neural Networks for ASR}
+\begin{itemize}
+    %\item Alternative Title "Deep Neural Networks for ASR"
+    \item DNNs for other applications like image recognition
+    \item Deepspeech and RNNs
+    \item Highlight the large dataset size for deepspeech
+    \item This then can set up the dataset size race
+    \item CNNs and early ASR models
+    \item Quartznet \cite{quartznet}
+    \item talk about all of the different language variations for quartznet
+    \item Adapters and the issue of multi-domain training
+    \item the catastropic forgetting principal
+    \item We can set up MLS and maybe common voice for the next section
+\end{itemize}
+
+\subsection{Early Neural Networks}
+\begin{itemize}
+    \item Quick overview of original 60s paper and a few papers over the years
+    \item descriptions of important concepts
+    \begin{itemize}
+        \item backpropagation (hinton, 1986) 
+        \item loss objectives: MSE, cross-entropy, KL-divergence 
+        \item random initialisation
+        %\item \hl{these concepts so far are all directly relevant}
+    \end{itemize}
+\end{itemize}
+
+\subsection{Recurrent and Convolutional Networks}
+\begin{itemize}
+    \item CNNs 1980-1997, 1989 on handwriting task 
+    \begin{itemize}
+        \item could change this around:
+        \item CNNs were used for handwriting recognition as was CTC Loss, so it might flow better near CTC
+    \end{itemize}
+    \item RNNs were invented sometime between 1982-1990
+    \item LSTMs 1997-2005, with 2005 being bi-directional as used from then on
+    \begin{itemize}
+        \item relevant as they are the precursor to transformers
+        %\item not sure if any models I cover use them, but it's probably still important to cover them since they relate to transformers
+        \item There are also some RNN and LSTM models in the pruning papers, so probably worth covering
+    \end{itemize}
+    \item autoencoder 1989-1990
+\end{itemize}
+
+\subsection{Connectionist Temporal Classification Loss}
+\begin{itemize}
+    %\item alternative section header: handwriting recognition; Connectionist Temporal Classification Loss;
+    %\item OR this subsection could briefly go over early image recognition and then handwriting recognition
+    %\item that might introduce the concept of CTC well...
+    \item levenstein distance for WER and CER
+    \item CTC loss - 2006 handwriting using LSTM and RNN architecture
+    \item Introduce deepspeech and it's use of CTC
+    %\item It's difficult to be sure where to put CTC, since it is a loss function and could be explained alongside them
+    %\item for now, this works
+    %\item Deepspeech by baidu was the first DNN to use CTC for ASR, so does CTC needs its own section?
+    %\item I could add some nice figures for CTC and it is important
+\end{itemize}
+
+
+
+\subsection{Deep Neural Networks}
+\begin{itemize}   
+    \item Brief description of the rise of GPUs, big data and Deep Networks
+    \item Brief description of DNNs for image recognition and the seminal papers using GPUs
+    \item description of deepspeech \cite{citationrequired}
+    \item deepseech and matching (2014) SOTA HMM WERs \cite{citationrequired}
+    \item deepspeech 2 beating HMM WERs \cite{amodei16_deepeech2}
+    \item Overview of various common techniques:
+    \begin{itemize}
+        \item mel-spectrograms as inputs
+        \item dropout - 2012
+        \item data augmentation - AlexNet 2012, SpecAugment 2019
+        \item batch normalisation - 2015
+    \end{itemize}
+    \item Comment on the size of the datasets used for deepspeech and the fact they were not open-sourced
+\end{itemize}
+
+
+\subsection{Big Data}
+\begin{itemize}
+    \item reference earlier speech datasets like WSJ
+    \item The issue of small open-source datasets for DNNs
+    \item Librispeech \cite{librispeech} and it's impact - \textasciitilde 1000h
+    \item Common Voice \cite{ardila-etal-2020-common} and open sourcing
+    \item AISHELL-2 (2018) [Mandarin] \cite{needtoadd} and multilingual data outside of English
+    \item The issue of bias in many of these datasets
+    \item Diverse datasets with comments on their pushback against bias and the desire in academia for more diverse datasets
+    \begin{itemize}
+        \item AAVE 2020 \cite{chang2024self}
+        \item Datatang 2020 \cite{aesrc2020}
+        \item FLEURs 2022 \cite{FLEURS} 
+    \end{itemize}
+    \item MLS (2020) \cite{MLS},  and the start of the dataset size alms race
+    \item Comment on the significance of having Spanish, French, German open source read speech datasets the same size as LibriSpeech (=>1k hours each)
+    \item I should spend some time with MLS. I may need to comment on specifics, such as a lot of the Spanish book being English books translated to Spanish.
+    \item Then comment on the ridiculous size of MLS English (44k hours) and how bias was still a problem
+    \item Include a list of the big big datasets including comments
+    \begin{itemize}
+        \item voxpopuli (400k) \cite{wang-etal-2021-voxpopuli}
+        \item librilight (60k hours) \cite{librilight}
+        \item There are more, but since I don't use any of these maybe don't spend too much time with this.
+    \end{itemize}
+    \item This section needs to cover all relevant datasets
+    \begin{itemize}
+        \item or do I have a separate section later on for just the directly relevant ones for my experiments?
+    \end{itemize}
+    \item I could also have some comments at the end on much more recent datasets. Such as recent large Irish, Gaelic and Hindi datasets that show that the desire for more diverse data has been a big change in the last \textasciitilde 5 years
+    \item \textbf{Now we have the big data we set up the model size race.}
+\end{itemize}
+
+\subsection{CNNs for speech}
+\begin{itemize}
+    \item Jasper (as the precurser to QN) architecture \cite{needsjaspercitation}
+    \item Quartznet15x5 (2020) architecture \cite{quartznet}
+    \begin{itemize}
+        \item since this currently isn't in my thesis we don't need quite as much depth
+        \item however, this is still a good explanation of CNNs as feature extractors for later wav2vec
+    \end{itemize}
+    \item feature extraction
+    \item Monolingual Quartznets for different languages
+    \item catastrophic forgetting
+    \item Adapter layers and the issue of multilingual training
+    \item Layer freezing and supervised learning layer analysis
+    \item Parameters in QN and efficiency of CNNs
+    \item \hl{Much of this is interesting and somewhat relevant, but without the actual Quartznet15x5 experiments included, only some of it is directly relevant and completely necessary. I should write this towards the end when I have a better sense for what I want to include.}
+\end{itemize}
+
+\section{Self-Supervised Learning and Transformers}
+\begin{itemize}
+    \item Transformers - 2017
+    \item Conformers
+    \item Self-Supervised learning
+    \item neural scaling principal
+    %\item Either set up or cover here multilingual SSL ASR
+\end{itemize}
+\subsection{Transformers}
+\begin{itemize}
+    \item Transformers (2017) \cite{vaswani2017attention}
+    \item Cover all of the upsides of transformers for speech
+    \item Self-attention learns from multiple frames through time
+    \item Efficiency through positional encoding
+    \item Conformer models \cite{nvidiapapers}
+    \item Whisper? \cite{whisper}
+    \begin{itemize}
+        \item it's a little difficult to place Whisper. It is a supervised learning CTC Loss model but it does use transformers and a similar conformer architecture to the SSL models.
+        \item Here could work, but I could move it if necessary
+    \end{itemize}
+\end{itemize}
+
+\subsection{Self-Supervised Learning of Speech}
+\begin{itemize}
+    \item List all of the approaches to SSL ASR
+    \begin{itemize}
+        \item BERT \cite{needs reference}, as an LM
+        \begin{itemize}
+            \item k-means clustering + masked language modelling
+        \end{itemize}
+        \item HuBERT \cite{hsu2021hubert}
+        \begin{itemize}
+            \item BERT applied to speech
+        \end{itemize}
+        \item WavLM \cite{chen2022wavlm}
+    \end{itemize}
+\end{itemize}
+
+\subsection{wav2vec 2.0}
+\begin{itemize}
+    \item wav2vec 2.0 \cite{wav2vec}
+    \item Go into more depth with architecture, such as maybe drawing out my own diagram
+    \begin{itemize}
+        \item Contrastive Loss (autoencoder)
+        \item Masking (augmentation)
+        \item Conformer architecture
+        \item CNN feature extraction of waveform (i.e. no mel-spectrogram)
+        %\item Check whether other models use mel-spectrograms
+        \item Requires CTC finetuning for deployment (unlike whisper)
+    \end{itemize}
+    \item WER for Librispeech
+    \item WER for other monolingual models
+    \item Compare different librispeech sizes and WER after finetuning
+    \begin{itemize}
+        \item i.e. low WER for very small divisions of librispeech
+    \end{itemize}
+    \item Do I include XlSR-53 here? It was the same year as wav2vec 2.0
+    \begin{itemize}
+        \item Maybe I should, apparently it has the same parameter count as wav2vec 2.0 large
+        %\item I need to come back to this, to look at the codebook latent space stuff
+        \item The datasets are very imbalanced, so this is a good talking point as well.
+    \end{itemize}
+\end{itemize}
+
+\section{Mutlilingual SSL ASR}
+\subsection{Neural Scaling}
+\begin{itemize}
+    \item \hl{This section could fit in a couple of different places, it only definitely needs to go before model compression.}
+    \item Neural Scaling Principle (2017) \cite{kaplan2020scaling, hestness2017deep}
+    \item Neural Scaling for ASR \cite{zhang2022bigssl}
+    \item Maybe compare Quartznet, Conformer and SSL model parameter sizes
+    \item Comment on the wav2vec 2.0 monolingual nature and being trained on 1000h of data
+    \item I need to set up the idea that very large models sizes are directly related to how many languages a model can simultaneously learn.
+\end{itemize}
+
+\subsection{Mutilingual SSL at Scale}
+\begin{itemize}
+    \item Start by highlighting older SL multilingual approaches, low WER multilinugal, monolingual low-parameter and multilingual adapters.
+    \begin{itemize}
+        \item I may or may not have covered some of this in the earlier section
+    \end{itemize}
+    \item I should probably then talk about whisper in detail if I haven't already.
+    \item Cover XLSR-53 \cite{XLSR-53}, XLS-R \cite{babu2021xlsr} and compare to supervised Whisper \cite{whisper}
+    \begin{itemize}
+        \item I may have already covered XLSR-53
+        \item XLS-R fits here because we have now talked about the neural scaling principle
+        \item wav2vec 2.0 Large and XLSR-53 are \textasciitilde 300M parameters
+        \item Whereas XLS-R is 2B parameters in the biggest model.
+    \end{itemize}
+    \item Go into detail on the benefits and issues of SSL vs SL
+    \item Take apart the results and claims made about WER on multiple languages
+    \item Concentrate on the concept of shared features, which they do claim but they don't really test
+    \begin{itemize}
+        \item I mean that they don't test if the model learned shared features
+        \item They test it in the sense that they have their shared latent space idea and then finetune and check the WER
+        \item They don't do any layer or weight analysis experiments to see what the model learned from the shared latent space [That's why I'm doing it].
+    \end{itemize}
+    %\item Highlight the lack of testing for this
+    %\item Highlight where people have found evidence, but that these results are often done after finetuning, which would change the results
+    %\item OR they test what the model outputs, which is really just testing if the loss function worked
+\end{itemize}
+
+\subsection{Monolingual or Multilingual}
+\begin{itemize}
+    \item Here we can talk about the monolingual comparisons, like with Dutch \cite{poncelet2021comparison} and japanese \cite{ashihara2023exploration}
+    \item We can also discuss related mixed-language pretraining \cite{zhang2023fast}
+    \item Discusses efficiency and show a parallel with the neural scaling principal and the lack of evidence that multilingual data actually helps monolingual finetuning.
+    \item We could even introduce Neural scaling here instead of earlier?
+    \begin{itemize}
+        \item Could neural scaling go into the model compression section?
+    \end{itemize}
+    \item \textbf{After talking about efficiency we want to introduce model compression}
+\end{itemize}
+
+\section{Model Compression}
+\iffalse
+\begin{itemize}
+    \item I think this could go here?
+    \item we have set up the neural scaling principle before this section
+    \item Possibly we could put this is in the neural scaling section to expand that
+    \item it definitely needs to go ahead of the model analysis section
+    \item It could go after Mutilingual section
+    \item This could be after multilingual
+    \item By that point we have set up the idea that these models are huge and need to be deconstructed
+    \item Also, a lot of model compression techniques require some domain knowledge, which could set up the model analysis section.
+\end{itemize}
+\fi
+\begin{itemize}
+    \item set up the reasons for why we need to compress models
+    \item The benefits of model compression 
+    \item The inefficiency of big models
+\end{itemize}
+
+\subsection{Model Compression}
+\begin{itemize}
+    \item Model Distillation (Student-Teacher training) \cite{distillation}
+    \item Adaptation and Low-rank adaptation \cite{hu2021lora}
+    \begin{itemize}
+        \item Might wanna check LoRA reference isn't just the arxiv
+        \item Adapters will probably have been covered by now, but I shouldn't explain LoRA until here
+    \end{itemize}
+\end{itemize}
+
+\subsection{Pruning}
+\begin{itemize}
+    \item Lottery Ticket Hypothesis \cite{frankle2018LTH}
+    \item Then Model pruning \cite{han2015learning}
+    \item Unstructured pruning \cite{frankle2018LTH}
+    \item structred pruning \cite{li2017pruning}
+    \item Layer pruning \cite{gromov2024unreasonable}
+    \item One-Shot Magnitude Pruning + PARP \cite{frankle2018LTH, PARP}
+    \item Iterative Pruning \cite{frankle2018LTH}
+\end{itemize}
+
+\subsection{Pruning for Speech}
+\begin{itemize}
+    \item Model pruning for ASR %[Many citations in bib and chapter 3]
+    %\item This section can be lifted from SLT paper, lots of depth there.
+    \item language-specific subnetworks \cite{Lu_Language_adap_xlsr, yang2023learning, PARP}
+    \item Go into a little more detail here on the findings of how these subnetworks have high overlap
+    \item We need some discussion of why these subnetworks exist and what the language-specific features they are finding are.
+    \item The answer broadly is that we don't know. This will both sets up the pruning work [Chapter 3] and then the probing and analysis work [Chapter 4].\thoughts{Note: Chapter 4 here was previously referred to as Chapter 5. Without the early Quartznet15x5 work as a chapter, it has now been bumped up to Chapter 4 and the SLT paper up to Chapter 3.}
+\end{itemize}
+
+\section{Model Analysis}
+\begin{itemize}
+    \item Now we have all of the motivation for model analysis and the gaps in the current research are starting to appear.
+    \item Here we start to discuss how we can analyse what these models have learned
+\end{itemize}
+
+\subsection{Approaches to Model Analysis}
+\begin{itemize}
+    \item My pruning paper \cite{storeyedbiasSSL}
+    \begin{itemize}
+        \item \hl{Ask Naomi, how to appraoch including my own paper}
+        \item Do I do it here or do I do it in the final section where I outline how the contents of litreview relates to the  thesis?
+    \end{itemize}
+    \item Extracted feature comparisons \cite{li2023quantitative}
+    \begin{itemize}
+        \item dunno how necessary this is to cover, only one small part of the paper is at all relevant
+    \end{itemize}
+    \item I could use this section to cover stuff like CTC CNN layer analysis for pre wav2vec models
+    \begin{itemize}
+        \item It would be useful to have this context, since the layers of a supervised model can behave quite differently to an SSL model.
+        \item I may have covered it previously though, or it may just not be that relevant
+    \end{itemize}
+    \item Other different approaches? Pasad has basically become the baseline though, so this may not be necessary
+\end{itemize}
+
+\subsection{Phoneme Recognition and The Montreal Forced Aligner}
+\begin{itemize}
+    \item Phoneme recognition for older models and MFA \cite{mcauliffe2017montreal}
+    \item I can mention phoneme annotated data like TIMIT \cite{timit} and the lack of phoneme data available before MFA
+    \item not sure exactly where to fit this in, it could equally go after Pasad and maybe even after Cormac's probing stuff since they only use TIMIT. Come back to this later.
+\end{itemize}
+
+\subsection{Layer-wise Analysis of wav2vec 2.0}
+\begin{itemize}
+    \item This paper deserves a decent amount of attention
+    \item Layer-wise analysis of wav2vec 2.0 \cite{pasad2021layer}
+    \begin{itemize}
+        \item This paper covers some linguistic concepts such as phonemes, articulation and mel-spectrograms
+        \item Do I discuss the linguistics here or in the spectrogram HMM section?
+    \end{itemize}
+    \item This paper sets up the idea that each layer does something different
+    \item It also covers the fact that there is no semantic or word identity knowledge learned in pretraining
+    \item It covers how the CNN feature extractor essentially learned to independently produce mel-spectrograms without being trained on them.
+    \item It covers a lot of essential stuff basically
+    %\item \hl{we need to cover some basic linguistics at least possibly it could be here, it certainly needs to be before the probing section}
+\end{itemize}
+
+\subsection{Model Analysis}
+\begin{itemize}
+    %\item My pruning paper \cite{storeyedbiasSSL}
+    %\begin{itemize}
+    %    \item \hl{Ask Naomi, how to appraoch explaining my own paper}
+    %\end{itemize}
+    \item Probing as a concept \cite{immer2021probing, schneiderleveraging}
+    \item Cormac's probing papers \cite{english2022domain, plusothers}
+    \item overall accuracy at each layer
+    \item Manner of articulation accuracy
+    \item Results and theories on how SSL ASR models learn speech
+\end{itemize}
+
+\subsection{Open Questions}
+\begin{itemize}
+    \item Maybe this can go in the next section
+    \item What information is currently missing from the literature
+    \item Bring together everything we know about SSL ASR and everything we don't know about multilingual SSL ASR.
+    \item \textbf{Now we have all of the information we need, we can set up the Thesis}
+\end{itemize}
+
+\hl{A few different options for how to end}
+\begin{itemize}
+    \item I could hasve a section with the research questions
+    \item However, I should have already asked them throughout the LR
+    \item Either explicitly and I'm just restating them here or implicitly and clearly
+    \item 
+\end{itemize}
+
+
+\section{Review and Relevance to this Thesis}
+\begin{itemize}
+ \item This section will outline the relevance of everything in the LR to our work
+    \item Give a summary of the open areas of SSL ASR research based on everything said so far
+    %\begin{itemize}
+    %   \item Do I need to put explicit research questions here? Mark, Ayushi and George haven't
+    %\end{itemize}
+    \item \textbf{Cover the questions answered in chapter 3 [SLT Paper]}
+    \item Matched and related languages are more efficient for SSL ASR accuracy and parameter counts
+    \item So, how do multilingual models learn multiple languages and how shared are the features they learn really?
+    \item How do they apply this knowledge when finetuned?
+    \item Are language-specific features learned and are they leveraged in finetuning?
+    \item Let's use OMP structured pruning to find out.
+    
+    %\item Now we know that they do not transfer from matched or related language weights for XLS-R how are they learning multilingual features?
+    \item \textbf{After our pruning experiments we want to asses multilingual SSL ASR further, Specifically:}
+    \item How would XLS-R behave in a situation controlled for the ratio of languages in pretraining and the model size?
+    \item We know that pretraining data affects finetuned results, but pretraining only learns abstracted speech features and not, semantic knowledge \cite{pasad2021layer}.
+    %\item How shared really are the cross-lingual features it learns?
+    \item So we now need to evaluate the pretrained model for phoneme and articulation accuracy and understand how multilingual data affects both of these.
+    \item We can do this by probing layer 7 of the encoder \cite{english2022domain}
+    \item \textbf{Cover the questions that will be answered in Chapter 4 [Probing analysis (previously Chapter 5)]}
+    \item So, how abstracted from speech are the features learned during SSL and how does the language they are spoken in affect this?
+    %\begin{itemize}
+    %    \item i.e. if the model learns shared cross-lingual articulations just not words can we design
+    %\end{itemize}
+    \item What are the main contributors to high multilingual SSL ASR accuracy?
+    \begin{itemize}
+        %\item Pretraining to finetuning language relationships?
+        \item Size of the model?
+        \item Quantity of data overall?
+        \item Quantity of matched-language data?
+        \item Quantity of related-language data?
+        \item Quantity of relevant phonemes or relevant articulations?
+    \end{itemize}
+    \item How can our findings be leveraged to improve multilingual SSL ASR performance?
+    %\item if it is quantity of relevant phonemes and articulation, matched and related language pretraining is explained with some new insights and potential new approaches.
+    %\item If it is the quantity of data size or matched language, then multilingual pretraining is a provably inefficient approach
+    
+    \item Then either end here or have a very brief conclusion.
+    %\item Then give brief overview of each of the chapters and the connections to the LR
+\end{itemize}
+
+\hl{Do I need a separate section for datasets and/or models used in these experiments? We will have covered all of them elsewhere in the LR. I could bullet point all of the most relevant ones for clarity though.}\naominote{Yes essentially, and I could have a table with the important information for each dataset.}
+
+\iffalse
+\section{Research Questions}
+\begin{itemize}
+    \item \hl{COME BACK TO THIS I CAN DO BETTER}
+    \item H1 Multilingual is less efficient even with large models?
+    \item H2 Multilingual SSL ASR learns limited cross-lingual information
+    \item H3 Does Monolingual pretraining therefore learn the language or the data?
+\end{itemize}
+\begin{itemize}
+    \item What am I trying to get across?
+    \item Mostly we want to know exactly what it is that SSL ASR learns
+    \item Specifically we want to learn what happens when SSL ASR learns multiple languages
+    \item Shared latent space makes some sense, but it is somewhat forced
+    \item Do mutlilingual models learn shared features naturally, like they learn English linguistic features?
+    \item Does mutlilingual pretraining help a model
+    \item What factors in the pretraining data affect how well an SSL model learns a certain feature?
+    \begin{itemize}
+        \item Neural scaling allow for more specific aspects of more data to be learned
+        \item But what decides if something is a different feature and what isn't
+        \item When scaling up are we just adding in more overfitted features that could come up but probably won't
+        \item OR are we teaching the model to learn which niche circumstances a feature can be shared
+        \item does a large model learn 2 separate but related features separately or together?
+        \item Also I have to remember these questions are for both chapters
+        \item So I can start with the questions that the paper answers
+    \end{itemize}
+\end{itemize}
+\fi
+
+\section{Conclusion}
+\begin{itemize}
+    \item Short conclusion, no more than 1 page, could even merge with the previous section
+    
+\end{itemize}
+
+\iffalse
 \section{Speech Technology and Automatic Speech Recognition}
 %\label{chapter2:Speech_technology_and_automatic_speech_recognition}
+
 
 \subsection{Speech Representations}
 %\label{chapter2:limitations_of_conventional_approaches}
@@ -66,5 +574,5 @@
 \section{Datasets}
 
 \section{Conclusion}
-
+\fi
 % Put actual numbers in papers 
