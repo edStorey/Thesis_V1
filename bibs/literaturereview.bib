@@ -1,1 +1,757 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Linguistics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% IPA Handbook
+@book{ipahandbook_1999, 
+place={Cambridge}, 
+title={Handbook of the International Phonetic Association: A Guide to the Use of the International Phonetic Alphabet}, 
+publisher={Cambridge University Press}, 
+author={International Phonetic Association}, 
+year={1999}
+} 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Early Neural Networks %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Wav2vec 2.0 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Product quantisation important for the codebook and quantisation layer
+%%%% Do I need to go into depth on this paper?
+@ARTICLE{QuantizationJegou,
+  author={Jégou, Herve and Douze, Matthijs and Schmid, Cordelia},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={Product Quantization for Nearest Neighbor Search}, 
+  year={2011},
+  volume={33},
+  number={1},
+  pages={117-128},
+  keywords={Quantization;Nearest neighbor searches;Indexing;Neural networks;Euclidean distance;File systems;Scalability;Image databases;Permission;Electronic mail;High-dimensional indexing;image indexing;very large databases;approximate search.},
+  doi={10.1109/TPAMI.2010.57}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEED TO READ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%% MMS Massive dataset for pretraining and finetuning wav2vec 2.0 %%%%%%%
+%%%%%% I have read most of it, the relevant ASR parts anyway.
+@article{pratap2024scaling,
+  title={Scaling speech technology to 1,000+ languages},
+  author={Pratap, Vineel and Tjandra, Andros and Shi, Bowen and Tomasello, Paden and Babu, Arun and Kundu, Sayani and Elkahky, Ali and Ni, Zhaoheng and Vyas, Apoorv and Fazel-Zarandi, Maryam and others},
+  journal={Journal of Machine Learning Research},
+  volume={25},
+  number={97},
+  pages={1--52},
+  year={2024}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Probing %%%%%%%%%%%%%%%%%%%%%%%%%%
+% They try multiple probing techniques on wav2vec [1.0] and other models and find phonetic representations; they also find that MLP (linear layer probes) often get the highest accuracy.
+@inproceedings{ma2021probing,
+  title={Probing acoustic representations for phonetic properties},
+  author={Ma, Danni and Ryant, Neville and Liberman, Mark},
+  booktitle={ICASSP 2021-2021 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={311--315},
+  year={2021},
+  organization={IEEE}
+}
+
+
+%%% Haven't read in depth, they use statistical analysis to show that HS represent phoemes and MoA and such
+@INPROCEEDINGS{sicherman2023analysingdiscrete,
+  author={Sicherman, Amitay and Adi, Yossi},
+  booktitle={ICASSP 2023 - 2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Analysing Discrete Self Supervised Speech Representation For Spoken Language Modeling}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={1-5},
+  keywords={Visualization;Analytical models;Correlation;Measurement units;Codes;Redundancy;Signal processing;self supervised learning;generative spoken language modeling;textless NLP;speech LM},
+  doi={10.1109/ICASSP49357.2023.10097097}}
+
+
+%%%%% This paper has an interesting breakdown of entropy in teh w2v2 and XLS-R codebooks showing that vowels have more entropy especially in XLS-R
+@inproceedings{abdullah2023information,
+  title={An Information-Theoretic Analysis of Self-supervised Discrete Representations of Speech},
+  author={Abdullah, Badr M and Shaik, Mohammed Maqsood and M{\"o}bius, Bernd and Klakow, Dietrich},
+  booktitle={Proc. Interspeech 2023},
+  pages={2883--2887},
+  year={2023}
+}
+
+%%% Haven't yet read, but it could be interesting. This paper analyses HS representations for a language identification finetuned XLS-R compared to pretrained XLS-R
+@inproceedings{abdullah2024wave,
+  title={Wave to Interlingua: Analyzing Representations of Multilingual Speech Transformers for Spoken Language Translation.},
+  author={Abdullah, Badr M and Shaik, Mohammed Maqsood and Klakow, Dietrich and others},
+  booktitle={INTERSPEECH},
+  year={2024}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SSL wav2vec 2.0 codebook analysis papers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% This paper analyses XLSR codebook entries though clustering
+%%% They find clusters for things liek speaker style and they find different cluster for german and ausrain lanuages and dialects
+%%%% NEED TO READ THIS ONE FULLY!!
+@inproceedings{linke2023self,
+  title={What do self-supervised speech representations encode? An analysis of languages, varieties, speaking styles and speakers.},
+  author={Linke, Julian and Kadar, Mate and Dosinszky, Gergely and Mihajlik, Peter and Kubin, Gernot and Schuppler, Barbara},
+  booktitle={INTERSPEECH},
+  pages={5371--5375},
+  year={2023}
+}
+
+%%% Vowels may be overrepresented in wav2vec 2.0 codebook
+%%% Interesting and need to read properly!!
+%%% I however have only been able to find the arxiv version so far...
+@article{de2025evaluating,
+  title={Evaluating the Representation of Vowels in Wav2Vec Feature Extractor: A Layer-Wise Analysis Using MFCCs},
+  author={De Cristofaro, Domenico and Vitale, Vincenzo Norman and Vietti, Alessandro},
+  journal={arXiv preprint arXiv:2508.17914},
+  year={2025}
+}
+
+%%% This paper uses the pretrained codebook entries to help with finetuning
+%%% They claim that the codebook contains a lot fo good phonetic information that can be used in FT
+%%% They also show that 22\% of the entries in the codebook are silence, a useful statistic
+@inproceedings{cambara2022recycle,
+  title={Recycle Your Wav2Vec2 Codebook: a Speech Perceiver for Keyword Spotting},
+  author={C{\'a}mbara, Guillermo and Luque, Jordi and Farr{\'u}s, Mireia},
+  booktitle={Proceedings of the 29th International Conference on Computational Linguistics},
+  pages={7166--7170},
+  year={2022}
+}
+
+%% they claim it normalises away from "irrelevant things" like gender when doing tone analysis
+%%% SO the model is flexible is their claim
+%%% NEEDS a deeper read
+%%% This could be useful for the probing chapter!!
+@inproceedings{wang2025normalization,
+  title={Normalization Through Fine-Tuning: Understanding Wav2vec2. 0 Embeddings for Phonetic Analysis},
+  author={Wang, Yiming and Yuan, Jiahong},
+  booktitle={2025 Asia Pacific Signal and Information Processing Association Annual Summit and Conference (APSIPA ASC)},
+  pages={2587--2591},
+  year={2025},
+  organization={IEEE}
+}
+
+
+%%%% This paper claims to encourage more rare codebook entries to encourage more variable learning
+%% It confirms the skew towards pretraining data to some extent
+@inproceedings{lee2024balanced,
+  title={Balanced-Wav2Vec: Enhancing Stability and Robustness of Representation Learning Through Sample Reweighting Techniques.},
+  author={Lee, Mun-Hak and Lee, Jae-Hong and Kim, Do-Hee and Ko, Ye-Eun and Chang, Joon-Hyuk},
+  booktitle={INTERSPEECH},
+  year={2024}
+}
+
+%%%%% Dan and Hao analyse HuBERT encoder similarities to phonemes spoken in English
+%%%%% They also analyse the k-means clusters I think, so I need to check this for Aris
+@inproceedings{wells2022phonetic,
+  title={Phonetic analysis of self-supervised representations of english speech},
+  author={Wells, Dan and Tang, Hao and Richmond, Korin},
+  booktitle={23rd Annual Conference of the International Speech Communication Association, INTERSPEECH 2022},
+  pages={3583--3587},
+  year={2022},
+  organization={ISCA}
+}
+
+%%% VCTK corpus from dan and hao paper
+@article{yamagishi2019cstr,
+  title={CSTR VCTK Corpus: English multi-speaker corpus for CSTR voice cloning toolkit (version 0.92)},
+  author={Yamagishi, Junichi and Veaux, Christophe and MacDonald, Kirsten},
+  URL = {https://datashare.is.ed.ac.uk/handle/10283/3443},
+  year={2019},
+  publisher={University of Edinburgh. The Centre for Speech Technology Research (CSTR)}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%% Neural Scaling %%%%%%%%%%%%%%%%%%%
+%%% Published overview of neural scaling
+@article{
+bahriscalinglaws,
+author = {Yasaman Bahri  and Ethan Dyer  and Jared Kaplan  and Jaehoon Lee  and Utkarsh Sharma },
+title = {Explaining neural scaling laws},
+journal = {Proceedings of the National Academy of Sciences},
+volume = {121},
+number = {27},
+pages = {e2311878121},
+year = {2024},
+doi = {10.1073/pnas.2311878121},
+URL = {https://www.pnas.org/doi/abs/10.1073/pnas.2311878121},
+eprint = {https://www.pnas.org/doi/pdf/10.1073/pnas.2311878121},
+}
+
+%%% Scaling laws speech
+@inproceedings{droppo21_interspeech,
+  title     = {{Scaling Laws for Acoustic Models}},
+  author    = {Jasha Droppo and Oguz Elibol},
+  year      = {2021},
+  booktitle = {{Interspeech 2021}},
+  pages     = {2576--2580},
+  doi       = {10.21437/Interspeech.2021-1644},
+  issn      = {2958-1796},
+}
+
+%%%% Neural Scaling for speech models 
+@inproceedings{cuervo-marxer-2024-scaling,
+    title = "Scaling Properties of Speech Language Models",
+    author = "Cuervo, Santiago  and
+      Marxer, Ricard",
+    editor = "Al-Onaizan, Yaser  and
+      Bansal, Mohit  and
+      Chen, Yun-Nung",
+    booktitle = "Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing",
+    month = nov,
+    year = "2024",
+    address = "Miami, Florida, USA",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.emnlp-main.21/",
+    doi = "10.18653/v1/2024.emnlp-main.21",
+    pages = "351--361",
+    
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Probing stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% They study nasals in a french trained wav2vec 2.0
+@inproceedings{kim2024using,
+  title={Using wav2vec 2.0 for phonetic classification tasks: methodological aspects.},
+  author={Kim, Lila and Gendrot, C{\'e}dric},
+  booktitle={INTERSPEECH},
+  year={2024}
+}
+
+
+%%%% SUPERB framwork for analysing pretrained models, used in PAsad's 2nd paper
+@article{yang2021superb,
+  title={SUPERB: Speech Processing Universal PERformance Benchmark},
+  author={Yang, Shu-wen and Chi, Po-Han and Chuang, Yung-Sung and Lai, Cheng-I Jeff and Lakhotia, Kushal and Lin, Yist Y and Liu, Andy T and Shi, Jiatong and Chang, Xuankai and Lin, Guan-Ting and others},
+  journal={Interspeech 2021},
+  year={2021},
+  publisher={ISCA}
+}
+
+
+%%% AV-HuBERT
+
+@inproceedings{
+shi2022learning,
+title={Learning Audio-Visual Speech Representation by Masked Multimodal Cluster Prediction},
+author={Bowen Shi and Wei-Ning Hsu and Kushal Lakhotia and Abdelrahman Mohamed},
+booktitle={International Conference on Learning Representations},
+year={2022},
+}
+
+
+%% Fast-VGS
+@INPROCEEDINGS{fastvgspeng2022,
+  author={Peng, Puyuan and Harwath, David},
+  booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Fast-Slow Transformer for Visually Grounding Speech}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={7727-7731},
+  keywords={Visualization;Grounding;Conferences;Semantics;Signal processing;Phonetics;Benchmark testing;visually-grounded speech;vision and language;self-supervised speech processing},
+  doi={10.1109/ICASSP43922.2022.9747103}}
+
+%%% Fast-VGS+
+@article{peng2022self,
+  title={Self-supervised representation learning for speech using visual grounding and masked language modeling},
+  author={{Peng, Puyuan and Harwath, David}},
+  journal={arXiv preprint arXiv:2202.03543},
+  year={2022}
+}
+
+
+
+%% ANother Cormac paper I should read
+@inproceedings{english2024searching,
+  title={Searching for Structure: Appraising the Organisation of Speech Features in wav2vec 2.0 Embeddings.},
+  author={English, Patrick Cormac and Kelleher, John D and Carson-Berndsen, Julie},
+  booktitle={Interspeech},
+  year={2024}
+}
+
+%% This paper probes features and analysies feature relations
+@inproceedings{ten2023phonemic,
+  title={Phonemic competition in end-to-end ASR models},
+  author={ten Bosch, Louis and Bentum, Martijn and Boves, Lou},
+  booktitle={Proc. Interspeech 2023},
+  pages={586--590},
+  year={2023}
+}
+
+%%%% Phoneme associations
+@phdthesis{sagey1986representation,
+  title={The representation of features and relations in non-linear phonology},
+  author={Sagey, Elizabeth Caroline},
+  year={1986},
+  school={Massachusetts Institute of Technology}
+}
+
+%%%% A short abstract on LID where they use probes to see how good a pretrained XLS-R and wav2vec 2.0 would be at LID. They find that they are not very good before finetuning.
+@inproceedings{abdullah2023nature,
+  title={On the nature of discrete speech representations in multilingual self-supervised models},
+  author={Abdullah, Badr M and Shaik, Mohammed Maqsood and Klakow, Dietrich},
+  booktitle={Proceedings of the 5th Workshop on Research in Computational Linguistic Typology and Multilingual NLP},
+  pages={159--161},
+  year={2023}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%% A 2022 survey on multilingual ASR
+@inproceedings{yadav2022survey,
+  title={A survey of multilingual models for automatic speech recognition},
+  author={Yadav, Hemant and Sitaram, Sunayana},
+  booktitle={Proceedings of the Thirteenth Language Resources and Evaluation Conference},
+  pages={5071--5079},
+  year={2022}
+}
+
+
+%%%%%%% 2020 paper on massively multilingual model with teh wav2letter architecture
+@article{pratap2020massively,
+  title={Massively multilingual ASR: 50 languages, 1 model, 1 billion parameters},
+  author={Pratap, Vineel and Sriram, Anuroop and Tomasello, Paden and Hannun, Awni and Liptchinsky, Vitaliy and Synnaeve, Gabriel and Collobert, Ronan},
+  journal={arXiv preprint arXiv:2007.03001},
+  year={2020}
+}
+
+
+%%%%%% Negative transfer in mutlilingual LLMs
+@inproceedings{wang2020negative,
+  title={On negative interference in multilingual models: Findings and a meta-learning treatment},
+  author={Wang, Zirui and Lipton, Zachary C and Tsvetkov, Yulia},
+  booktitle={Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  pages={4438--4450},
+  year={2020}
+}
+
+%%%%% Scaling laws for acoutic models
+@article{droppo2021scaling,
+  title={Scaling laws for acoustic models},
+  author={Droppo, Jasha and Elibol, Oguz},
+  journal={arXiv preprint arXiv:2106.09488},
+  year={2021}
+}
+
+
+%%%% Seminal DNN NLP paper
+@article{sutskever2014sequence,
+  title={Sequence to sequence learning with neural networks},
+  author={Sutskever, Ilya and Vinyals, Oriol and Le, Quoc V},
+  journal={Advances in neural information processing systems},
+  volume={27},
+  year={2014}
+}
+
+
+%%%% Deepspeech 1 arxiv only, apparently
+@article{hannun2014deep,
+  title={Deep speech: Scaling up end-to-end speech recognition},
+  author={Hannun, Awni and Case, Carl and Casper, Jared and Catanzaro, Bryan and Diamos, Greg and Elsen, Erich and Prenger, Ryan and Satheesh, Sanjeev and Sengupta, Shubho and Coates, Adam and others},
+  journal={arXiv preprint arXiv:1412.5567},
+  year={2014}
+}
+
+
+%%%%%% DNN-HMM hybrid models
+@ARTICLE{hintondnnhmm,
+  author={Hinton, Geoffrey and Deng, Li and Yu, Dong and Dahl, George E. and Mohamed, Abdel-rahman and Jaitly, Navdeep and Senior, Andrew and Vanhoucke, Vincent and Nguyen, Patrick and Sainath, Tara N. and Kingsbury, Brian},
+  journal={IEEE Signal Processing Magazine}, 
+  title={Deep Neural Networks for Acoustic Modeling in Speech Recognition: The Shared Views of Four Research Groups}, 
+  year={2012},
+  volume={29},
+  number={6},
+  pages={82-97},
+  keywords={Automatic speech recognition;Speech recognition;Hidden Markov models;Training;Gaussian processes;Acoustics;Neural networks;Data models},
+  doi={10.1109/MSP.2012.2205597}}
+
+%%% Early CNN-HMM model
+@INPROCEEDINGS{Hamidcnnhmm,
+  author={Abdel-Hamid, Ossama and Mohamed, Abdel-rahman and Jiang, Hui and Penn, Gerald},
+  booktitle={2012 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Applying Convolutional Neural Networks concepts to hybrid NN-HMM model for speech recognition}, 
+  year={2012},
+  volume={},
+  number={},
+  pages={4277-4280},
+  keywords={Hidden Markov models;Convolution;Speech;Artificial neural networks;Speech recognition;Acoustics;Training;acoustic modeling;neural networks;speech recognition;local filtering;max-pooling},
+  doi={10.1109/ICASSP.2012.6288864}}
+
+
+%%% Google RNN ASR model, DNN-HMM still outperforms
+@InProceedings{pmlr-v32-graves14,
+  title = 	 {Towards End-To-End Speech Recognition with Recurrent Neural Networks},
+  author = 	 {Graves, Alex and Jaitly, Navdeep},
+  booktitle = 	 {Proceedings of the 31st International Conference on Machine Learning},
+  pages = 	 {1764--1772},
+  year = 	 {2014},
+  editor = 	 {Xing, Eric P. and Jebara, Tony},
+  volume = 	 {32},
+  number =       {2},
+  series = 	 {Proceedings of Machine Learning Research},
+  address = 	 {Bejing, China},
+  month = 	 {22--24 Jun},
+  publisher =    {PMLR},
+}
+
+
+%%%% Early Attention mechanism in ASR
+@article{chorowski2015attention,
+  title={Attention-based models for speech recognition},
+  author={Chorowski, Jan K and Bahdanau, Dzmitry and Serdyuk, Dmitriy and Cho, Kyunghyun and Bengio, Yoshua},
+  journal={Advances in neural information processing systems},
+  volume={28},
+  year={2015}
+}
+
+%%% Bi-LSTMs in ASR
+@INPROCEEDINGS{chan2015listen,
+  author={Chan, William and Jaitly, Navdeep and Le, Quoc and Vinyals, Oriol},
+  booktitle={2016 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Listen, attend and spell: A neural network for large vocabulary conversational speech recognition}, 
+  year={2016},
+  volume={},
+  number={},
+  pages={4960-4964},
+}
+
+
+%%% Levenstein edit distance
+@inproceedings{levenshtein1966binary,
+  title={Binary codes capable of correcting deletions, insertions, and reversals},
+  author={Levenshtein, Vladimir I and others},
+  booktitle={Soviet physics doklady},
+  volume={10},
+  number={8},
+  pages={707--710},
+  year={1966},
+  organization={Soviet Union}
+}
+
+
+%%%% Early Speech transformers
+%% First proper speech transformers paper
+@inproceedings{dong2018speech,
+  title={Speech-transformer: a no-recurrence sequence-to-sequence model for speech recognition},
+  author={Dong, Linhao and Xu, Shuang and Xu, Bo},
+  booktitle={2018 IEEE international conference on acoustics, speech and signal processing (ICASSP)},
+  pages={5884--5888},
+  year={2018},
+  organization={IEEE}
+}
+
+%% Mandarin transformers
+@inproceedings{li2019speechtransformer,
+  title={The speechtransformer for large-scale mandarin chinese speech recognition},
+  author={Li, Jie and Wang, Xiaorui and Li, Yan and others},
+  booktitle={ICASSP 2019-2019 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={7095--7099},
+  year={2019},
+  organization={IEEE}
+}
+
+%%% Transformer-transduce: tranformer encoder, LSTM decoder
+%%%% No published version of this apparently
+%% I don't think I'm using this now
+@article{yeh2019transformer,
+  title={Transformer-transducer: End-to-end speech recognition with self-attention},
+  author={Yeh, Ching-Feng and Mahadeokar, Jay and Kalgaonkar, Kaustubh and Wang, Yongqiang and Le, Duc and Jain, Mahaveer and Schubert, Kjell and Fuegen, Christian and Seltzer, Michael L},
+  journal={arXiv preprint arXiv:1910.12977},
+  year={2019}
+}
+
+%% Not used
+@inproceedings{zhang2020transformer,
+  title={Transformer transducer: A streamable speech recognition model with transformer encoders and rnn-t loss},
+  author={Zhang, Qian and Lu, Han and Sak, Hasim and Tripathi, Anshuman and McDermott, Erik and Koo, Stephen and Kumar, Shankar},
+  booktitle={ICASSP 2020-2020 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={7829--7833},
+  year={2020},
+  organization={IEEE}
+}
+
+
+
+%%% The Conformer paper
+@article{gulati2020conformer,
+  title={Conformer: Convolution-augmented Transformer for Speech Recognition},
+  author={Gulati, Anmol and Qin, James and Chiu, Chung-Cheng and Parmar, Niki and Zhang, Yu and Yu, Jiahui and Han, Wei and Wang, Shibo and Zhang, Zhengdong and Wu, Yonghui and others},
+  year={2020}
+}
+
+%%% Attention before convolution
+@inproceedings{bello2019attention,
+  title={Attention augmented convolutional networks},
+  author={Bello, Irwan and Zoph, Barret and Vaswani, Ashish and Shlens, Jonathon and Le, Quoc V},
+  booktitle={Proceedings of the IEEE/CVF international conference on computer vision},
+  pages={3286--3295},
+  year={2019}
+}
+
+%%% wav2vec [1.0]
+@inproceedings{schneider2019wav2vec,
+  title={wav2vec: Unsupervised Pre-Training for Speech Recognition},
+  author={Schneider, Steffen and Baevski, Alexei and Collobert, Ronan and Auli, Michael},
+  booktitle={Proc. Interspeech 2019},
+  pages={3465--3469},
+  year={2019}
+}
+
+%% Emotion recognition from wav2vec 2.0
+@article{pepino2021emotion,
+  title={Emotion Recognition from Speech Using Wav2vec 2.0 Embeddings},
+  author={Pepino, Leonardo and Riera, Pablo and Ferrer, Luciana},
+  year={2021}
+}
+
+%%% speaker verification and LID in wav2vec 2.0
+@article{fan2021exploring,
+  title={Exploring wav2vec 2.0 on speaker verification and language identification},
+  author={Fan, Zhiyun and Li, Meng and Zhou, Shiyu and Xu, Bo},
+  year={2021}
+}
+
+%%% A survey of HMMs in speech 2008
+@article{galeshmm2008,
+    author = {Gales, Mark and Young, Steve},
+    title = {The Application of Hidden Markov Models in Speech Recognition},
+    journal = {Foundations and Trends in Signal Processing},
+    volume = {1},
+    number = {3},
+    pages = {195-304},
+    year = {2008},
+    month = {02},
+    issn = {1932-8346},
+    doi = {10.1561/2000000004},
+}
+
+
+%% HMMs in ASR 1991
+@article{Juang01081991,
+author = {B. H. Juang and L. R. Rabiner},
+title = {Hidden Markov Models for Speech Recognition},
+journal = {Technometrics},
+volume = {33},
+number = {3},
+pages = {251--272},
+year = {1991},
+publisher = {Taylor \& Francis},
+doi = {10.1080/00401706.1991.10484833},
+}
+
+
+@Inbook{Graves2012,
+author="Graves, Alex",
+title="Long Short-Term Memory",
+bookTitle="Supervised Sequence Labelling with Recurrent Neural Networks",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="37--45",
+}
+
+
+%%% RNNs
+@article{elman1990finding,
+  title={Finding structure in time},
+  author={Elman, Jeffrey L},
+  journal={Cognitive science},
+  volume={14},
+  number={2},
+  pages={179--211},
+  year={1990},
+  publisher={Wiley Online Library}
+}
+
+
+%%% Switchboard dataset
+@INPROCEEDINGS{godfreyswitchboard1992,
+  author={Godfrey, J.J. and Holliman, E.C. and McDaniel, J.},
+  booktitle={[Proceedings] ICASSP-92: 1992 IEEE International Conference on Acoustics, Speech, and Signal Processing}, 
+  title={SWITCHBOARD: telephone speech corpus for research and development}, 
+  year={1992},
+  volume={1},
+  number={},
+  pages={517-520 vol.1},
+  keywords={Telephony;Research and development;Instruments;Speech recognition;Testing;Speech processing;Databases;Authentication;Protocols;Vocabulary},
+  doi={10.1109/ICASSP.1992.225858}}
+
+%% Fisher dataset
+@inproceedings{cieri2004fisher,
+  title={The Fisher corpus: A resource for the next generations of speech-to-text.},
+  author={Cieri, Christopher and Miller, David and Walker, Kevin},
+  booktitle={LREC},
+  volume={4},
+  pages={69--71},
+  year={2004}
+}
+
+%%% GRU
+@inproceedings{cho2014grulearning,
+    title = "Learning Phrase Representations using {RNN} Encoder{--}Decoder for Statistical Machine Translation",
+    author = {Cho, Kyunghyun  and
+      van Merri{\"e}nboer, Bart  and
+      Gulcehre, Caglar  and
+      Bahdanau, Dzmitry  and
+      Bougares, Fethi  and
+      Schwenk, Holger  and
+      Bengio, Yoshua},
+    editor = "Moschitti, Alessandro  and
+      Pang, Bo  and
+      Daelemans, Walter",
+    booktitle = "Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing ({EMNLP})",
+    month = oct,
+    year = "2014",
+    address = "Doha, Qatar",
+    publisher = "Association for Computational Linguistics",
+    pages = "1724--1734"
+}
+
+
+%%% Batch norm
+
+@InProceedings{pmlr-v37-ioffe15,
+  title = 	 {Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift},
+  author = 	 {Ioffe, Sergey and Szegedy, Christian},
+  booktitle = 	 {Proceedings of the 32nd International Conference on Machine Learning},
+  pages = 	 {448--456},
+  year = 	 {2015},
+  editor = 	 {Bach, Francis and Blei, David},
+  volume = 	 {37},
+  series = 	 {Proceedings of Machine Learning Research},
+  address = 	 {Lille, France},
+  month = 	 {07--09 Jul},
+  publisher =    {PMLR},
+}
+
+
+%% attention mechanisms
+@inproceedings{bahdanau2014neural,
+  author       = {Dzmitry Bahdanau and
+                  Kyunghyun Cho and
+                  Yoshua Bengio},
+  editor       = {Yoshua Bengio and
+                  Yann LeCun},
+  title        = {Neural Machine Translation by Jointly Learning to Align and Translate},
+  booktitle    = {3rd International Conference on Learning Representations, {ICLR} 2015,
+                  San Diego, CA, USA, May 7-9, 2015, Conference Track Proceedings},
+  year         = {2015},
+}
+
+%% dot product attention mechanism
+@inproceedings{luong2015effective,
+  title={Effective approaches to attention-based neural machine translation},
+  author={Luong, Minh-Thang and Pham, Hieu and Manning, Christopher D},
+  booktitle={Proceedings of the 2015 conference on empirical methods in natural language processing},
+  pages={1412--1421},
+  year={2015}
+}
+
+
+%%% SpecAugment masking spectrograms
+@inproceedings{park2019specaugment,
+  title={SpecAugment: A Simple Data Augmentation Method for Automatic Speech Recognition},
+  author={Park, Daniel S and Chan, William and Zhang, Yu and Chiu, Chung-Cheng and Zoph, Barret and Cubuk, Ekin D and Le, Quoc V},
+  booktitle={Proc. Interspeech 2019},
+  pages={2613--2617},
+  year={2019}
+}
+
+%%% BeRT NLP language understanding SSL model
+@inproceedings{devlin-etal-2019-bert,
+    title = "{BERT}: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+    author = "Devlin, Jacob  and
+      Chang, Ming-Wei  and
+      Lee, Kenton  and
+      Toutanova, Kristina",
+    editor = "Burstein, Jill  and
+      Doran, Christy  and
+      Solorio, Thamar",
+    booktitle = "Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
+    month = jun,
+    year = "2019",
+    address = "Minneapolis, Minnesota",
+    publisher = "Association for Computational Linguistics",
+    pages = "4171--4186",
+}
+
+%%% Original CNN paper
+@ARTICLE{lecuncnn1998,
+  author={Lecun, Y. and Bottou, L. and Bengio, Y. and Haffner, P.},
+  journal={Proceedings of the IEEE}, 
+  title={Gradient-based learning applied to document recognition}, 
+  year={1998},
+  volume={86},
+  number={11},
+  pages={2278-2324},
+  keywords={Neural networks;Pattern recognition;Machine learning;Optical character recognition software;Character recognition;Feature extraction;Multi-layer neural network;Optical computing;Hidden Markov models;Principal component analysis},
+  doi={10.1109/5.726791}}
+
+
+%% GELU activation
+@article{hendrycks2016gaussian,
+  title={Gaussian error linear units (gelus)},
+  author={Hendrycks, Dan and Gimpel, Kevin},
+  journal={arXiv preprint arXiv:1606.08415},
+  year={2016}
+}
+
+%%% Gumbel softmax as used in wav2vec 2.0
+@inproceedings{jang2017categorical,
+  title={Categorical Reparametrization with Gumble-Softmax},
+  author={Jang, Eric and Gu, Shixiang and Poole, Ben},
+  booktitle={International Conference on Learning Representations (ICLR 2017)},
+  year={2017},
+  organization={OpenReview. net}
+}
+
+%%% Ted-LIUM v2 dataset
+@inproceedings{rousseau2014enhancing,
+  title={Enhancing the TED-LIUM Corpus with Selected Data for Language Modeling and More TED Talks},
+  author={Rousseau, Anthony and Del{\'e}glise, Paul and Est{\`e}ve, Yannick},
+  booktitle={Proceedings of the Ninth International Conference on Language Resources and Evaluation (LREC'14)},
+  pages={3935--3939},
+  year={2014}
+}
+
+%%% Wall Street Journal dataset
+@inproceedings{paul1992design,
+  title={The design for the Wall Street Journal-based CSR corpus},
+  author={Paul, Douglas B and Baker, Janet},
+  booktitle={Speech and Natural Language: Proceedings of a Workshop Held at Harriman, New York, February 23-26, 1992},
+  year={1992}
+}
+
+%% The BLEU score
+@inproceedings{papineni2002bleu,
+  title={Bleu: a method for automatic evaluation of machine translation},
+  author={Papineni, Kishore and Roukos, Salim and Ward, Todd and Zhu, Wei-Jing},
+  booktitle={Proceedings of the 40th annual meeting of the Association for Computational Linguistics},
+  pages={311--318},
+  year={2002}
+}
+
+%%% original backpropogation paper
+@article{rumelhart1986learning,
+  title={Learning representations by back-propagating errors},
+  author={Rumelhart, David E and Hinton, Geoffrey E and Williams, Ronald J},
+  journal={nature},
+  volume={323},
+  number={6088},
+  pages={533--536},
+  year={1986},
+  publisher={Nature Publishing Group UK London}
+}
+
+%%% Dutch Spoken Corpus
+@inproceedings{schuurman2003cgn,
+  title={CGN, an annotated corpus of spoken Dutch},
+  author={Schuurman, Ineke and Schouppe, Machteld and Hoekstra, Heleen and Van der Wouden, Ton},
+  booktitle={Proceedings of 4th International Workshop on Linguistically Interpreted Corpora (LINC-03) at EACL 2003},
+  year={2003}
+}
+

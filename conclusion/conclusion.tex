@@ -1,1 +1,268 @@
-\chapter{Conclusion}
+\chapter{Conclusion}\label{Chapter6}
+\iffalse
+\begin{itemize}
+    \item Mark conclusion: 7 pages, no discussion section
+    \begin{itemize}
+        \item Conclusions/Summary: 4 pages
+        \item Future Work: 2.5 pages
+        \item final remarks: 0.5 pages
+        \item blank page: 1 page
+    \end{itemize}
+    \item George conclusion: 12 pages, no discussion section
+    \begin{itemize}
+        \item Summary + Significance: 3 pages
+        \item Context: 0.5 pages
+        \item limitations: 0.5 pages
+        \item "What went wrong": 1 page
+        \item Broader Impact: 0.5 pages
+        \item Future Work: 5.5 pages
+        \item Final remarks: 0.5 pages
+        \item blank: 0.5 pages
+    \end{itemize}
+    \item Rishabh: 5 pages, no discussion
+    \begin{itemize}
+        \item Summary/Contributions: 2 pages
+        \item Discussion: 0.5 pages
+        \item future work: 2 pages
+        \item blank: 0.5 pages
+    \end{itemize}
+    \item Sam: 8 pages, no discussion
+    \begin{itemize}
+        \item Summary/ Contributions: 4 pages
+        \item Related work: 1.5 pages
+        \item Future Work: 2.5 pages
+        \item Concluding remoarks: 0.5 pages
+    \end{itemize}
+    \item Ayushi: 5 pages, no discussion
+    \begin{itemize}
+        \item Summary: 2 pages
+        \item Context: 0.5 pages
+        \item Limitations: 0.5 pages
+        \item future work: 2 pages
+        \item Final remark: 0.5 pages
+        \item blank: 0.9 pages
+    \end{itemize}
+\end{itemize}
+\begin{itemize}
+    \item My Conclusion:
+    \item Summary/Conclusion
+    \item Limitations
+    \begin{itemize}
+        \item Do I want a george style "what went wrong"?
+    \end{itemize}
+    \item Future Work
+    \item Final Remarks
+\end{itemize}
+\fi
+
+\iffalse
+\hl{Brief Intro paragraph} 2-paragaphs
+\begin{itemize}
+    \item restate overall aims and problems
+    \item \hl{I don't necessarily need this, skip for now}
+\end{itemize}
+\fi
+
+
+\section{Summary}\label{conc_sec:summary}
+\iffalse
+\hl{2-4 pages}
+\begin{itemize}
+    \item \hl{I should relate to research questions here}
+    \item Chapter 3 and model pruning
+    \item what was achieved and what we reasoned
+    \item Chapter 4 and model probing
+    \item what was achieved and what we reasoned
+    \item Context/Limitations section
+    
+\end{itemize}
+
+\hl{Overall summary of the field and our aims}
+\begin{itemize}
+    \item We can talk a little here about the concept of pretraining introduce the idea of the resources it takes to pretrain a big model
+    \item How we as downstream researchers, do not have the resources to train them ourselves
+    \item how multilingual pretraining is not deeply thought through, and a see what sticks approach is very common
+    \item This thesis is all about picking that apart and finding out how they work and if we can improve upon that
+    \item 
+\end{itemize}
+\fi
+
+In this chapter we will summarise the major findings across this thesis and how they align with our research questions from section~\ref{intro_sec:research_questions}.
+
+\subsection{Language Bias in Self-Supervised Learning}
+
+In Chapter~\ref{chapter4}, we dissect the multilingual SSL ASR model XLS-R \cite{babu2021xlsr} by using LTH \cite{frankle2018LTH} to identify language-specific subnetworks. First, we find the highest sparsity that XLS-R can be pruned to without increasing CER. We find that with unstructured pruning, the model can be pruned to 50\% without any increase in CER and to 70\% with only a marginal increase. This finding is consistent across all languages tested fine-tuning to monolingual subsets of the FLEURs \cite{FLEURS} multilingual dataset.
+
+For sparsities >=70\%, we then fine-tune each of these subnetworks to a matched, related or mismated language and measure CER. This approach is our first step to answering \textbf{RQ1}, which asks how the balance of languages in pretraining affects downstream learning. Previous studies had identified language-specific subnetworks and fine-tuned them with a matched-language. This approach had been shown to produce highly sparse, low-error networks \cite{PARP, Lu_Language_adap_xlsr, yang2023learning}. However, little work had been done to analyse the weight distributions of these subnetworks. %For instance, whether a language-specific subnetworks could be adapted to related or mismatched languages. Whether subnetworks drawn from high-resource languages in pretraining would produce more beneficial weights. How language-specific subnetworks interact with one another, and whether there are linguistic relationships behind them. 
+
+For \textbf{RQ1}, we start by comparing the fine-tuned CER of multiple language-specific subnetworks. We found that across all languages, at >=70\% sparsity, the English language-specific subnetwork produced the lowest CER. This was true even when compared to subnetworks of related languages. English is also the language with the most hours in pretraining, which shows that language balance has a substantial impact on subnetwork performance. Fine-tuning the English subnetwork to Asturian even resulted in lower CER than fine-tuning the Spanish subnetwork to Asturian. This leads us to address \textbf{RQ2}, which asks whether, during fine-tuning, multilingual models use information learned in pretraining from related languages. Through our fine-tuning of the language-specific subnetworks, we have shown that XLS-R is not using weights learned from related languages. 
+
+To further investigate \textbf{RQ2}, we assess the IOU between language-specific subnetworks. We find that the English subnetwork has the most overlap with the pretrained XLS-R before it is fine-tuned. Therefore, the weight distribution of XLS-R changes the least when fine-tuning to English compared to other languages. We further test language relationships by comparing the English subnetwork to languages originating in Spain. We find that the English language-specific subnetwork had a high IOU with both Catalan and Asturian. We then measure the IOU between the Spanish subnetwork and subnetworks for Catalan and Asturian. The IOU between the Spanish regional languages was lower than the IOU found between them and English. This further shows that when fine-tuning, XLS-R relies on weights learned from English. It is not, therefore, using information learned from related-languages. 
+
+%By analysing the behaviour of and the relationship between language-specific subnetworks, we provide the first steps in understanding the behaviour of multilingual SSL ASR models. The findings of Chapter~\ref{chapter4} suggest that the distribution of languages in pretraining has an impact on downstream performance. This impact has been trained into the model during the pretraining stage. In order to answer \textbf{RQ1}, we must next understand how multilingual SSL ASR models learn speech.
+
+\subsection{Data Balance and Learning in Multilingual SSL}
+%In Chapter~\ref{chapter4} investigated how the balance of languages in XLS-R pretraining affected downstream CER. However, we did not compare our findings to a multilingual model with a different balance of languages. Without this comparison, we have not yet answered the question on language balance from \textbf{RQ1}.
+
+In Chapter~\ref{chapter5}, we continue investigating \textbf{RQ1} by pretraining 7 separate base wav2vec 2.0 models with different balances of 2 pretraining languages. We pretrain 2 monolingual models, 1 pretrained on English \cite{librispeech} and 1 on Spanish \cite{MLS}. We then train 5 more models with different ratios of Eng/Spa data: 800/100, 600/300, 450/450, 300/600. 100/800. We first fine-tune these models to English and Spanish data. We find that for both languages, downstream CER decreases proportionally to the amount of matched-language data in pretraining. We then fine-tune to multiple FLEURs \cite{FLEURS} languages. We find that this proportional increase in accuracy is true for related languages in pretraining as well. For unrelated language, there is no clear correlation between pretraining language balance and downstream CER. %These findings show that the balance of hours between multiple languages in pretraining directly relates to the model's multilingual performance.
+
+%These findings validate our previous answers to \textbf{RQ1} and \textbf{RQ2} based on the findings of Chapter~\ref{chapter4}. 
+
+%To understand how the balance of languages has this effect, we must next understand how multilingual SSL ASR models learn speech during pretraining. Previous studies have shown that English monolingual SSL ASR models learn phonetic features during pretraining \cite{pasad2021layer, english2022domain, wells2022phonetic}. Without any fine-tuning, these models are able to perform phoneme recognition with high accuracy. 
+
+Our next experiments then address \textbf{RQ3}, which asks how multilingual SSL ASR models learn phonetic features. We first test our pretrained models for phoneme accuracy through MLP probing. We first collect phoneme intervals with the MFA \cite{mcauliffe2017montreal} from English, Spanish, French and Polish data, \cite{librispeech, MLS}. We then train probes from the layer 7 outputs of each model and collect phoneme accuracy from our test data.
+
+To answer \textbf{RQ3}, we first ask whether SSL ASR models learn multilingual phonemes as shared or separate realisations, which forms \textbf{RQ4}. We group phonemes by the pretraining language in which they appear. We found that phonemes shared across the English and Spanish phoneme inventories have a higher average accuracy than phonemes unique to either language. We also find that both English and Spanish phonemes increase in accuracy proportionally to the amount of matched-language data in pretraining. These experiments revealed that phonemes are learned as separate realisations. 
+
+In this section, we also address, which asks how languages unseen in pretraining interact with phoneme representation. Our experiments show that French and Polish phonemes have higher accuracy when they appear in the pretraining language inventories. Phonemes that are unique to each language have low accuracy by comparison. Therefore, unseen languages benefit from phoneme representation in pretraining, even from mismatched languages.
+
+%So, we also found that having a phoneme represented in pretraining still benefits phoneme accuracy for unseen languages.\thoughts{I could change RQ5 to be about unseen and add it here}
+
+%To understand why unseen languages still benefit from phoneme representation in pretraining, we can first break down phonemes into their MoA classes. It has been shown that the pretrained monolingual English wav2vec 2.0 can identify articulations \cite{english2022domain}. However, it does not learn each MoA class to an equal accuracy. In pretraining, both wav2vec 2.0 and XLS-R assign more codebook entries to certain MoA classes, such as vowels, compared to others \cite{quantizer_entries_paper}, when tested on English phonemes \cite{timit}. 
+
+
+
+%This leads us to \textbf{RQ6}\thoughts{expand on RQ6}\thoughts{I have skipped RQ5 for now, it overlaps with the other RQs so I don't think I need it. OR I need to change it, to something about how multilingual quantizers learn.} which asks how the balance of languages affects the learning of articulations.\thoughts{Can probably move this later.} .\thoughts{probably need to define the test languages them somewhere} 
+
+To further understand these findings, we address \textbf{RQ6}, which asks how multilingual language balance affects MoA learning. We plot the average MoA class accuracy on each model for each of our 4 test languages searately. We first see that high-resource matched-language models always produce the highest MoA class accuracy. However, the extent to which matched-language pretraining is beneficial to phoneme accuracy differs by class. Spanish vowels, for example, have high accuracy across all 7 models, which is not true of English. Vowels that exist in both Spanish and an unseen language also have high accuracy. Vowels that exist in English and an unseen language have low accuracy by comparison. However, direct phoneme or MoA class representation in pretraining is not always enough to increase accuracy for unseen languages. Polish trills, for example, have low accuracy even on the Spanish monolingual model.
+
+To control for low-resource phonemes in tests we next weight MoA phoneme accuracy by their number of intervals. For nasals and fricatives, we find that the average accuracy for all languages increases. For certain languages, the increase in accuracy is large and this is not the case for other MoA classes. We then plot phoneme accuracy against probe test interval counts with scatter plots. The number of intervals in the probe testing data is shown to correlate with high phoneme accuracy. We also plot accuracy against pretraining interval counts and find that the number of intervals in pretraining can also correlate with phoneme accuracy. Low-resource Nasals and fricatives are often found to have high accuracy regardless of interval counts in pretraining. These classes can be low accuracy for very low-resource phonemes, where there are less than 500 intervals in test. However, for low-resource, more than 500 intervals, nasals and fricatives often have high accuracy, compared to low-resource phonemes in other classes. This suggests that, above a certain threshold of test intervals, MoA class alone can be a correlating factor to high accuracy.
+
+%%%%%%%%%%%%%%%%%% MAYBE I CAN USE THIS FOR THE FINAL THOUGHTS  %%%%%%%%%%%%%%%%%%%%%
+
+%Across these findings we see that the answer to \textbf{RQ6} is multi-faceted. Matched-language pretraining exposure consistently benefits MoA class accuracy. To a lesser extent, mismatched pretraining exposure can also benefit MoA class accuracy. Language selection is also important to high MoA accuracy. In certain cases the class itself is simply well learned by wav2vec 2.0.
+
+%Overall, we answer \textbf{RQ1} by stating that this thesis proves the balance between languages in pretraining does directly relate to language learning. The more matched-language data there is in SSL ASR pretraining, the higher the matched and related language downstream accuracy becomes. For unseen languages, balance is less important, as long as a model has been trained on phonemes that exist in the unseen language. Articulation plays a factor, but the factors can be MoA class or language specific.
+
+
+\section{Limitations}\label{conc_sec:limitations}
+
+\subsubsection{Probing Data}
+There are a number of limitations to the findings outlined in section~\ref{conc_sec:summary} that must be addressed. When probing wav2vec 2.0 models, \iffalse we test the average accuracy of each individual phoneme. We then compare this to the average phoneme accuracy weighted by the number of phoneme intervals in the test data. The latter of these approaches highlights that phonemes with more examples in test have averagely higher accuracy. The scatter plots confirm that the number of phoneme intervals in the test dat,a correlates with high individual phoneme accuracy.\fi we plot MoA weighted accuracy and scatter plots. These plots show that the number of phoneme intervals in the probe testing data correlates with phoneme accuracy. Therefore, the first limitation to note is that the MLP probes themselves add bias towards high-resource phonemes. 
+
+Phonemes that are low-resource in test may lower the average accuracy of a phoneme. These low-resource phonemes are usually low-resource in the probe training data as well. It could therefore be that the probes have not learned the representations for these phonemes well. We see in appendix~\ref{app_sec:chapter_5_appendix}, table~\ref{app_tab:phoneme_counts_per_language_vaid_1} that some phonemes have less than 10 intervals in the test data. It is possible that these phonemes have been misaligned. This is a limitation of using forced alignment rather than annotated phonemes. 
+
+By increasing the number of hours of test and training data, these issues could be mitigated. Early in the research process, we ran a test that trained our probes on 100 hours of LibriSpeech data instead of 10 hours \cite{librispeech}. We found that the average phoneme accuracy did increase when training on 100 hours of data. However, the increase was small relative to the increase in training time. We decided, therefore, that we would not train on the larger dataset. By training the probes on the smaller dataset, we may have impacted the final results. However, very low-resource phonemes, with less than 500 intervals, are still rare in both the test and training data. Therefore, we do not believe that the 100 hour datasets would have substantially changed the overall findings.
+
+\subsubsection{Available Compute Power}
+
+Compute power was a common limitation, often constraining the scope of potential experiments. However, this constraint also inspired the research direction of this thesis. Before performing pruning experiments on XLS-R we focussed on training low-parameter CNN models with approximately 6M parameters. We trained Quartznet15x5 \cite{quartznet} on LibriSpeech \cite{librispeech} and MLS languages \cite{MLS} as well as accented English data \cite{aesrc2020}. However, the results produced a high WER compared to SOTA models at the time. So we attempted strategies such as data augmentation, layer freezing and varying the learning rate scheduler \cite{some citations here}. However, we could not find an approach that competed with SSL transformer models. This line of research was eventually dropped. 
+
+The experiments in Chapter~\ref{chapter4} were performed at The University of Edinburgh, where we had access to a larger cluster of GPUs. This extra compute power allowed us to focus on the large SSL ASR model XLS-R \cite{babu2021xlsr}. We were able to study exactly what made it perform better than our smaller models. However, even here, we did not have the resources to train the larger 2B parameter XLS-R version. This limitation inspired the use of model compression techniques seen in this thesis. Through LTH \cite{frankle2018LTH}, we showed, among other findings, how much this model could be reduced in size without affecting performance.  
+
+The next direction was originally to experiment with knowledge distillation \cite{distillation}. The work had moved back to Trinity College Dublin and we now had access to more compute. However, again, the results were uninspiring when compared to other methods. Optimisation was difficult due to the large amount of GPU memory used in model distillation. This limited the directions we could expand these experiments into, despite our increased compute power. We shifted the scope of the experiments instead to pretraining multiple base wav2vec 2.0 models, something we now had the resources to do. This allowed us to emulate some of the behaviour of XLS-R and analyse language balance in multilingual SSL. This eventually formed the contributions presented in Chapter~\ref{chapter5}
+
+When we were training Quartznet15x5 \cite{quartznet} Meta\thoughts{technically Facbook research back then} had recently published wav2vec 2.0. Quartznet15x5 had 6M parameters and wav2vec 2.0 large had 317M. When we had access to increased compute resource, we would experiment with the 0.3B version of XLS-R and later pretrain the 0.1B wav2vec 2.0 model. During the same period we conducted these experiments, Meta would publish LLaMA \cite{llama_citation}. LLaMA is a 65B parameter Large Language Model (LLM). Google would then create their own LLM, Gemini, which is estimated to have a parameter count of 1.5T \cite{howtoreference?}. Although Gemini's parameter count has not, to this point, been officially disclosed by Google. 
+%We have never been able to compete with the computation required to train these models.\thoughts{reword} As well, many researchers in low-resource fields have even fewer resources than we did. 
+
+This disparity in resources between companies and research institutions highlights the need to understand how SSL models learn. With a better understanding, we can optimise these models to achieve better results with less computational resources. We hope, therefore, that this particular limitation has translated into a contribution that helps those with few resources of their own.
+
+
+\section{Future Work}\label{conc_sec:future_work}
+
+In this section, we will outline some avenues for future work based on the points raised in section~\ref{conc_sec:summary} and section~\ref{conc_sec:limitations}.
+
+\subsection{Model Compression}
+
+A natural direction to take the results in Chapter~\ref{chapter4} is to further experiment with model compression. First, our findings could be applied to model distillation \cite{distillation}. Distillation has been successful in producing high-accuracy compressed models \cite{chang2022distilhubert, sanh2019distilbert}. A future project could compare the results of distilled XLS-R models when training the student model with different languages. 
+
+Future work could also apply our findings in Chapter~\ref{chapter4} to structured pruning.  Structured pruning removes entire nodes in a network. Compressed networks can be deployed with structured pruning, without the need for specialist hardware or software. This is not the case for the unstructured pruning used in Chapter~\ref{chapter4}. Future work could test if the English language-specific subnetwork still performs well with structured pruning.
+
+Finally, we would like to see more work analysing language-specific subnetworks using unstructured pruning. We showed that at 70\% sparsity CER did not substantially increase. The English subnetwork was able to produce low CER for all languages. Additionally, 80\% or more of the weights between language-specific subnetworks overlap. It is important, therefore, that we identify the information encoded in this small portion of remaining weights. 
+
+%Pasad et al. \cite{pasad2021layer} identified that weights in layers containing acoustic information change less after fine-tuning than deep layers containing semantic information. Fine-tuning is required before applying LTH \cite{frankle2018LTH} to identify a language-specific subnetwork. So, analysing whether these impactful weights are acoustic or semantically driven is important. Global pruning was used in our research so further analysis could be done to analyse the sparsity at each layer. This may give insight into whether English acoustic or semantic data is encoded in the approximately 20\% of weights that do not overlap. 
+
+\iffalse
+\hl{2-3 pages depending on whether I write it up}
+\begin{itemize}
+    %\item Analysis work and short term experiments %\hl{There has to be a better phrase for this}
+    \iffalse
+    \item Generate and analyse scatter plots with phoneme accuracy vs  pretraining interval count
+    \begin{itemize}
+        \item We expect high accuracy to correlate with high pretraining count
+        \item We expect low accuracy to correlate with low pretraining count
+        \item we expect this relationship to be linear
+        \item However, the unseen languages have many phonemes that are not in pretraining
+        \item We test the test data interval counts as well
+    \end{itemize}
+    \item Generate and analyse scatter plots with phoneme accuracy vs  test data interval count
+    \begin{itemize}
+        \item We expect high accuracy to correlate with high test count
+        \item We expect low accuracy to correlate with low test count
+        \item However, we expect this to be more noisey, with certain phonemes not matching the patterns i.e. polish trills
+    \end{itemize}
+    
+    \item Fit a linear regression model to several variables: pretraining interval count, test interval count, phoneme accuracy, language, MoA class, matched-language condition.
+    \begin{itemize}
+        \item This allows a more complex analysis of all of the relationships explored in this chapter
+        \item Linear regression allows us to see which factor is most relevant to high dowsntream accuracy.
+        \item We could also add other broader factors, such as phoneme time length to the list of factors.
+    \end{itemize}
+    \fi
+    \item \textbf{Short-term experiments}:
+    \item This experiment would be a short time commitment.
+    \item No one has done a clear study on how the wav2vec 2.0 quantiser learns multilingual phonemes.
+    \begin{itemize}
+        %\item \hl{ADD SOMETHING HERE ABOUT ANALYSIS OF THE CODEBOOK}
+        \item With the English monolingual model from the wav2vec 2.0 paper, each English phoneme was shown to have a responding codebook entry \cite{wav2vec}.
+        \item The XLSR-53 paper claims that the contrastive loss function for wav2vec 2.0 makes the quantiser share the same speech representations across languages \cite{XLSR-53}.
+        \item However, they never actually prove that it did learn them together by repeating the same experiment on the codebooks from the wav2vec 2.0 appendix.%, we could do this easily by seeing if the same phoneme in English and Spanish use the same entry or if the quantiser assigns them separate entries.
+        \item I could also look at whether certain MoA classes are more represented in the codebook, similar to this study on vowels \cite{cambara2022recycle}.
+        \item This is a big open goal in the literature, and our models are well set up for that analysis. It would also be a relatively quick experiment to run.
+        %\item XLS-R paper does cover this lightly as well and states that it does skew towards English
+        \item Some relevent references: \cite{wang2025normalization, linke2023self, lee2024balanced}
+    \end{itemize}
+    \item \textbf{Long term experiments}: %\hl{AGAIN, NEEDS BETTER WORDING}
+    \item Both of these experiments would be a big time commitment.
+    \item \textbf{Experiment 1}: We continue on from the short-term experiment, if multilingual wav2vec 2.0 models are found to be separating the same phonemes into different codebook entries when spoken in different languages.
+    \begin{itemize}
+        \item A new model with the same pretraining data mixes could be pretrained with one or all of the following strategies:
+        \item \textbf{Strategy 1}: The XLSR multilingual pretraining strategy for encouraging low-resource languages could be tweaked.
+        \item \textbf{Strategy 2}: The $\tau$ variable in the loss function that increases diversity of entry use could also be tweaked.
+        \item Building a variable into the loss function that encourages or forces wav2vec 2.0 to use the same entry for a single phoneme, even when spoken in different languages, could improve multilingual learning. 
+        \item If this could be achieved, many more entries could be freed up to learn more fine details about each language.
+        \item \textbf{Strategy 3}: Just massively increasing the number of codebooks. If the quantiser learns multilingual phonemes in separate entries, then increase the number of entries so it has more space to learn all of the information.
+        \item Option 3 would increase the number of learnable parameters in the model, but by a much smaller amount than increasing the encoder size, as done for XLS-R. This might be an acceptable trade-off to improve multilingual accuracy.
+    \end{itemize}
+    \item \textbf{Experiment 2}:  Given the findings of the interval counts experiments, we would try to construct a dataset that would be optimal for pretraining on an unseen language.
+    \item \textbf{Option 1}: A dataset where each MoA class is balanced in the number of interval counts and no single phoneme is very low-resource. This would create a very generalisable pretraining dataset. It probably wouldn't achieve very low error rates, compared to high-resource monolingual pretraining. However, it could be very adaptable for unseen, low-resource languages.
+    \item \textbf{Option 2}: We construct a pretraining dataset that has the same phoneme inventory and interval counts as a single unseen language. The aim of this dataset is to produce an SSL model that could rival monolingual or related language pretraining, without including any matched-language data. This would show exactly how effective phoneme exposure in pretraining is to downstream accuracy.
+    %\begin{itemize}
+     %   \item This scenario is produced if pretraining interval count is clearly has the most correlation to downstream accuracy.
+    %\end{itemize}
+\end{itemize}
+\fi
+
+\subsection{Linear Regression for Phoneme Accuracy}
+
+To continue our analysis of phoneme accuracy in Chapter~\ref{chapter5}, we could apply linear regression to our phoneme accuracy data. Linear regression models the relationship between a set of weighted variables and a continuous output. It is trained to minimise prediction error by learning which weights correlate to the highest accuracy across all outputs in the data. Some initial models were run, which showed that the number of phoneme intervals in both probe training data and pretraining data had a high correlation to phoneme accuracy. However, time constraints meant that complex models, including MoA class interval counts or language-specific models, could not be explored. 
+
+\subsection{Quantized Latent Speech Features in Multilingual SSL}
+
+In section~\ref{lr_subsec:analysis_quantizer} we review studies on quantized phonetic features in pretrained wav2vec 2.0. Baevski et al. \cite{wav2vec} identified that wav2vec 2.0 quantizer codebook entries correlates to a specific English phonemes. Later, Conneau et al. \cite{XLSR-53} showed that XLSR-53 codebook entries clustered together by language. Abdullah et al. \cite{abdullah2023information} then showed that XLS-R codebook entropy was only at 24.2\% when testing English phonemes from TIMIT \cite{timit}. The work in Chapter~\ref{chapter5} shows that phonemes are learned as language-specific realisations. Using only English phonemes to test codebook entries could explain the low entropy in XLS-R. The remaining entries that were not activated in their study may be phoneme realisations in other languages.
+
+Continuing from our work in Chapter~\ref{chapter5}, the quantized features in the codebooks for our 7 models could be analysed. We can first test the monolingual models by measuring entropy across all phonemes in only matched languages. This will give us monolingual baselines for codebook entropy. We can then analyse the entropy in our mixed-language models for both matched and mismatched languages. The balanced 450/450 model can tell us how wav2vec 2.0 learns phoneme realisations across the two languages. The 800/100 and 100/800 models will tell us whether language scarcity in pretraining encourages cross-lingual sharing of entries. Finally, we can map language-specific phonemes to codebook entries and compare the results to our entropy findings. With this information, we could redesign the upsampling training strategy in XLSR-52 \cite{XLSR-53} to share more cross-lingual realisations. This could be done by reducing entropy factors in the Loss function, to encourage fewer entries to be used overall. We could also use MFA alignments to decide when entropy should be reduced or increased. 
+
+\subsection{Pretraining Dataset Composition}
+
+We found in Chapter~\ref{chapter5} that phonemes seen in pretraining had the highest average accuracy. This was true when comparing phonemes spoken in both seen and unseen languages. Building on these findings, we could design a synthesised language dataset using multilingual phoneme realisations. This dataset could test how much phoneme pretraining exposure impacts model accuracy.
+
+This synthesised dataset would take utterances from multiple languages to mimic the phonetic structure of one excluded language. The phoneme inventory of the synthesised dataset would be identical to that of the excluded language. The number of intervals per phoneme would also be identical to the excluded language. Given our findings on MoA classes in Chapter~\ref{chapter5}, articulations could also be selected from languages that produced the highest accuracy in each class.
+
+Two SSL models could then be pretrained, one with the synthesised dataset and one with real data from the excluded language. The phoneme accuracy and fine-tuned error from both models could then be compared. We would aim to produce relative performance to a model pretrained on the excluded language without including any of the target language data. 
+
+A comparison could also be made to an open-source multilingual model such as XLSR \cite{XLSR-53, babu2021xlsr}. We would expect the model pretrained on the synthesised dataset to produce better accuracy for the excluded language than the open-source multilingual model. If this were the case, then we could show the benefits of carefully selecting pretraining data. This experiment would also prove that carefully selected data from other languages can be used to augment low-resource datasets.
+
+%A further dataset could be designed for high-performance multilingual pretraining. It would include a broad phoneme inventory and each phoneme in the inventory would be high-resource, with many intervals in pretraining. A model pretrained on this dataset could then be compared to the multilingual SOTA. %Pretraining with this dataset would aim to produce a high-accuracy multilingual model. If the pretraining dataset is effective, the size of the model could be reduced to the smallest possible size. We would aim to achieve lower error with fewer parameters than the multilingual SOTA.
+
+
+%\section{Contributions}\label{conc_sec:contributions}
+%\hl{0.5-1 page}
+%\begin{itemize}
+%    \item the direct paper
+%    \item The contribution of the next chapter
+%    \item \hl{Fionn Note: End on a high note}
+%\end{itemize}
+
+\section{Final Remarks}\label{conc_sec:final_remark}
+As stated in the introduction to this thesis, the quantity of information transferred between two human beings in a single utterance of speech is vast. The variation between languages, accents, dialects and even pronunciations offers an immense challenge in automatic speech recognition. Teaching SSL ASR models to effectively learn all of these variations is a difficult task. When they do appear to have achieved this task, understanding how they did it can be almost as challenging itself. The contributions outlined in this thesis demonstrate the scale of this challenge. This thesis has focused on how the balance of hours between pretraining languages affects SSL language learning. We showed that a large SSL ASR model can be over-reliant on a single high-resource language in pretraining. Large SSL ASR models are also inefficient and can be pruned to high sparsities without impacting accuracy. We then showed that multilingual phonemes are learned as language-specific realisations. By not sharing cross-lingual phonetic features, this contribution outlines how multilingual SSL can be inefficient and unpredictable. We show that MoA classes are not learned equally between pretraining languages. This contribution demonstrated the need for careful selection of pretraining data, which must be guided by linguistic knowledge. We finally suggest directions that future work could explore based on our contributions. Overall, we hope that the contributions to knowledge in this thesis lead to high-accuracy, computationally efficient, multilingual SSL ASR that is widely available to all.

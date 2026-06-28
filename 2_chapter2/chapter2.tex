@@ -3,7 +3,7 @@
 %****************************** Second Chapter *********************************
 %*******************************************************************************
 % Use [] to create a short form of the title which is used in the header of the chapter when the title is too long for the running headers
-\chapter[Literature Review]{Literature Review}
+\chapter[Literature Review]{Literature Review}\label{Chapter2_LR}
 
 \ifpdf
     \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
@@ -11,236 +11,177 @@
     \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
 \fi
 
-%\section{Introduction}
-\begin{itemize}
-    \item short introduction, no more than the first page, just to set this section up
-\end{itemize}
 
-\section{Automatic Speech Recognition in DSP}
-\begin{itemize}
-    %\item Working title, not married to it
-    \item sets up pre-deep learning ASR techniques
-    %\item here we can cover very early ASR
-    \item The FFT, spectrograms and mel-spectrograms
-    \item Spectrograms, EMGs and other tools used in linguistics.
-    \item HMMs
-    \begin{itemize}
-        \item for HMMs we should set up best pre-deep learning WER
-        \item we could also set up the idea of the limited datasets available
-    \end{itemize}
-\end{itemize}
+This literature review introduces the key concepts for this thesis. In Section~\ref{lr_sec:asr_early_dnns} we cover how early neural networks were applied to Automatic Speech recognition (ASR). This section covers in depth relevant loss and error metrics, CTC and W/C/PER. We then cover the transformer architecture and some of its uses in ASR. In Section~\ref{lr_sec:wav2vec2} we cover, in depth, the architecture, loss objective and first results produced by wav2vec 2.0. In Section~\ref{lr_sec:multilingual_ssl}, how the wav2vec 2.0 family of models has been adapted to multilingual SSL ASR. We cover the results produced by these models and what can be done to optimise multilingual SSL ASR. 
+
+In Section~\ref{lr_sec:model_compression} we introduce the concept of model compression. This section focusses on and model pruning. We cover how weigt pruning can be used to compress and understand large multilingual SSL ASR models. Finally in Section~\ref{lr_sec:model_analysis}, we cover what features have been shown to be learned during SSL ASR pretraining. We cover which ASR tasks are learned in each layer of the models and how well they learn phonetic features. Finally, Section~\ref{lr_sec:datasets_models} summarises the datasets, models and training regimes used in the experiments throughout this thesis.
 
 
+\section{Automatic Speech Recognition and Neural Networks}\label{lr_sec:asr_early_dnns}
+Automatic Speech recognition (ASR) has historically been performed with Hidden Markov Models (HMMs) \cite{galeshmm2008, Juang01081991}. However, their probabilistic approach required fixed assumptions about speech, which made them hard to adapt to unseen conditions. To model variations in speech such as accent, dialect, language, noise, context and cross-talk, a different approach was required. So in 2012, when Krizhevsky et al. \cite{krizhevsky2012imagenet} published their breakthrough paper on image classification with Deep Neural Networks (DNNs), ASR research shifted its focus. In 2014, sequence learning with DNNs changed the field of Natural Language Processing (NLP) \cite{sutskever2014sequence}. Then, in the same year, Graves \& Jaitly showed that a DNN architecture could produce competitive ASR results to HMMs, if trained with Connectionist Temporal Classification (CTC) Loss. However, their DNN-HMM hybrid model still resulted in the best results \cite{pmlr-v32-graves14}.
 
-\subsection{The Fourier Transform and Mel-Spectrograms}
-\begin{itemize}
-    \item Cover the maths of the FFT
-    \item Introduce the spectrogram
-    \item Cover the mel-spectrogram and the linguistic theory behind it
-    %\item I can put a figure of a mel-spectrogram here 
-\end{itemize}
+At the end of 2014, Hannun et al. \cite{hannun2014deep} submitted their paper detailing an ASR model designed entirely with DNNs. Previous attempts had been made to improve ASR by integrating DNNs with HMMs \cite{hintondnnhmm, Hamidcnnhmm}. However, none had, so far, been successful with an entirely DNN architecture. They called their model Deep Speech and the core of the architecture employed Recurrent Neural Networks (RNNs) \cite{Graves2012}. RNNs are neural networks built for sequential data, such as text or audio. When learning the current token in a sequence, they carry the hidden states from the previous token forward. So, each new token learns contextual information from prior tokens.
 
-\subsection{Engineering and Linguistics}
-\begin{itemize}
-    \item How the spectrogram changed linguistics
-    \item Measuring F1 through the FFT and the cepstrum spectrum
-    \item Manners of articulation
-    \item Graphing formants and mapping them to phonemes
-    \item I should also cover diphthongs directly and their relationship to MoA, formants and phonemes
-    \item Maybe a mel-spectrogram figure here for a specific phoneme, with labels to the formants and MoA
-\end{itemize}
+Deep Speech learns from log-mel spectrograms. Mel-spectrograms contain a variable-size filterbank of frequency bins. Mel-filterbanks contain narrow-band bins at low frequencies and high-band bins at high frequencies, mimicking how human perception in speech. It was trained using a CTC Loss. They evaluate the ASR performance of their model using Word Error Rate (WER). Deep Speech also uses a 4-gram language model (LM). An LM is a probabilistic model that assigns a likelihood to a sequence of words. An n-gram LM estimates probabilities based on the n previous words.
 
-\subsection{Hidden Markov Models}\naominote{I do not need a whole section on HMMs!}
-\begin{itemize}
-    \item HMMs (and their relationship with mel-spectrograms)
-    \item Cover the maths of HMMs and their linguistic theory
-    \item Training an HMM model
-    \item Datasets prior to 2015: WSJ, TIMIT (Irish TIMIT? for the shoutout), switchboard
-    \item It may be worth mentioning the size in hours of all of these datasets and how a lot of accents and languages were quite limited in the data.
-    \item Cover HMM best WERs on pre 2015 datasets
-        \begin{itemize}
-            \item for HMMs we should set up best pre-deep learning WER
-            \item we could also set up the idea of the limited datsets available
-        \end{itemize}
-    %\item LibriSpeech was 2015, deepspeech was 2014 and used 5000 hours of their own unbpublished data deepspeech 2 was 2016
-\end{itemize}
+%\hl{It would be nice to have a figure here, maybe of a spectrogram I have generated from LibriSpeech.}
 
-\hl{Maybe I could cover other machine learning techniques here, like k-means for later BERT discussion}\thoughts{The issue here is the only ML technique that is relevant is k-means and that is only relevant to HuBERT pretraining, which I don't use in any of my experiments.}
+Deep Speech was trained on large datasets for the time. By using model parallelism \cite{hannun2014deep}, they were able to significantly decrease training time compared to previous attempts. When trained on 2.3k hours of conversational Switchboard (SWB) \cite{godfreyswitchboard1992} and Fisher (FSH) \cite{cieri2004fisher}, they were able to produce comparable ASR WER to other State of the Art (SOTA) ASR models. They then trained Deep Speech on 5k hours of clean, read speech, collected in-house, and tested on a subset of the same data. They then compared test accuracy of Deep Speech on their in-house dataset to SOTA HMM and HMM hybrid models. They found that it had a lower WER than all SOTA models, even on a noisy subset of the data \cite{hannun2014deep}. These results proved that with more data and efficient training time, DNN architectures could, in fact, outperform traditional HMM models.
 
-%\hl{I could possibly put a linguistics section here covering some of the things pasad et al. find in wav2vec plus MoA}
+In 2015, Chan et al. \cite{chan2015listen} created a DNN ASR architecture that compressed long sequences by using a pyramid structure of layers. Each layer compresses and concatenates previous audio frames before feeding them to the next layer. This allowed the model to learn sequence structure, with increasingly fewer computations at each layer. The layer architectures they use for sequence modelling are  Bidirectional Long Short Term Memory RNNs (BLSTM) \cite{Graves2012}. LSTMs extend RNNs by adding a gated cell state that preserves multiple learned features from earlier tokens in a sequence. At each step, the model uses the current token and previous hidden state to decide which features to retain in memory. BLSTMs then process the sequence in both directions. Each token is represented using hidden state context from both preceding and following tokens.
+
+They also use an attention mechanism in the decoder to learn additional context information. At each step in training, an attention vector is created. The decoder then compares the vector for the current step to previous steps to learn sequence context. This attention mechanism was further adapted for speech recognition by Chorowski et al. \cite{chorowski2015attention}. They introduce a location-aware attention model for end-to-end ASR. Their method incorporates 1D convolution over the previous attention weights to produce learned location features. These are combined with the decoder state and encoder states to predict the next token output.
+
+In 2016, Amodei, and the same team at Baidu, published their work on Deep Speech 2 \cite{amodei2016deep}. Deep Speech 2 experimented with several architecture choices. They first compared an RNN architecture to Gated Recurrent Units (GRU) \cite{cho2014grulearning} and batch normalisation \cite{pmlr-v37-ioffe15}. They found that the use of both techniques lowered WER when compared to the vanilla RNN architecture. However, while GRUs generally use less memory, they are still sequential models and therefore more computationally expensive than vanilla RNNs. Due to their sequential nature, they still produced high error on long utterances. 
+
+Finally, they tested how Convolutional Neural networks (CNNs) \cite{lecuncnn1998} feature extraction could improve performance. CNNs only learn from a single input frame and are therefore not suited for learning long-range dependencies in sequential data. They are however, useful for projecting input data into feature space. Their best ASR performance was found when using 3 2D CNNs with a mel-spectrogram inputs. In this case WER was substantially reduced on test data, especially in noisy conditions.
+
+%%%% Possible extended explanation of 2D CNNs if I wanted to expand this.
+%“Convolutional layers apply small learnable filters over local patches of the input feature map, producing feature maps that highlight local patterns such as formant transitions or energy changes; in 2D CNNs, these filters slide over both time and frequency.”
+
+They trained two models, one trained on 11.9k hours of labelled English data and another model on 9.4k of labelled Mandarin data. The English model produced lower WER than human attempts on the Wall Street Journal (WSJ) \cite{paul1992design} and a new dataset from 2015 LibriSpeech \cite{librispeech}. Librispeech contained almost 1k hours of clean, read, American English annotated speech. Due to the quality and size of the dataset, it would become a common benchmark for many ASR models. While Deep Speech 2 performed well on LibriSpeech, WER was substantially higher when it was tested on VoxForge accented English speech data. Despite the large size of the training data, Deep Speech 2 struggled to adapt to out-of-domain English accented data. ASR research was now in need of 2 things: efficient, sequence-aware architectures and a solution to expensive data labelling.
 
 
-\section{Deep Neural Networks for ASR}
-\begin{itemize}
-    %\item Alternative Title "Deep Neural Networks for ASR"
-    \item DNNs for other applications like image recognition
-    \item Deepspeech and RNNs
-    \item Highlight the large dataset size for deepspeech
-    \item This then can set up the dataset size race
-    \item CNNs and early ASR models
-    \item Quartznet \cite{quartznet}
-    \item talk about all of the different language variations for quartznet
-    \item Adapters and the issue of multi-domain training
-    \item the catastropic forgetting principal
-    \item We can set up MLS and maybe common voice for the next section
-\end{itemize}
-
-\subsection{Early Neural Networks}
-\begin{itemize}
-    \item Quick overview of original 60s paper and a few papers over the years
-    \item descriptions of important concepts
-    \begin{itemize}
-        \item backpropagation (hinton, 1986) 
-        \item loss objectives: MSE, cross-entropy, KL-divergence 
-        \item random initialisation
-        %\item \hl{these concepts so far are all directly relevant}
-    \end{itemize}
-\end{itemize}
-
-\subsection{Recurrent and Convolutional Networks}
-\begin{itemize}
-    \item CNNs 1980-1997, 1989 on handwriting task 
-    \begin{itemize}
-        \item could change this around:
-        \item CNNs were used for handwriting recognition as was CTC Loss, so it might flow better near CTC
-    \end{itemize}
-    \item RNNs were invented sometime between 1982-1990
-    \item LSTMs 1997-2005, with 2005 being bi-directional as used from then on
-    \begin{itemize}
-        \item relevant as they are the precursor to transformers
-        %\item not sure if any models I cover use them, but it's probably still important to cover them since they relate to transformers
-        \item There are also some RNN and LSTM models in the pruning papers, so probably worth covering
-    \end{itemize}
-    \item autoencoder 1989-1990
-\end{itemize}
-
-\subsection{Connectionist Temporal Classification Loss}
-\begin{itemize}
-    %\item alternative section header: handwriting recognition; Connectionist Temporal Classification Loss;
-    %\item OR this subsection could briefly go over early image recognition and then handwriting recognition
-    %\item that might introduce the concept of CTC well...
-    \item levenstein distance for WER and CER
-    \item CTC loss - 2006 handwriting using LSTM and RNN architecture
-    \item Introduce deepspeech and it's use of CTC
-    %\item It's difficult to be sure where to put CTC, since it is a loss function and could be explained alongside them
-    %\item for now, this works
-    %\item Deepspeech by baidu was the first DNN to use CTC for ASR, so does CTC needs its own section?
-    %\item I could add some nice figures for CTC and it is important
-\end{itemize}
+\subsection{CTC and WER}\label{lr_subsec:ctc_were}
+In this section, we will briefly cover some important concepts to ASR: CTC Loss and Word/Character/Phoneme Error Rate. Both of these concepts were used in early architectures and continue into modern ASR. They are also used throughout the research covered in this thesis.
 
 
+\subsubsection{Connectionist Temporal Classification}
+In 2006, Grave et al. \cite{graves2006connectionist} trained neural networks to align an input sequence to an output sequence of different lengths. They named their method Connectionist Temporal Classification (CTC) and trained an RNN model for an ASR task. Their models were trained with an output classifier layer. This layer has a number of outputs that equals the number of characters in a given alphabet plus 1. The extra output maps to a blank token that does not map to a character token. 
 
-\subsection{Deep Neural Networks}
-\begin{itemize}   
-    \item Brief description of the rise of GPUs, big data and Deep Networks
-    \item Brief description of DNNs for image recognition and the seminal papers using GPUs
-    \item description of deepspeech \cite{citationrequired}
-    \item deepseech and matching (2014) SOTA HMM WERs \cite{citationrequired}
-    \item deepspeech 2 beating HMM WERs \cite{amodei16_deepeech2}
-    \item Overview of various common techniques:
-    \begin{itemize}
-        \item mel-spectrograms as inputs
-        \item dropout - 2012
-        \item data augmentation - AlexNet 2012, SpecAugment 2019
-        \item batch normalisation - 2015
-    \end{itemize}
-    \item Comment on the size of the datasets used for deepspeech and the fact they were not open-sourced
-\end{itemize}
+For training CTC uses maximum likelihood, with prefix search. Traditionally, softmax and argax functions would be applied to the output activations to select the most likely character for each frame. Instead of throwing away lower probability characters, CTC retains all classification activations at each frame for each character in the output sequence. These activations are then interpreted as the probability of observing each label in a given frame. 
+\begin{equation}\label{lr_equ:ctc_loss}
+\begin{split}
+    \mathcal{L}_{CTC}&= -ln(p(Z|X)) \\
+                     &=-\sum^U_{u=1} ln(p(z|x))\\
+                     &=-\sum^U_{u=1} \prod_{t=1}^T ln(p(x_t)) 
+\end{split}
+\end{equation}
+To calculate the probability of a label occurring in a given frame, the output layer activation for each possible label is weighted by the activations for that label in adjacent frames. They also weight by the activations for labels that are adjacent in the output sequence. The probabilities for each character are then calculated as the sum of these weighted activations. These probabilities are then used to calculate the boundaries of each label in the output sequence. 
+
+Boundaries are used to map multiple input frames to each label in the output sequence. These boundaries are marked in CTC with blank tokens that do not equate to any text characters. For backpropagation in training, the probabilities are differentiated with respect to the activation weights. The CTC loss objective is expressed as minimising the negative sum of the product of the log probabilities for each label in every frame.
+
+The negative maximum likelihood is shown in equation \ref{lr_equ:ctc_loss}, where p is the probability function. The output sequence, $Z=(z_0,z_1,...,z_U)$, is the target sequence of length $U$ and the activations at each frame, $X=(x_0,x_1,...,x_T)$, are length $T$. This equation calculates the sum of the products of each $t$ log probability, $ln(p(a|b))$, for each $u$ output token. 
+
+When evaluating a finetuned model during inference, we use "best path" decoding, typically referred to as "greedy" decoding. This involves applying the softmax and argmax functions to the activations collected at each frame to collect the predicted characters. A string of the most likely characters is produced. Since there are more input frames than output characters, duplicates and blanks are likely produced, $Y=(-,h,h,h,-,-,i,i,-)$. First, greedy decoding removes the blanks, $Y=(h,h,h,i,i)$ and then removes duplicate characters, $Y=(h,i)$. This final output is considered the model's prediction of the output sequence.
 
 
-\subsection{Big Data}
-\begin{itemize}
-    \item reference earlier speech datasets like WSJ
-    \item The issue of small open-source datasets for DNNs
-    \item Librispeech \cite{librispeech} and it's impact - \textasciitilde 1000h
-    \item Common Voice \cite{ardila-etal-2020-common} and open sourcing
-    \item AISHELL-2 (2018) [Mandarin] \cite{needtoadd} and multilingual data outside of English
-    \item The issue of bias in many of these datasets
-    \item Diverse datasets with comments on their pushback against bias and the desire in academia for more diverse datasets
-    \begin{itemize}
-        \item AAVE 2020 \cite{chang2024self}
-        \item Datatang 2020 \cite{aesrc2020}
-        \item FLEURs 2022 \cite{FLEURS} 
-    \end{itemize}
-    \item MLS (2020) \cite{MLS},  and the start of the dataset size alms race
-    \item Comment on the significance of having Spanish, French, German open source read speech datasets the same size as LibriSpeech (=>1k hours each)
-    \item I should spend some time with MLS. I may need to comment on specifics, such as a lot of the Spanish book being English books translated to Spanish.
-    \item Then comment on the ridiculous size of MLS English (44k hours) and how bias was still a problem
-    \item Include a list of the big big datasets including comments
-    \begin{itemize}
-        \item voxpopuli (400k) \cite{wang-etal-2021-voxpopuli}
-        \item librilight (60k hours) \cite{librilight}
-        \item There are more, but since I don't use any of these maybe don't spend too much time with this.
-    \end{itemize}
-    \item This section needs to cover all relevant datasets
-    \begin{itemize}
-        \item or do I have a separate section later on for just the directly relevant ones for my experiments?
-    \end{itemize}
-    \item I could also have some comments at the end on much more recent datasets. Such as recent large Irish, Gaelic and Hindi datasets that show that the desire for more diverse data has been a big change in the last \textasciitilde 5 years
-    \item \textbf{Now we have the big data we set up the model size race.}
-\end{itemize}
+\subsubsection{Label Error Rate}
+In order to evaluate the transcription produced by an ASR model, the most common metric is the label error rate. To compute the error rate we split both the hypothesis and target transcriptions into labels. These labels are most commonly either words, characters or phonemes. The error rate is calculated by comparing how many labels in the hypothesis align correctly with labels in the target.
 
-\subsection{CNNs for speech}
-\begin{itemize}
-    \item Jasper (as the precurser to QN) architecture \cite{needsjaspercitation}
-    \item Quartznet15x5 (2020) architecture \cite{quartznet}
-    \begin{itemize}
-        \item since this currently isn't in my thesis we don't need quite as much depth
-        \item however, this is still a good explanation of CNNs as feature extractors for later wav2vec
-    \end{itemize}
-    \item feature extraction
-    \item Monolingual Quartznets for different languages
-    \item catastrophic forgetting
-    \item Adapter layers and the issue of multilingual training
-    \item Layer freezing and supervised learning layer analysis
-    \item Parameters in QN and efficiency of CNNs
-    \item \hl{Much of this is interesting and somewhat relevant, but without the actual Quartznet15x5 experiments included, only some of it is directly relevant and completely necessary. I should write this towards the end when I have a better sense for what I want to include.}
-\end{itemize}
+\begin{equation}
+    ErrorRate=\frac{S+D+I}{N}
+\end{equation}
 
-\section{Self-Supervised Learning and Transformers}
-\begin{itemize}
-    \item Transformers - 2017
-    \item Conformers
-    \item Self-Supervised learning
-    \item neural scaling principal
-    %\item Either set up or cover here multilingual SSL ASR
-\end{itemize}
+Here we mark the number of labels in the target transcription as $N$. The error rate, therefore, is calculated as a ratio of incorrect labels in the hypothesis to correct labels in the target. Incorrect labels are categorised as either substitutions, $S$, deletions, $D$, or insertions, $I$, (SDI). Substitutions are labels that have been incorrectly substituted for another label. Deletions are labels incorrectly deleted from the target transcription. Insertions are labels incorrectly inserted into the transcription. To calculate the SDIs we use the Levenshtein distance \cite{levenshtein1966binary}, often also called the edit distance. Levenshtein uses dynamic programming to calculate the smallest number of SDI errors necessary to map the hypothesis to the target transcriptions.
+
+When the transcription labels are divided into words, we refer to this as the Word Error Rate (WER). For character labels, it is the Character Error Rate (CER). For phoneme labels, it is the Phoneme Error Rate (PER). 
+
 \subsection{Transformers}
-\begin{itemize}
-    \item Transformers (2017) \cite{vaswani2017attention}
-    \item Cover all of the upsides of transformers for speech
-    \item Self-attention learns from multiple frames through time
-    \item Efficiency through positional encoding
-    \item Conformer models \cite{nvidiapapers}
-    \item Whisper? \cite{whisper}
-    \begin{itemize}
-        \item it's a little difficult to place Whisper. It is a supervised learning CTC Loss model but it does use transformers and a similar conformer architecture to the SSL models.
-        \item Here could work, but I could move it if necessary
-    \end{itemize}
-\end{itemize}
 
-\subsection{Self-Supervised Learning of Speech}
-\begin{itemize}
-    \item List all of the approaches to SSL ASR
-    \begin{itemize}
-        \item BERT \cite{needs reference}, as an LM
-        \begin{itemize}
-            \item k-means clustering + masked language modelling
-        \end{itemize}
-        \item HuBERT \cite{hsu2021hubert}
-        \begin{itemize}
-            \item BERT applied to speech
-        \end{itemize}
-        \item WavLM \cite{chen2022wavlm}
-    \end{itemize}
-\end{itemize}
+To this point, sequential tasks, such as ASR, had typically used RNNs or LSTMs \cite{graves2012rnnt}. These architectures process tokens one at a time and carry hidden states forward to preserve context. However, this approach makes long-sequence training computationally expensive. Architectures based solely on CNN layers were also shown to get respectable results on datasets such as LibriSpeech, with less computation \cite{librispeech, quartznet}. However, they are unable to learn contextual information between frames and so underperformed when compared. To solve this problem, they set out to design an architecture that would use attention mechanisms \cite{bahdanau2014neural, luong2015effective}. In 2017, Vaswani et al. \cite{vaswani2017attention} published their work on a new architecture based on multi-head attention. They created an architecture that can be trained on multiple tokens in a sequence simultaneously at a lower computational cost compared to RNNs. They use a multi-head attention mechanism and name their architecture the transformer.
 
-\subsection{wav2vec 2.0}
+An attention mechanism maps a query and a set of key-value pairs to an output, where the query, key and value are all vectors. The query and Key values are used to calculate a weighting multiplier to each value, and the output is the weighted sum of the values. Their initial transformer architecture employs an encoder-decoder structure, which maps one sequence of symbols to continuous representations. To train the encoder, we start with a data sequence, $X = X_0, X_1,...,X_{N-1}$, such as words in a sentence or audio frames of a spoken utterance. The encoder employs self-attention by using the same input vector to create the query $Q$, key $K$ and value $V$ vectors through a projection layer. 
+
+\begin{equation}
+    Q=XW_Q, K=XW_K, V=XW_V
+\end{equation}
+
+Here, $W_Q, W_K$ and $W_V$ are learned throughout the course of training. The attention weighting is then calculated by the dot product of query and key vectors. They scale the dot product by the root of the dimension of the key vector $d_k$ and then apply softmax. The weighting is calculated and multiplied by the value vector. 
+
+\begin{equation}
+    Attention(Q,K,V)=softmax(\frac{QK^T}{\sqrt{d_k}})V
+\end{equation}
+
+Instead of performing a single attention function, transformers implement multi-head attention. Multi-head attention creates $h$ linear projections, heads, for the queries, keys and values. This effectively calculates attention multiple times in parallel, on the same projected token. This allows the model to jointly learn information from different representational space simultaneously. Multi-head attention is calculated as:
+
+\begin{equation}
+    MultiHead(Q,K,V)=Concat(head_1,...,head_h)W^O
+\end{equation}
+
+\begin{equation}
+    head_i=Attention(QW^Q_i,KW^K_i,VW^k_i)
+\end{equation}
+
+For the experiments in this paper they use 8 attention heads, $h=8$. The outputs of the multi-head attention mechanism are then concatenated, normalised and passed on to a single feed-forward layer, ReLU activation and a second layer before layer normalisation, which then creates the output to the transformer block. If the model contains multiple transformer self-attention blocks, the output of the initial transformer is fed into the input of the next block. 
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth,trim={0 70 0 10},clip]{2_chapter2/images/transformers/transformer_encoder.pdf}
+    \caption{The transformer encoder architecture, wit multi-head attention and the scaled dot-product. Adapted from: (Vaswani et al. 2017)}
+    \label{lr_fig:transformer_encoder}
+\end{figure}
+
+The decoder utilises two attention mechanisms, self-attention and cross-attention. The first self-attention mechanism has the target sequence as an input and follows the same self-attention mechanism of the encoder blocks. After self-attention is applied instead of passing the outputs onto a feed-forward network, they perform cross-attention. In this case, cross-attention takes the query from the decoder input and the key and value from the encoder output. Cross attention is performed with the same mechanisms as self-attention otherwise. The outputs of the cross-attentions are added and normalised with the outputs of the decoder self-attention. This is then fed into a feed-forward network and passed either to the next block or, at the final block, a single linear classification layer.
+
+For both the encoder and the decoder, one final step addition is made by adding positional encoding for the input sequences. A vector of sine or cosine values is added to the output of the projection layer. This addition gives each embedding for a token a clear, relative position within the vector. 
+
+
+They test their architecture by training it for a translation task between multiple languages. They train for two tasks: English to German text translation and English to French text translation. In each case, English is the input, and either German or French is the target. They find that for both targets the transformer architecture results in better BLEU scores \cite{papineni2002bleu} than all previous SOTA models. They also find that transformers achieve this improved performance with substantially fewer Floating Point Operations (FLOPs) when compared to previous models.
+
+They experiment with different optimal architecture types and find that increasing the number of attention heads beyond a certain point had diminishing returns. They also find that when using learned positional encoding, the results were also identical to adding absolute sinusoid positions. The final architectures they settled on is shown in table \ref{lr_tab:transformer_architectures}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|lllllllllll}
+\hline
+     & $N$ & $d_{model}$ & $d_{ff}$ & $h$  & $d_k$ & $d_v$ & $d_q$ & \begin{tabular}[c]{@{}l@{}}\textit{training}\\ \textit{steps}\end{tabular} & \textit{params} \\ \hline
+\textbf{base} & 6 & 512      & 2048  & 8  & 64   & 64   & 64   & 100k  & 65M    \\
+\textbf{big}  & 6 & 1024     & 4096  & 16 & 64   & 64   & 64    300k    & 213M   \\ \hline
+\end{tabular}
+\caption{The architectures for base and big, transformer encoder-decoder models trained for a text-to-text translation task as listed in Vaswani et al. 2017. $N$ is the number of transformer encoder and decoder blocks in each model. $d_{model}$ is the block input size. $d_{ff}$ is the size of the internal feedforward layers. $h$ is the number of attention heads for each mechanism. $d_k, d_v$ and $d_q$ are the vector sizes for the queries, keys and values, they are always the same size. Training steps is the total number of steps throughout training. Params is the total number of trainable parameters.}
+\label{lr_tab:transformer_architectures}
+\end{table}
+
+
+
+\subsection{Tranformers in Speech}\label{lr_subsec:transformer_in_speech}
+Due to their ability to process sequences in parallel, transformers were used in several ASR architectures. In 2019, Dong et al. \cite{dong2018speech} used the encoder-decoder architecture to produce lower WER on WSJ when compared to previous architectures. Attention mechanisms were also used in speech by placing them before CNN layers \cite{bello2019attention, gulati2020conformer}. A common architecture emerged in ASR that included a CNN feature extractor, with masked \cite{park2019specaugment} mel-spectrograms as the input and a transformer or conformer encoder. 
+
+In 2022, this architecture was used to train the multilingual ASR model Whisper \cite{whisper}. The Whisper inputs a masked mel-spectrogram to a CNN feature extractor, which feeds into the transformer encoder-decoder architecture using conformer blocks \cite{gulati2020conformer} and trained with cross-entropy loss. Conformers are transformer blocks with a convolutional layer placed before the feed-forward output layer. Whisper increased the scale of its model over many previous architectures, with its largest incarnation having over 1.5B parameters. They produced multiple models of different sizes, with the smallest having 39M parameters. They trained the large model on 680k hours of data, including 99 languages. All the language data was transcribed, and all transcriptions were normalised to standard vocabularies for each language. 
+
+Whisper is able to transcribe at least 99 languages out of the box and can be trained to recognise more. Whisper boasted lower WER on datasets such as Librispeech \cite{librispeech}, MLS \cite{MLS} and VoxPopuli \cite{wang-etal-2021-voxpopuli}. However, since Whisper is trained with transcribed data the model can be quite restrictive. Adapting the model to new data in a pretrained language can be difficult if out-of-vocabulary (OOV) words or characters are necessary. Whisper can be used without further training for pretrained languages. However, for low-resource languages, results are not always in line with SOTA  \cite{FLEURS_XLSR_WHISPER}. Training the largest Whisper model can also be computationally expensive, with its very high parameter count. They note that the WER recorded for small Whisper models is much higher than the largest versions of Whisper.
+
+Adaptability is a common problem with ASR models due to the diversity of vocabularies in transcribed data, even within the same language. Normalising for every OOV label between datasets is not always possible. Success may depend on the context of the new speech data and the vocabulary a model was trained on. Domain-specific words, such as terms used in certain professions, may not be included in a large dataset of book readings such as LibriSpeech or MLS \cite{librispeech, MLS, luo2021cross}. The ideal solution to this problem would be to train a model on a large set of data without the need for transcriptions. 
+
+In 2019 Schneider et al. \cite{schneider2019wav2vec}, showed that ASR could be accomplished effectively by training on unlabelled speech data. With their model wav2vec, they use a contrastive loss function to predict future speech frames. The model is fully convolutional, using only CNNs in the architecture. They train an encoder to distil frames of audio down to speech representations and a context network to learn contextualised representations. The predictive training does not require labelled data for the model to learn. We refer to training methods that do not require labelled data as Self-Supervised Learning (SSL). The wav2vec model required two stages of training, the first SSL stage, which we refer to as pretraining, and a fine-tuning stage on labelled data. While wav2vec was innovative, the WER produced was not competitive with SOTA results at the time.
+
+
+In 2020, Baevski et al. \cite{wav2vec} would expand on the concepts introduced to ASR with wav2vec by creating another SSL ASR model, wav2vec 2.0. Wav2vec 2.0 would introduce a transformer architecture for the context network. It would still be trained on contrastive loss, but this time by contrasting context network outputs with learned, quantized, representations. This new approach to ASR would beat previous SOTA WER on LibriSpeech while requiring only small speech datasets for fine-tuning. Wav2vec 2.0 quickly became a widely cited benchmark for ASR models and is the model used throughout this thesis. We explore the architecture of wav2vec 2.0 in more detail in Section \ref{lr_sec:wav2vec2}.
+
+Other SSL approaches have been taken, most notably HuBERT \cite{hsu2021hubert}. HuBERT takes inspiration from the SSL natural Language Processing (NLP) model BeRT \cite{devlin-etal-2019-bert}. BeRT trained transformers on masked text predictions. HuBERT uses a similar masking strategy to train transformer blocks. To train HuBERT on speech, the input to the model uses a CNN feature extractor on a raw waveform, the features are randomly masked and fed to the transformer blocks. The output of the transformer blocks are then compared to multiple k-means clustering models trained on mel-spectrograms from the input speech. The outputs of the clustering models and the final transformer block are then quantised into the same latent space. They are compared for similarity to create the final loss value. With these methods, they achieve WER relative to wav2vec 2.0 on LibriSpeech \cite{librispeech}.
+
+%The create several version fo HuBERT with different layer sizes and numbers of transformer blocks. The base and large models are similar in size to wav2vec 2.0 bas and large models, they also create an X-Large model with 964M parameters. They pretrain on 960 hours of LibriSpeech and 60k hours of LibriLight clean read English speech \cite{librispeech, librilight}. They then fine-tune the models to the full 960 hour LibriSpeech dataset. They achieve comparable WERs to wav2vec 2.0 base and large with the Large and X-Large models, as well as other SOTA conformer and LSTM models. They also test the trained clusters for their relation to phonemes. They create a phoneme purity metric that calculates the conditional probability of phone given a k-means label. They first find that all models have variable purity across layers, with deeper layers having higher phone purity. They see that phone purity peaks at approximately 70\%, while cluster purity at approximately 30\%. They also find that higher average phone purity relates to a lower final WER.
+
+%The HuBERT architecture would go on to be adapted to tasks other than ASR such as speaker identification, diarization or multi-model ASR \cite{chen2022wavlm, shi2022learning}. Similarly, wav2vec 2.0 would be adapted to multiple tasks \cite{pepino2021emotion, fan2021exploring} such as multilingual ASR with success \cite{XLSR-53, babu2021xlsr}. 
+
+Large, transformer based, archietctures had shown that they could achieve low error rates while doing the bulk of learning during pretraining. This was advantageous in low-resource ASR applications, where only a small amounts of speech data were available. Pretrained SSL models could be adapted with success at a low computational cost. However, due to the limited range of datasets SSL models were trained on, the fine-tuning results are not always consistent. Models often struggle to adapt to data not included, or that is low-resource, in pretraining \cite{FLEURS_XLSR_WHISPER}. As such, it is important that we understand how SSL ASR models learn speech.
+
+%Pretraining is often performed on large datasets and large models to maximise the information learned in the first round of training. The computational resources to perform large-scale pretraining such as this are often not available to most researchers. As such, it is important to understand what an SSL model is learning during pretraining and get it right the first time.\thoughts{this paragraph is awful and need rewriting.}
+
+
+
+%\hl{Whisper has some good comments on scaling data and model size}
+
+%\hl{If I include transformers and other SSL models in the neural networks section, this whole section would be approximately 8-9 pages. I have 5-6 pages to write.} 
+
+
+%\section{Self-Supervised Learning and Transformers}
+\section{wav2vec 2.0}\label{lr_sec:wav2vec2}
+\iffalse
 \begin{itemize}
+    \item \colorbox{green}{\textcolor{red}{Easy to write}}
     \item wav2vec 2.0 \cite{wav2vec}
     \item Go into more depth with architecture, such as maybe drawing out my own diagram
     \begin{itemize}
         \item Contrastive Loss (autoencoder)
+        \begin{itemize}
+            \item I will have to explain the following things:
+            \item softmax (this could be done here or in earlier section)
+            \item Gumbel noise
+            \item wav2vec 2.0 codebook
+        \end{itemize}
         \item Masking (augmentation)
         \item Conformer architecture
         \item CNN feature extraction of waveform (i.e. no mel-spectrogram)
@@ -260,47 +201,307 @@
         \item The datasets are very imbalanced, so this is a good talking point as well.
     \end{itemize}
 \end{itemize}
+\fi
+%\hl{Opening paragraph before subsubsection? Possibly the first paragraph of the architecture subsubsection.}
 
-\section{Mutlilingual SSL ASR}
+In this section, we will cover in detail the architecture of wav2vec 2.0 \cite{wav2vec}. We cover the pretraining and fine-tuning strategies used. Then the results obtained and how they compare to previous SOTA models. Pretrained wav2vec 2.0 models are often used as the basis for fine-tuning to various speech domains with limited data \cite{zhang2023fast, chang2024self, ashihara2023exploration}. It is, therefore, important to understand exactly how it learns.
+
+\subsection{Architecture}
+
+\begin{figure}[H]
+    
+    \includegraphics[width=\linewidth]{2_chapter2/images/self_supervised_learning/wav2vec2.png}
+    \caption{wav2vec 2.0 architecture taken from  (Baevski et al. 2020)}
+    \label{lr_fig:wav2vecv2}
+\end{figure}
+\iffalse
+In 2020, Baevski et al. \cite{wav2vec} decided to build on the architecture for wav2vec \cite{schneider2019wav2vec} in order to improve speech SSL ASR. Their new model, wav2vec 2.0 \cite{wav2vec}, replaced the earlier predictive setup with masked latent representation learning and contrastive prediction over quantised targets. This approach allows wav2vec 2.0 to learn from large quantities of data. After the SSL stage, the model can be trained on much smaller datasets using CTC Loss \cite{graves2006connectionist}, resulting in substantially improved WER\unexplained{WER} over previous models.
+\fi
+
+In 2020, Baevski et al. \cite{wav2vec} published their work on the SSL ASR model, wav2vec 2.0. Wav2vec 2.0 builds on the transformer models outlined in Section~\ref{lr_subsec:transformer_in_speech} by using a CNN feature encoder and a transformer context network. Many previous ASR models used mel-spectrograms as an input to their first layers \cite{amodei2016deep, chorowski2015attention, hannun2014deep} The wav2vec 2.0 feature encoder takes a different approach by learning directly from the raw waveform. This allows the CNNs to learn latent speech features without being guided by the features already emphasised in a mel-spectrogram. The feature encoder consists of 7 1D CNN layers followed by batch normalisation \cite{pmlr-v37-ioffe15} and a GELU activation function \cite{hendrycks2016gaussian}.
+
+The outputs of the feature encoder are then randomly masked with a similar approach to specaugment \cite{park2019specaugment} and then fed into the context network. The wav2vec 2.0 context network consists of 12 transformer blocks \cite{vaswani2017attention} for the "base" version and 24 for the "large"\cite{wav2vec}. Each block has a hidden layer size of 786 for base and 1024 for large. For positional encoding wav2vec 2.0 uses a single 1D convolutional layer \cite{lecuncnn1998} to encode a relative positional embedding rather than absolute positional embeddings \cite{vaswani2017attention}. The output of each block is then fed through the network and output at the final block as either a 786 or 1024 dimensional hidden state.
+
+For self-supervised pretraining wav2vec 2.0 uses a contrastive loss function that compares the output of the context network with quantized speech representations. The quantizer first separates the latent features from the feature encoder before masking. The latent features are compared to codebooks of learned latent speech vectors, called codebook entries. A codebook entry with the highest similarity to the output of the feature encoder is selected from each codebook using the Gumbel softmax function \cite{jang2017categorical}. These selected entries are concatenated to form the contrastive vector. Several distractor vectors are also created, that do not relate to the input features. This concatenated vector and the distractors are then compared to the output of the context network. The network's ability to recognise the real latent features, is used to calculate the contrastive loss before backpropagation \cite{rumelhart1986learning}.
+
+\subsection{Contrastive Loss}
+\iffalse
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{2_chapter2/images/perplexity/codebook_generated_image.png}
+    \caption{Quantizer \hl{UPDATE THIS!!! [generated image]} }
+    \label{lr_fig:wav2vecv2}
+\end{figure}
+\fi
+
+To understand what information wav2vec 2.0 learns, it is important to understand the loss function used in pretraining. Wav2vec 2.0 has two learning objectives in its loss function $\mathcal{L}$: contrastive loss $\mathcal{L}_m$ and diversity loss $\mathcal{L}_d$. 
+
+\begin{equation}\label{lr_equ:wav2vec_loss}
+    \mathcal{L} = \mathcal{L}_m + \alpha \mathcal{L}_d.
+\end{equation}
+
+Where $\alpha$ is a tuned hyperparameter used to weight diversity loss.
+
+$\mathcal{L}_m$ is calculated as the minus log ratio between the output of the context network and the quantizer. The numerator is the exponential, $\exp$, of the cosine similarity $sim$ between the output of the context network, $c_t$, at the masked time step $t$ and the true quantized speech representation $q_t$ at the same timestep. The denominator is the summation of the exponentials of the cosine similarity of $c_t$ and the set of quantized candidate speech representations $\tilde q_t$. The vector $\tilde q$ contains all distractor candidates as well as the true quantized representation, $q_t$. Here $\kappa$ is used as a temperature control that maximises or minimises the difference between the true target $c_t$ and quantised target $q_t$. Cosine similartity is calculated as: $sim(x,y)=\frac{x^Ty}{||x||||y||}$.  
+
+\begin{equation}\label{lr_equ:contrastive_loss}
+    \mathcal{L}_m = -\log\frac{\exp(sim(c_t,q_t)/\kappa)}{\sum_{\tilde q \in Q_t}\exp(sim(c_t,\tilde q_t)/\kappa)}
+\end{equation}
+
+
+
+%\begin{equation}
+%    sim(x,y)=x^Ty/||x||||y||
+%\end{equation}
+
+$q_t$ is a vector of concatenated learned quantised latent speech representations extracted from the wav2vec 2.0 codebooks. Each codebook entry consists of a trainable layer, a fraction of the size of the output vector from the feature encoder. For each batch, the similarity between the output logits for each of $V$ codebook entries and the feature encoder output is calculated. The entries with the highest similarity from each of $G$ codebooks are selected and concatenated to create $q_t$. This creates a vector containing the most similar quantised speech latents to the input.
+
+\begin{equation}\label{lr_equ:w2v2codebook}
+    p_{g,v} = \frac{\exp(l_{g,v} + n_v)/\tau}{\sum_{u=1}^{V} \exp(l_{g,k} + n_k)/\tau}
+\end{equation}
+
+In equation \ref{lr_equ:w2v2codebook} we see the formula for selecting the highest similarity codebook entry $p_{g,v}$. The codebook has $V$ entries and $G$ total codebooks, $p_{g,v}$ is the score for the codeword at point $v$, codebook $g$. It is a ratio of the exponential $exp$ of the logits, with added noise $n_v$, at each entry over the sum of all of the $k$ logits and all noise, across the codebook. Both numerator and denominator are also divided by a temperature term $\tau$.  High values for $\tau$ encourage softer gradients and learning of broader features. While low values of tau increase the gradient to encourage specialisation for learned latent features
+
+The added noise, $n_v$, uses a Gumbel distribution \cite{jang2017categorical}. It is calculated as $n=-log(-log(u))$ where $u$ are uniform Gumbel noise samples. Gumbel noise makes the logits function differentiable for backpropagation. It is stochastic noise added before the selection process. This increases entropy and helps prevent the model from converging towards a small set of codebook entries. The softmax function \cite{jang2017categorical} is applied across all $V$ entries to select the highest similarity for each codebook. 
+
+The candidate representations, $\tilde q_t$, include the true latent speech $q_t$ and $K$ distractors, $Q_t$. The $K$ distractors are quantised speech latents that are not matched to the input through the Gumbel softmax function. Equation \ref{lr_equ:contrastive_loss} is comparing the $sim$ of $c_t$ and $q_t$ with the $sim$ of $c_t$ and $\tilde q_t$. This gives it a measure of how close the model output is to the real latent speech input.
+
+\begin{equation}\label{lr_equ:diversity_loss}
+    \mathcal{L}_d=\frac{1}{GV}\sum_{g=1}^G\sum_{v=1}^V\bar{p}_{g,v}log\bar{p}_{g,v}
+\end{equation}
+
+To further increase codeword entropy, the loss function in equation \ref{lr_equ:wav2vec_loss} includes a diversity loss term $\mathcal{L}_d$. This is the average softmax distribution across all codewords in a training batch. The average softmax distribution is first calculated as, $\bar{p}_{g,v}=\frac{1}{B}\sum_{b=1}^Bp_{g,v}^b$ where $B$ is the total size of the batch and $b$ is the current utterance. This distribution, $\bar{p}_{g,v}$, is then multiplied by $log\bar{p}_{g,v}$ to calculate the entropy for that batch. The mean average of all $V$ entry entropies across all $G$ codebooks is the diversity loss, $\mathcal{L}_d$. In the final loss calculation \ref{lr_equ:wav2vec_loss}, this term is then multiplied by the temperature control $\alpha$. As training goes on, the codewords will become more diverse and specialised, so $\alpha$ can be reduced.
+
+%\newpage
+\subsection{Finetuning Hyperparameters}
+The contrastive SSL objective learns by creating latent speech representations at teh context network output that have high similarity to the input. To recognise semantic labels, wav2vec 2.0 requires a second stage of training before it can perform ASR tasks, the finetuning stage. The SSL stage has already learned latent speech information so, smaller datasets and shorter training time can be used in fine-tuning.
+
+To fine-tune wav2vec 2.0, a single randomly initialised classifier layer is added after the context network. This layer maps the output of the context network to characters extracted from the dataset labels. The model is then trained using CTC Loss \cite{graves2006connectionist} as outlined in Section \ref{lr_subsec:ctc_were}. For fine-tuning the large models, two learning rates are tested: 2e-5 and 3e-5. They then select the learning rate that produced the lowest WER for the results published. The base model is always fine-tuned with a learning rate of 1e-4. 
+
+For all models, the optimizer is Adam with a tri-state scheduler. The learning rate is warmed up for the first 10\% of updates, held for 40\% and then has a linear decay for the remaining 50\% of updates. The batch size for fine-tuning base is 3.2m samples per GPU, training with 8 GPUs. The batch size for finetuning large is 1.28m samples per GPU training with 24 GPUs. They freeze learnable parameters across the entire model, except for the classifier layer for the first 10k updates. For the remaining updates, the classifier and context network are unfrozen and trained. The feature encoder is frozen throughout the entire finetuning stage. They also mask the latent output of the feature encoder \cite{park2019specaugment}. For several of their experiments, Baevski et al. \cite{wav2vec} use a Language Model (LM). They use either a 4-gram LM or a 20-block transformer LM trained on the LibriSpeech LM corpus.
+
+\subsection{Finetuning Results}
+To test the relation between pretraining and fine-tuning hours, Baevski et al. \cite{wav2vec} finetune several models with varying amounts of data. The pretrain 3 models, base with 960h of Librispeech data (base-LS960), large with LibriSpeech (large-LS960) and large with 60k of LibriVox data (large-LV60k). The LibriVox data is taken from the same clean read speech data as LibriSpeech and LibriLight \cite{librispeech, librilight}. They fine-tune each model to 10 minute, 1 hour and 10 hour and then the 100 hour clean subsets of LibriSpeech \cite{librispeech}. These pretrained and finetuned models were made open source and are available on Hugging Face\footnote{\hyperlink{https://huggingface.co/docs/transformers/model_doc/wav2vec2}{huggingface.co/docs/transformers/model\_doc/wav2vec2}}.
+
+\iffalse
+\hl{this need editing}
+
+First, they find that for all models tested, the transformer LM produces lower WER than the 4-gram LM. With an LM the large model pretrained on 60k hours of LibriVox (large-LV-60k) \cite{librilight} achieves a WER of 4.8\% on the 10m clean LibriSpeech set \cite{wav2vec}. The large and base models pretrained on LibriSpeech get 6.8\% and 6.9\% on the same set. Without an LM the results are substantially higher with all models being over 40\% WER. Results for 10m of finetuning data are included in the appendix. Adding a transformer LM clearly improves results, but it could add considerable extra training time to any training pipeline. 
+
+For comparison, we can look at models finetuned with the largest dataset of 100h of clean LibriSpeech data. The lowest WER achieved is 2.0\% on the clean test set when finetuning large-LV-60k with the transformer LM and 3.1\% without an LM. Large with LibriSpeech has 2.3\% with the transformer LM and 4.7\% without. Base with the transformer LM achieves 2.6\% and 6.1\% without. For finetuning done on the 10h LibriLight subset, a magnitude smaller than the 100h set, the WER is not a magnitude higher. For large with a transformer LM we have 2.6\% WER on clean test and 6.3\% without an LM. For large pretrained on LibriSpeech, it gets 3.2\% with the tranformer LM and 8.0\% without. Finally, base with the transformer LM has 3.2\% WER and 11.1\% without.
+
+When finetuning the large-LV-60k  on the 100 LibriSpeech set, WER is as low as 2.0\% . For finetuning done on the 10h LibriSpeech subset, a magnitude smaller than the 100h set, the WER is not a magnitude higher. For large with a transformer LM we have 2.6\% WER on clean test. When finetuning the same model on 1 hour of LibriSpeech data, 2 orders of magnitude less data, the WER is 2.9\%. This shows that for large-LV-60k with an LM, increasing the fine-tuning data has diminishing returns. For base, the 100 hour results are 2.6\% with an LM and 6.1\% without. For finetuning on 1 hour of LibriSpeech, the difference is much larger. With an LM the WER is 4.0\% but without it is 24.5\%. 
+
+\hl{Edited version}
+\fi
+They find that when fine-tuning to only 10 minutes of LibriSpeech data all of their models are competitive with SOTA results. Previous SOTA models used supervised training throughout and achieved WER in the 5-6\% range. These wav2vec 2.0 results are obtained with the transformer LM. Without the LM, the WER is much higher for all models, at over 40\% for base. However, when training on the 100 hour subset, the models perform much better. Both large models substantially outperform SOTA results even without an LM. Then, base-LS960 produces comparable WER to SOTA without and outperforms with the transformer LM. They find that large-LV60k can produce SOTA results, without an LM, with as little as 10 hours of data.
+
+If 100 hours of speech data are available for an application, the base model might be a viable option. However, for low-resource applications at 10 hours or less, an LM would be necessary. The transformer LM is 24 blocks in size, the same size as the large model context network, and requires training. This suggests that the number of trainable parameters is directly related to the model performance. They test this hypothesis by comparing the large and base models when both are pretrained on the same LibriSpeech 960-hour dataset. For all combinations of finetuning data and LM, large always results in lower WER than base. 
+
+%Finally, they compare results when their models are finetuned with the entire 960 hour LibriSpeech dataset. With the transformer LM all versions of wav2vec 2.0 show an improvement or are closely comparable to the previous best supervised and semi-supervised ASR models. In this experiment, Baevski et al. \cite{wav2vec} compare their pretrained models to a "from scratch" model, starting with randomised weights, fine-tuned to LibriSpeech. The large model pretrained on LibriSpeech outperforms the from scratch model with a 0.1\% difference in WER. The large-VP-60k has the lowest WER, so pretraining is improving these models. However, the large from scratch model outperforms the base pretrained model. This suggests that a higher number of parameters contributes more to lower downstream WER than just pretraining does.
+
+%Overall, the more parameters a model and LM have, and the more pretraining data a model was exposed to, the less data is needed for finetuning. But the larger the model the more GPU and compute power is required even when finetuning. When the finetuning dataset is larger at around 100 hours, the base model can achieve a low WER without an LM. However, the larger the finetuning dataset is, the less advantage SSL pretraining offers. With pretraining offering very large finetuning datasets little to no advantage at all\thoughts{I might not need this paragraph really.}
+
+\subsection{Phoneme Recognition}
+Baevski et al. \cite{wav2vec} also test phoneme accuracy for wav2vec 2.0. They test a model pretrained on LibriSpeech and finetuned on 10 hours of LibriLight \cite{librilight} without a language model. This model produces a Phoneme Error Rate (PER) of 8.3\% on the TIMIT dataset \cite{timit}, a dataset with hand-annotated phoneme intervals. This is an improvement over previous PER benchmarks \cite{wav2vec}. This shows that wav2vec 2.0 has not just learned semantic information through CTC but also has learned phonetic information.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{2_chapter2/images/self_supervised_learning/wav2vec2_appendix_phoneme_graph.pdf}
+    \caption{The conditional probability of discrete latent speech representations occurring in each codebook entry in the quantizer. The $x$ axis shows all $VxG$ codebook entries, and the $y$ axis all the phonemes tested. Taken from the appendix of: (Baevski et al. 2020)}
+    \label{lr_fig:wav2vec_quantizer_phonemes}
+\end{figure}
+
+In Appendix D they do an analysis of the discrete latent speech representations learned during pretraining in the quantizer \cite{wav2vec}. Since the quantizer is not used during finetuning, this could give insight into the phonetic information learned during pretraining. In Figure~\ref{lr_fig:wav2vec_quantizer_phonemes} we see which quantizer entries show the highest correlation with each phoneme present in the TIMIT dataset \cite{timit}. We can see clearly that the quantised entries in the wav2vec codebook appear to specialise in representing specific phonemes. Each TIMIT phoneme shows high correlation to an individual entry as well as allocating entries to represent silence. Silence here is represented with the \textit{bcl} token and is highly present in TIMIT. This shows that wavv2ec 2.0 is learning specific phonetic information during the SLL pretraining stage.
+\iffalse
+In Appendix E an analysis of errors made by models finetuned on different amounts of data. For models finetuned on 10 minutes of LibriLight \cite{librilight}, without an LM, they found that the model would often spell words phonetically. Words with repeated letters such as \textit{still} and \textit{little} were predicted as \textit{stil} and \textit{litle} in multiple cases. Words with silent letters such as \textit{could} and \textit{know} were often spelt without the letter, \textit{coud} and \textit{now}. The models also struggled with rare names such as spelling \textit{phoebe} as \textit{feeby}. These, alongside other examples in the appendix, suggest that finetuning is teaching the model semantic but not phonetic information. The model already has phonetic information learned during pretraining. So, it is then using this to directly map phonemes to letters. Larger datasets improve WER by teaching the models exact spellings, and that, in English, it can't just map phonemes to letters.\thoughts{Maybe I don't need this last paragraph, it's sort of interesting but not really necessary. It's very 2020 kind of research...} %This suggests that the finetuning stage may add little extra phonetic information to the models pretrained weights, just semantic.\thoughts{is this clear? I could just remove the last sentence.}
+\fi
+
+\section{Multilingual Self-Supervised Learning}\label{lr_sec:multilingual_ssl}
+In this section we will explore multilingual pretraining for the wav2vec 2.0 family of models by discussinf XLSR-53 \cite{XLSR-53} and XLS-R \cite{babu2021xlsr}. We first compare results on multiple languages between these models and the monolingual wav2vec 2.0. We then look at which aspects of training and architecture help these models in learning multiple languages. We assess how different model sizes affect learning and how dataset size relates to accuracy. We then discuss the trade-off between multilingual, mono-lingual and related-language pretraining.
+
+\subsection{Cross-Lingual Representations}
+In the same year, members of the same Facebook AI team that published wav2vec 2.0 \cite{wav2vec} published a multilingual SSL ASR model, XLSR-53 \cite{XLSR-53}. Conneau et al. \cite{XLSR-53} adapt the wav2vec 2.0 architecture by developing their own strategy for pretraining on multilingual speech data. XLSR-53 encourages utterances from low-resource languages in pretraining to be upsampled in each batch. 
+
+\begin{equation}
+    p_l=(\frac{n_l}{N})^\alpha
+\end{equation}
+
+Here, $n_l$ is the number of pretraining hours in a language $l$, $N$ is the total number of hours in pretraining and $\alpha$ is the upsampling factor. A high $\alpha$, a maximum of 1, does not upsample low-resource languages with batches reflecting the overall balance of languages in the total pretraining data. A low $\alpha$ value increases the chance of a batch including more utterances from a low-resource language. 
+
+First, Conneau et al. \cite{XLSR-53} test base and large models on monolingual vs multilingual pretraining. They first pretrain XLSR-53 on the 1.3k hours of Common Voice (CV) \cite{ardila-etal-2020-common} English. They finetune this model to 10 other languages and compare the results to 10 monolingual models, pretrained and finetuned on each of their respective languages. They test the PER of each model on small phoneme annotated CV subsets. They find that the English model achieves lower average PER than monolingual models. They next pretrain a model with 1.3k hours of multilingual data. The dataset contains 793 hours from 10 languages and 557 hours from English. For the base model pretraining with an $\alpha$ of 0.5 on mutlilingual data produces lower PER than an $\alpha$ of 1. Which shows that the upsampling strategy is effective. Both multilingual models also have lower PER than any of the monolingual models.
+
+However, the PER differs greatly between languages and appears to be related to the number of hours there is for a language. French for example, has 353 hours and Spanish has 168 hours, both of these languages achieve lower PER on their monolingual base model than the English model. Conneau et al. acknowledge that there is a "trade-off" \cite{XLSR-53} with multilingual pretraining. This trade-off decreases error rates for low-resource languages, but increases them for high-resource languages. 
+
+They also note that increasing the number of parameters in a model can increase performance. Pretraining the large model, 24 transformer blocks, on the same multilingual data further decreases the average PER. This strategy decreases PER for all languages, high or low-resource. However, pretraining and finetuning the base model, 12 transformer blocks, on a single high-resource language still outperforms the large multilingual model. 
+
+The highest performing model for most languages is XLSR-53 itself \cite{XLSR-53}. XLSR-53 follows the same 24 block architecture as wav2vec 2.0 large. It is trained on 56k hours of data containing 53 unique languages. The datasets included in pretraining are: CommonVoice (CV) \cite{ardila-etal-2020-common}, BABEL \cite{gales2014speech}, and Multilingual LibriSpeech (MLS) \cite{MLS}. The exact value of $\alpha$ is not specified. When testing on both CV and BABEL this model achieves the lowest PER for most languages.
+
+Conneau et al \cite{XLSR-53} note that both the size of the model and the quantity of pretraining data are important factors in achieving accurate multilingual models. However, they also compare XLSR-53 to a wav2vec 2.0 large-LV60k \cite{wav2vec, librilight} a model of the same size, pretrained on a similar amount of English monolingual data. XLSR-53 achieves lower WER on every language except English. 
+
+XLSR-53 also fails to achieve lower WER when compared to monolingual supervised models trained on MLS for 4 of the 8 languages in the dataset. Notably, these four languages could be considered high-resource within MLS, having 900 or more hours of data. Dutch here is the exception, having lower WER on XLSR-53 while being high-resource in MLS. The other 3 languages that perform better on XLSR-53 than their monolingual counterparts all have less than 250 hours.
+
+They then test multilingual related-language pretraining, by mixing 5 hours of italian data with 50 hours of data from 6 different languages separately. They find that the model pretrained with 55 hours of Italian data has the lowest error. The next lowest error is achieved by mixing 5 hours of Italian with 50 hours of Spanish data. The highest error comes from mixed Italian and Chinese speech. This shows that monolingual pretraining is most effective but that related-language pretraining can also improve performance. 
+
+Finally, Conneau et al. \cite{XLSR-53} measure how well XLSR-53 has learned cross-lingual speech representations by examining its codebooks after pretraining. They run k-means clustering on discrete latents obtained from the quantizers of 3 multilingual models. The clusters show that the model shares discrete tokens for certain groups of languages. Romance languages Italian, Basque, Catalan and Spanish form one clear cluster, showing similarity between these languages. This may explain the previous results where Italian performed well when mixed with Spanish data. The Germanic languages English and German are closely clustered alongside French. French is classically a Romance language, but do share many linguistic features with English and German.
+
+Language clusters appear to conform to other historical language groupings, such as Arabic and Kabyle or Mandarin and Cantonese. This may suggest that the model learns cross-lingual information well between related languages. However, outliers such as Hong Kong Cantonese forming its own cluster may also suggest otherwise. Conneau et al. \cite{XLSR-53} do not explore this further, but suggest that encouraging shared tokens between similar languages may improve cross-lingual transfer.
+
+%%\hl{Do I need a figure somewhere here? and if so what?? 3 pages with only a single equation is quite a lot, maybe I could also reduce this section a bit. Maybe a table of the results I want to show?}
+
+\subsection{Cross-Lingual Representations at Scale}
+The following year, in 2021, Babu et al. \cite{babu2021xlsr} expanded further on the ideas of multilingual SSL learning with their model XLS-R. XLS-R is another model in the wav2vec 2.0 family following the same quantizer and context network architecture as wav2vec 2.0 \cite{wav2vec}. It also keeps the same multilingual pretraining strategy as XLSR-53 \cite{XLSR-53}. XLS-R instead changes the scale of the approach by increasing both the size of the models and the number of hours in pretraining data. XLS-R comes in 3 sizes: 0.3B, 1B and 2B parameters. For the 0.3B model, the context network has 24 transformer blocks with a layer size of 1024. For the 1B and 2B models the context network has 48 blocks. The 1B parameter model has a layer size of 1024 and the 2B model is expanded to 1920.
+
+\iffalse
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{2_chapter2/images/self_supervised_learning/xlsr_data_spread_temp.png}
+    \caption{\hl{UPDATE AND MAKE MY OWN} Change this to my own one that isn't logarithmic on the y axis, or maybe even compare theirs to mine. taken from: XLS-R Paper}
+    \label{lr_fig:xlsr_data}
+\end{figure}
+\fi
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth,trim={80 50 10 20}, clip]{2_chapter2/images/multilingual_ssl/xls-r_pretraining_data_hours.pdf}
+    \caption{The first 48 languages with the highest numbers of hours in pretraining for XLS-R. The languages are ordered from left to right in order of highest to lowest number of hours in pretraining. The y axis shows the percentage of the total number of hours from all 128 languages in pretraining that each language has.}
+    \label{lr_fig:xlsr_data}
+\end{figure}
+
+For pretraining, XLS-R utilises the VoxPopuli dataset released the same year \cite{wang-etal-2021-voxpopuli}. VoxPopuli contains 1.8k hours of transcribed speech in 16 languages and 384k hours of unlabelled speech in 26 different languages. Voxpopuli is collected from European Parliament speeches between 2009 and 2020. The speeches are spoken in a source language and then translated orally into 23 other languages, with only a subset of these speeches being transcribed. The XLS-R pretraining data combines the unlabelled VoxPopuli dataset with MLS, BABEL, Common Voice and VoxLingua datasets \cite{wang-etal-2021-voxpopuli, MLS, gales2014speech, ardila-etal-2020-common, VoxLingua}. These datasets combined contain 436K hours and 128 different languages.
+
+Figure~\ref{lr_fig:xlsr_data} shows the percentage of total hours each language has in the XLS-R pretraining data. Languages are ordered from right to left, from the largest to the smallest percentage. We see that English has the largest proportion of data with 15.9\% of the total pretraining data, which translates to 69.5k hours. The languages with the next highest number of hours are: German, French, Spanish and Italian, each taking up between 5\% to 6\% of the pretraining data. When ordered by percentage of pretraining data, the first 24 languages make up more than 98\% of the total data. So, 104 languages share less than 2\%. The 23 highest data languages are all European languages. This is due to VoxPopuli being the largest dataset in XLS-R's pretraining data. The English subset of MLS is also substantially larger than any other language subset, with 44k hours. So while XLS-R has been trained on 128 different languages, the number of hours are heavily imbalanced towards a small number of them.
+
+XLS-R is tested on multiple speech recognition tasks, including setting new benchmarks for multilingual ASR. Babu et al. \cite{babu2021xlsr} show their improvement over the WER for XLSR-53 on BABEL, MLS and CommonVoice \cite{gales2014speech, MLS, ardila-etal-2020-common}. They show that their 1B and 2B parameter models can outperform XLSR-53 in all languages in all of these datasets. 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llcccccccc}
+\hline
+  & en & de & nl & fr & es & it & pt & pl & Avg. \\
+\hline
+\textit{Full labeled data (h)}  & 44.7K & 2K & 1.6K & 1.1K & 918 & 247 & 161 & 104 &  \\
+\hline
+%XLSR-53 (0.3B)  & 14.6 & 8.4 & 12.8 & 12.5 & 8.9 & 13.4 & 18.2 & 17.8 & 13.3 \\ %% Orig paper: pl=21.2 avg=13.7
+large-LV60k (0.3B) \cite{XLSR-53} & \textbf{10.6} & 14.5 & 19.6 & 19.6 & 13.5 & 16.7 & 25.0 & 32.0 & 18.9  \\
+XLSR-53 (0.3B) \cite{XLSR-53} & 14.6 & 8.4 & 12.8 & 12.5 & 8.9 & 13.4 & 18.2 & 21.2 & 13.7 \\ %% Used original Polish XLSR-53 value, recalculated avg
+XLS-R (0.3B) \cite{babu2021xlsr}  & 15.9 & 9.0 & 13.5 & 12.4 & 8.1 & 13.1 & 17.0 & 13.9 & 12.9 \\ % Corrected average
+XLS-R (1B) \cite{babu2021xlsr} & 12.9 & \textbf{7.4} & \textbf{11.6} & 10.2 & 7.1 & \textbf{12.0} & 15.8 & 10.5 & \textbf{10.9} \\
+XLS-R (2B) \cite{babu2021xlsr} & 14.0 & 7.6 & 11.8 & \textbf{10.0} & \textbf{6.9} & 12.1 & \textbf{15.6} & \textbf{9.8} & 11.0 \\
+\hline
+\end{tabular}
+%\caption{\hl{UPDATE!!} Important info, all models FT on 10 hours of each language. all models tested with a 4-gram LM, except for Polish. \hl{The hours for full dataset are form the original paper, dunno if I need them.} ------ \hl{The values for XLSR-53 are exactly the same as the original papers except Polish. Polish is 21.2, I have used that here}  ALSO: the original paper got the average for XLSR-53 wrong, presumably because they used the original polish value (and still got tat a bit wrong!)}
+\caption{A summary of results for wav2vec 2.0, XLSR-53 and XLS-R models when finetuned to 10 hours of MLS data from each languge. wav2vec 2.0 and XLSR-53 results are taken from (Conneau et al. 2020). XLS-R results are taken from (Babu et al. 2022)}
+\label{lr_tab:xlsr_xlsr_53_mls}
+\end{table}
+
+Table~\ref{lr_tab:xlsr_xlsr_53_mls} shows the WER for 5 models when finetuned to 10 hours of a single MLS language collected from \cite{XLSR-53, babu2021xlsr}. XLS-R 1B and 2B parameter models achieve lower WER than XLSR-53 for all languages. Notably, this is not the case for XLS-R 0.3B and XLSR-53, which also has 0.3B parameters. XLS-R 0.3B performs better on 5 of the 8 languages, but worse than XLSR-53 on English, German and Dutch. These three languages have some of the highest numbers of hours in the pretraining data for both models. This, therefore, reinforces the idea that multilingual pretraining is a trade-off. The more languages introduced in pretraining, the less that is learned about each individual language. This trade-off can, however, benefit low-resource languages such as Portuguese and Polish. The large-LV60k model from \cite{wav2vec} has the lowest WER on MLS English compared to all other models. It also has the highest WER for every other language in MLS. This again supports the trade-off seen in the XLSR-53 results.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{l | c c c}        
+        \hline %\\
+          & \multicolumn{3}{c}{\textbf{Language Model}}  \\
+         \textbf{Pretrained Model}  & \multicolumn{1}{c}{None} & \multicolumn{1}{c}{Transformer}  & \multicolumn{1}{c}{4-Gram} \\
+
+         %& \multicolumn{3}{c}{}
+         \hline 
+       % \textbf{FineTuning: LibriLight} & \multicolumn{1}{c}{10h} & \multicolumn{1}{c}{10h}  & \multicolumn{1}{c}{10h} \\ 
+        %\textbf{Test Set: LirbiSpeech}& \multicolumn{1}{c}{Clean Test} & \multicolumn{1}{c}{Clean Test} & \multicolumn{1}{c}{Clean Test} \\
+        
+        %\hline %\\
+        base LS960 (0.1B) \cite{wav2vec} & 11.1  & 3.2 & 4.3  \\% & -- & --  \\
+        large LS960 (0.3B) \cite{wav2vec} & 8.0  & 3.2  & 3.2  \\% & -- & --  \\
+        large-LV-60k (0.3B) \cite{wav2vec} & \textbf{6.3}  & \textbf{2.6}  & \textbf{3.0}  \\% & -- & --  \\
+
+        \hline %\\
+        large-LV-60k (0.3B) \cite{babu2021xlsr}  & \textbf{5.6}  & -- & -- \\% & -- & --  \\
+        XLS-R (0.3B) \cite{babu2021xlsr}   & 8.3  & -- & -- \\% & -- & -- \\
+        XLS-R (2B) \cite{babu2021xlsr}  & 5.9  & -- & -- \\% & -- & -- \\
+        \hline
+    \end{tabular}
+    %\caption{\hl{UPDATE} make it clear LV-60k refers to 60k of LibriVox data, all of the finetuning data here is English language. \hl{ALSO}, the LS 10 hour results are models finetuned with 10 houra of Libri-Light data and then tested on clean and dev LibriSpeech data (unessecarily confusing setup in my opinion). Do I want another table for Spanish and or other languages (Pol, Fre). \hl{for XLS-R results, I think the low-resource sets are LL, but It doesn't say for sure, there are two different results for w2v2 LV-60k} MENTION FT AND TEST DATASETS HERE. \hl{Datasets are: 10h LibriLight for wav2vec 2.0 paper and 10h LibriSpeech for XLS-R paper}}
+    \caption{A summary of English language WER when fine-tuning wav2vec 2.0 and XLS-R models. All models are fine-tuned with 10 hours of LibriSpeech. The results form 3 wav2vec 2.0 models are taken from (Baevski et al. 2020). These models are compared without an LM to models with a transformer LM and a 4-gram LM. Separate results were taken from (Babu et al. 2022). They compare wav2vec 2.0 (large-LV-60k) to XLS-R with 0.3B and 2B parameters.}
+    \label{lr_tab:wav2vec2_xlsr_english_wer}
+\end{table}
+
+Table~\ref{lr_tab:wav2vec2_xlsr_english_wer} shows the results of various wav2vec 2.0 and XLS-R models when finetuned to 10 hours of English data. For wav2vec 2.0 results taken from \cite{wav2vec}, models are finetuned to 10 hours of LibriLight data. For results taken from \cite{babu2021xlsr}, models are finetuned to 10 hours of LibriSpeech data. For Librispeech results from \cite{babu2021xlsr} large-LV60k has lower WER than XLS-R 0.3B or 2B. The large-LV60k LibriLight finetuning \cite{wav2vec}, results in a higher WER than XLS-R 2B at 6.3\%. However, with 1.7B fewer parameters, this is still a comparable outcome. This result is also lower than the XLSR-53 8.3\% on LibriSpeech. When using the 24 block transformer LM, wav2vec 2.0 base has a WER of 3.2\% on LibriSpeech, lower than XLS-R 2B. Even with the extra trainable parameters in the LM the monolingual model here still has fewer parameters than XLS-R 2B.
+
+
+
+%\subsubsection{MMS}\hl{Dunno if this needs a heading}
+%\hl{ALTERANTIVELY: This paper \cite{pratap2024scaling} doesn't fit that well in this section, so maybe move this to be after XLS-R and before neural scaling. Then keep the previous ending.}
+
+In 2024, Pratap et al. \cite{pratap2024scaling} extended the XLS-R multilingual experiment further still. They created a large dataset containing a total of 55k hours of multilingual labelled speech data. The dataset would contain 1,036 different languages, vastly more than XLS-R's 128 \cite{babu2021xlsr}. They created this dataset by taking new testament bible recordings by Faith Comes by Healing\footnote{\hyperlink{https://www.faithcomesbyhearing.com/}{faithcomesbyhearing.com}}. %They finetune XLS-R for an alignment task, then align recorded utterances with bible verses. They also create an unlabelled dataset with 7.7k hours of speech spoken in 3,089 different languages. These recordings are also bible recordings, from the Global Recordings Network\footnote{\hyperlink{https://globalrecordings.net}{globalrecordings.net}}. 
+
+\iffalse
+Even combined, these datasets are smaller than the total size of VoxPopuli, the largest datset in XLS-R's pretraining data. They also contain many more languages, which makes the average number of hours per language much smaller. The exact number of hours per language is not given, however we can see the distribution of hours per language in Figure \ref{MMS figure} taken from \cite{pratap2024scaling}. While there is still a large gap between the most populous languages and the least, the range is smaller. The most populous languages in MMS have up to 150 hours of data and the least have close to 0. The most populous language in XLS-R pretraining, by comparison, is English with 69.5k hours. The language with the fewest hours is Votic or Abkhazian, with less than 1 hour each. So the range of hours per language is much smaller, although still imbalanced. \hl{BUT They pretrain with all of the previous datasets anyway!! SO maybe this is not the best note to make.}
+\fi
+
+They pretrain the 0.3B and 1B parameter versions of XLS-R by combining the same datasets previously used with XLS-R and the MMS-Lab-U unlabelled 55k-hour dataset (XLS-R-MMS). They find that when finetuned to the FLEURs \cite{FLEURS} dataset, XLS-R-MMS produced lower average CER than the 0.3B and 1B XLS-R models \cite{pratap2024scaling}. They also find that XLS-R-MMS had lower CER than XLS-R for languages that were low-resource in the XLS-R-MMS pretraining. XLS-R-MMS also had higher CER than XLS-R on languages that were high-resource in pretraining. 
+
+They then pretrain multiple models with different numbers of languages from MMS: 61, 128, 256, 512 and 1107 languages. They then finetune each model to the entire FLEURs dataset and measure the average CER. They find that with each increase in the number of languages in pretraining, the average CER increases. They also find that the CER does not increase linearly. The increase in CER between 512 languages and 1107 languages is smaller than the increase between 61 and 128 languages. However, neither the specific languages nor the number of hours added with each step is reported, so the effect of these factors is unclear.
+
+\subsection{Neural Scaling}
+The results across these multilingual experiments show a consistent trade-off. That increasing the number of languages included in pretraining results in increased error for individual languages. High-resource languages especially benefit from monolingual pretraining and lose accuracy in multilingual settings. However, for languages that do not have enough data to effectively pretrain a monolingual model, this is not the case. For low-resource languages, multilingual pretraining can improve the downstream WER. 
+
+\begin{wrapfigure}[17]{l}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{2_chapter2/images/neural_scaling/neural scaling_generalization.pdf}
+    %\caption{An approximation of the neural scaling in DNNs. The power-law here refers to the trade-off between dataset size and model size. At small dataset sizes, all model sizes struggle to learn. In the Power-Law Region, the dataset size and model size are each scaled appropriately to one another. In the Irreducible Error Region, increasing data size has decreasing benefits. Adapted from: (Hestnes et al. 2017)}
+    \caption{An approximation of the neural scaling in DNNs. The power-law here refers to the trade-off between dataset size and model size. Adapted from: (Hestnes et al. 2017)}
+    \label{lr_fig:scaling_laws}
+\end{wrapfigure}
+
+This trade-off for high-resource languages can be offset by increasing the model parameter count. At 2B parameters, XLS-R can be competitive with monolingual models for high-resource languages, while still benefiting low-resource languages. However, the number of parameters required to achieve a similar low WER is much less in monolingual settings. Monolingual models with 20 times fewer parameters can achieve the same WER as XLS-R when finetuned to matched-language data. Here matched-language refers to when pretraining and fine-tuning languages match.
+
+%\newpage
+In 2017, Hestness et al. \cite{hestness2017deep} explored the relationship between model size, training data size and validation loss. They show for Deep Speech 2 that for the model with the largest parameter count, 87M, validation loss consistently fell as the number of hours in the training data increased. The relationship was linear until only the largest datasets, where the benefit of increasing the dataset size was reduced. For smaller models, the loss decrease plateaued at much smaller dataset sizes, showing that low-parameter count models did not benefit as mcuh from very large datasets. 
+
+
+
+Figure \ref{lr_fig:scaling_laws} shows the relationship between training dataset size and model size. Here, small datasets struggle to reduce loss in the small-data region. The power-scaling region is where large models linearly benefit from increasing training data. The irreducible error region is where the benefits of increased training data reduce. Hestness et al. \cite{hestness2017deep} note that they did not find a threshold for data size that did not decrease loss compared to smaller sizes, just that the benefits were more when parameter count was high.
+
+In 2020 Kaplan et al. \cite{kaplan2020scaling} further investigate scaling laws by attempting to find an optimal point between dataset size, model size and available compute size. They first train multiple models with different parameter counts on a language modelling task. Overall, the largest models at 708M parameters produced the lowest loss when trained on the largest dataset, of approximately 22B text tokens. However, when the smallest model was trained on the 22B token dataset, it outperformed the same small model trained on smaller datasets. Similarly, when a large model was trained on a small dataset, it outperformed small models trained on small datasets. 
+
+The benefits of increasing model size seem to reduce as the dataset size is reduced. They plot the best loss for each dataset by the parameter count for each model. For the 22B token dataset loss kept reducing linearly without plateauing as the parameter count was increased. However, for the small 21M token dataset, loss plateaued after 85M parameters and even increased at 708M parameters. This shows that for small datasets, large model sizes can unecessary or even be detrimental. Whereas for large datasets, large model sizes are necessary.
+
+Scaling research seems to support the findings by Babu et al. \cite{babu2021xlsr} that training on very large multilingual data requires a very large model size to effectively learn from. Radford et al. \cite{whisper} study the effects of parameter count and multilingual accuracy in depth for Whisper. They show that when Whisper performed zero-shot ASR, WER reduction scaled to model size. The lowest multilingual WER was produced with the 1.5B parameter model, the largest version of Whisper. Interestingly, for English, the largest data language in the training data, WER plateaus at 718M parameters. This appears to show that 1.5B is not necessary for this language. They also show that the largest multilingual Whisper models outperform smaller models trained only on English. However, smaller multilingual models produce significantly higher English WER than the same size monolingual model. 
+
+For other languages in the Whisper training data \cite{whisper}, they plot zero-shot WER for FLEURs \cite{FLEURS} languages vs the number of hours in the training data. They find that the number of hours for a language that Whisper saw in training is directly correlated to WER. High-resource languages in training produced low WER, and low-resource languages produced high WER. The WER for each language scales with the number of hours in pretraining. Given these findings, we can see that multilingual pretraining for ASR has multiple dimensions that relate to good performance. The total amount of speech data in training, the parameter count and the balance of data between languages, all affect the final WER. 
+
+
+\iffalse
+%\section{Mutlilingual SSL ASR}
 \subsection{Neural Scaling}
 \begin{itemize}
+    \item \colorbox{yellow}{\textcolor{red}{Medium difficulty to write}}
+    %\item \colorbox{green}{\textcolor{red}{Easy to write}}
+    \item \hl{This requires some reading, but it should be a relatively short section, I have put it in medium for now and I can come back to it.}
+    \item \colorbox{purple}{\textcolor{white}{In Chapter 5 Background}}
     \item \hl{This section could fit in a couple of different places, it only definitely needs to go before model compression.}
-    \item Neural Scaling Principle (2017) \cite{kaplan2020scaling, hestness2017deep}
-    \item Neural Scaling for ASR \cite{zhang2022bigssl}
+    \item Neural Scaling Principle (2017) \cite{kaplan2020scaling, hestness2017deep, bahriscalinglaws}
+    \item Neural Scaling for ASR \cite{zhang2022bigssl, droppo21_interspeech, cuervo-marxer-2024-scaling}
+    \item Scaling for acoutsic models \cite{droppo2021scaling}
     \item Maybe compare Quartznet, Conformer and SSL model parameter sizes
     \item Comment on the wav2vec 2.0 monolingual nature and being trained on 1000h of data
     \item I need to set up the idea that very large models sizes are directly related to how many languages a model can simultaneously learn.
+    \item \textbf{There may also be some papers that try to quantify the multilingual trade off maybe I could fit them in here.}
+    \item Whisper has some comments on data and model scaling that might be usefu here \cite{whisper}
 \end{itemize}
+\fi
 
-\subsection{Mutilingual SSL at Scale}
-\begin{itemize}
-    \item Start by highlighting older SL multilingual approaches, low WER multilinugal, monolingual low-parameter and multilingual adapters.
-    \begin{itemize}
-        \item I may or may not have covered some of this in the earlier section
-    \end{itemize}
-    \item I should probably then talk about whisper in detail if I haven't already.
-    \item Cover XLSR-53 \cite{XLSR-53}, XLS-R \cite{babu2021xlsr} and compare to supervised Whisper \cite{whisper}
-    \begin{itemize}
-        \item I may have already covered XLSR-53
-        \item XLS-R fits here because we have now talked about the neural scaling principle
-        \item wav2vec 2.0 Large and XLSR-53 are \textasciitilde 300M parameters
-        \item Whereas XLS-R is 2B parameters in the biggest model.
-    \end{itemize}
-    \item Go into detail on the benefits and issues of SSL vs SL
-    \item Take apart the results and claims made about WER on multiple languages
-    \item Concentrate on the concept of shared features, which they do claim but they don't really test
-    \begin{itemize}
-        \item I mean that they don't test if the model learned shared features
-        \item They test it in the sense that they have their shared latent space idea and then finetune and check the WER
-        \item They don't do any layer or weight analysis experiments to see what the model learned from the shared latent space [That's why I'm doing it].
-    \end{itemize}
-    %\item Highlight the lack of testing for this
-    %\item Highlight where people have found evidence, but that these results are often done after finetuning, which would change the results
-    %\item OR they test what the model outputs, which is really just testing if the loss function worked
-\end{itemize}
+
 
 \subsection{Monolingual or Multilingual}
+
+\iffalse
 \begin{itemize}
+    \item \colorbox{green}{\textcolor{red}{Easy to write}}
+    \item \colorbox{purple}{\textcolor{white}{In Chapter 5 Background}}
+    \item \hl{THERE ARE SOME PAPERS HERE THAT i HAVE MISSED}
+    \item \hl{Specifically some papers that try to quantify the impact of multilingual pretraining}
+    \item I also have papers on embeddings and how they suppress "task irrelevant information", but I'm not sure exactly where they should go, they're in the LR .bib
     \item Here we can talk about the monolingual comparisons, like with Dutch \cite{poncelet2021comparison} and japanese \cite{ashihara2023exploration}
     \item We can also discuss related mixed-language pretraining \cite{zhang2023fast}
     \item Discusses efficiency and show a parallel with the neural scaling principal and the lack of evidence that multilingual data actually helps monolingual finetuning.
@@ -308,72 +509,239 @@
     \begin{itemize}
         \item Could neural scaling go into the model compression section?
     \end{itemize}
-    \item \textbf{After talking about efficiency we want to introduce model compression}
-\end{itemize}
-
-\section{Model Compression}
-\iffalse
-\begin{itemize}
-    \item I think this could go here?
-    \item we have set up the neural scaling principle before this section
-    \item Possibly we could put this is in the neural scaling section to expand that
-    \item it definitely needs to go ahead of the model analysis section
-    \item It could go after Mutilingual section
-    \item This could be after multilingual
-    \item By that point we have set up the idea that these models are huge and need to be deconstructed
-    \item Also, a lot of model compression techniques require some domain knowledge, which could set up the model analysis section.
+    \item \textbf{After talking about efficiency, we want to introduce model compression}
+    \item Talk about papers that analyse the codebook entries and how that makes the model skewed towards English \cite{wang2025normalization, linke2023self, lee2024balanced}
+    \item There may be a few other papers I should cover according to perplexity.
+    \items \textbf{Papers not covered that could be relevant here:}
+    \item \cite{gupta2021clsril} related-language pretraining similar to the romance languages one below. \textbf{It is only on arxiv though}
+    \item 
 \end{itemize}
 \fi
+\iffalse
 \begin{itemize}
-    \item set up the reasons for why we need to compress models
-    \item The benefits of model compression 
-    \item The inefficiency of big models
+    \item \textbf{This section needs some thinking about}
+    \item The story doesn't quite flow, the first reference sort of disproves mono/multilingual pretraining theories
+    \item Maybe I could use it as a basis for either related language pretraining OR how complicated multilingual pretraining can be
+    \item In fact, the flemish results and the japanese results almost directly contradict one another
+    \item Quite a lot of Neth Dutch (4.5k) doesn't do better than 60k of English
+    \item However, 200 hours of Japanese does much better than 60k English or 400k multilingual
+    \item The related language paper does not compare to an English or monolignual model.
+    \item The previous paper said that adding many more languages (and more data) helped low-resource languages
+    \item XLSR-53 does better than w2v2-large-LV-60k so maybe I could argue that way
+    \item multilingual helps low-resource (ND may not be close enough in language relation)
+    \item Then monolingual really helps
+    \item Then related multilingual languages are better than mismatched but worse than mono
+    \item Maybe der heer cloots dutch paper to finish off, it does feel like I need another reference
+    \begin{itemize}
+        \item That paper is good, but it also covers layer analysis that we haven't covered yet in the LR, this could be complicated.
+        \item I could do a bit of throwaway reference here and then come back to it later
+        \item i.e. "However, a later publication in 2025 showed that mixed Dutch pretraining beenfited Dutch WER"
+        \item That could work, and then I expand in later model section
+    \end{itemize}
+    \item I also haven't covered the trade off quantification
+    \item \textbf{Come back to this section}
+    
 \end{itemize}
+\fi
+\iffalse
+\begin{itemize}
+    \item I could have a short couple of sentences addressing that this trade-off has been documented in previous models, pre-SSL
+    \item Also dosumented in LLMs
+    \item But not precisely documented in ASR models
+    \item This paper has a review of multilingual ASR in 2022 \cite{yadav2022survey}
+    \item This paper 
+\end{itemize}
+\fi
+
+%\hl{I will need a paragraph here to connect the previous neural scaling section to this section. I will have to add that in after I have written the neural scaling stuff.}
+
+We have shown so far that pretraining SSL models for multilingual ASR can benefit low-resource languages. We have seen the relationship between parameter counts and the total number of hours and languages in pretraining. So next, we must explore how the relationships between the pretraining languages and the fine-tuning languages affect performance.
+
+In 2021, Poncelet et al. \cite{poncelet2021comparison} finetuned wav2vec 2.0 large-LV60k, to Flemish Dutch data. They found that it had a lower WER than the same model when pretrained on the Netherlands Dutch from the VoxPopuli \cite{wang-etal-2021-voxpopuli} dataset. The base-LS960 also achieved a lower WER than the Netherlands Dutch model and XLSR-53 had the lowest WER overall. These results seem to confirm that multilingual SSL ASR learned enough cross-lingual information to adapt to a new low-resource language. Here, the related language, Netherlands Dutch, was less beneficial to downstream WER than multilingual pretraining. However, Netherlands Dutch has many distinct pronunciations and words when compared to Flemish Dutch \cite{ipahandbook_1999}. This could have contributed to the Flemish results.
+
+%\hl{Maybe instead of going into full detail here of why it may be wrong instead cite and talk very briefly about their Dutch monolingual experiment from 2025} \cite{deheerkloots25_interspeech} 
+
+%\iffalse
+In a later paper in 2025, De Heer Kloots et al. \cite{deheerkloots25_interspeech} pretrained a monolingual Dutch wav2vec 2.0 model for analysis, w2v2-nl. This model was pretrained on 537 hours of Dutch from the Spoken Dutch Corpus (CGN) \cite{schuurman2003cgn}, which includes Flemish data, 211 hours of MLS Dutch \cite{MLS} and 212 hours of Dutch CV data \cite{ardila-etal-2020-common}. They compare this model with the  wav2vec 2.0 model base-LS960 and a multilingual base model trained on 100k hours of voxpopuli data \cite{wang-etal-2021-voxpopuli}, fb-voxp-100k. They then train probes to analyse for phonetic and lexical analysis, and compare these findings against downstream finetuned ASR performance. 
+
+They found that w2v2-nl gave higher phoneme accuracy than the other models when tested on Dutch data. However, the average was only marginally higher than English, possibly reflecting the close relationship between the two languages. However, when analysing Dutch-specific phonemes, w2v2-nl had substantially higher accuracy. They then compare the WER for each model when fine-tuned Dutch data, w2v2-nl produced the lowest for all cases WER. These results show that for models of the same size, monolingual pretraining produces the lowest WER when fine-tuning to a matched language. The results also suggest that wav2vec 2.0 learns language specific phonemes and possibly language specific phoneme realisations.
+
+In 2023, Ashihara et al. \cite{ashihara2023exploration} showed that monolingual pretraining was also beneficial for Japanese fine-tuning. First, they compare a monolingual wav2vec 2.0 model pretrained on Japanese data to large-LV60k, XLSR-53 and XLS-R (0.3B). They find that for Japanese, the monolingual model has the lowest CER and large-LV60k the highest. They then test the same models on 50h of English TED-LIUM-v2 \cite{rousseau2014enhancing}. They find that the monolingual English model has the lowest WER. The monolingual Japanese model had significantly higher WER. For both languages, XLSR-53 and XLS-R gave higher error than the matched-language monolingual models. However, the multilingual models also achieved significantly lower error than the mismatched-monolingual models. Mismatched-language models are monolingual models where the pretraining and fine-tuning languages do not match.
+
+Ashihara et al. \cite{ashihara2023exploration} go on to experiment with the number of hours in the  Japanese monolingual pretraining data. They first fine-tune XLS-R (0.3B) and XLSR-53 (0.3B) on Japanese data to create their Japanese CER benchmarks. They then pretrain multiple wav2vec 2.0 base (0.1B) models with different amounts of Japanese data. They fine-tune each model to Japanese and compare the CER to the multilingual models. They show that Japanese monolingual pretraining can achieve lower CER than both multilingual models with as little as 200 hours of Japanese data. This is significant since both multilingual models are pretrained on much larger datasets. Additionally, by using the base model, the monolingual Japanese model had fewer parameters than either multilingual model.
+
+
+In 2023, Zhang et al. \cite{zhang2023fast} tested how SSL ASR might benefit from related-language pretraining. They chose datasets for several related languages from the CV open-source data \cite{ardila-etal-2020-common}: Catalan, Basque, French and Italian. The total dataset size is 1145 hours across all languages, however, the number of hours per language are not consistent. French and Catalan have the most hours in the data, 530 and 419, respectively. They claim, therefore, that especially for the low-resource, related-language pretraining will decrease finetuned WER. \iffalse
+
+To identify utterance similarities, they first train a Language Identification network (LID). They extract the embeddings from this network for each utterance from each language. They then create a similarity score between each utterance and each language.
+
+\begin{equation}
+    d(E_u, E_l)=\frac{E_u\cdot E_l}{||E_u||\cdot ||E_l||}
+\end{equation}
+
+Here $E_u$ are the Language Identification (LID) embeddings for the utterance. $E_l$ is the mean average embeddings across all embeddings in the language.
+
+\begin{equation}
+    E_L=\frac{\sum_{u\in L}E_u}{\sum_{u\in L}1}
+\end{equation}
+
+\fi The similarity scores show them which utterances across all languages are most similar to a source language. They also use their Extended Dynamic Curriculum Learning (EDCL) technique to encourage utterances that are most similar to the source language at the beginning of training. They pretrain multiple versions of wav2vec 2.0 with these datasets and finetune on 10 hour monolingual subsets of each language. They evaluate how little related-language data can be used to achieve low WER.
+
+They find that the optimal dataset size is 286 hours, or 25\%, of their total 1145h multilingual dataset. This subset consistently achieves the lowest WER when compared to pretraining on 100\% of the data. They also find that using EDCL consistently achieves models that produce the lowest WER overall. The 12.5\% subset increases in WER when compared to the 25\% subset. This implies that there is a limit to how little data can be used to pretrain an SSL model.
+
+\iffalse
+\begin{wrapfigure}[14]{l}{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.5\textwidth]{2_chapter2/images/self_supervised_learning/related_languages_similarity.jpg}
+    \caption{\hl{UPDATE AND MAKE MY OWN} Change this to my own one that isn't logarithmic on the y axis, or maybe even compare theirs to mine. adapted from: zhang2023 et al. 2023}
+    \label{lr_fig:related_language}
+\end{wrapfigure}
+
+%This approach gives an objective way to create datasets with similar embeddings. however. The similarity score does not take into account the diversity of a language. In Figure~\ref{lr_fig:related_language} we show an adaptation of their T-SNE\unexplained{T-SNE}\thoughts{I haven't looked into this myself} analysis of the embeddings for all utterances across languages. This analysis shows that a limited number of utterances from each language appear far from the language cluster, often overlapping with many utterances from a separate language. When reducing the dataset size these utterance will be the first to be discarded. Given we do not know the contents of these utterances, we do not know why they appear to far from the language average. It is possible these utterances are not outliers but necessary for learning a language. This may explain why the model increased in WER when pretraining on only 12.5\% of the data. \thoughts{Do I need all this as well?}
+
+Figure~\ref{lr_fig:related_language} shows an approximation of the groups created by the approach Zhang et al. \cite{zhang2023fast} take. As the groups are reduced in size, utterance similarity excludes more utterances far from the average. The most similar utterances to a language average are, inevitably, utterances spoken in the source language. For the high-resource languages, Catalan and French, this makes the pretraining data trend towards being monolingual, not related-language multilingual. However, for low-resource languages, even the smaller groups have significant diversity of language. Related-language pretraining does, therefore, appear to be beneficial for low-resource languages. %Although a comparison to a model pretrained on an equal amount of unrelated data would have solidified this theory.
+\fi
+
+Overall, across these papers, we see that monolingual and related-language pretraining can be more efficient than multilingual pretraining. Matched-language or related-language monolingual pretraining can also achieve better results with much fewer trainable parameters. However, this approach reduces the benefits of SSL pretraining. This approach requires a bespoke model to be trained for each language, or even each domain in speech. Here, there is less benefit for low-resource languages that do not have the large datasets required for pretraining. We can next, therefore, explore how the information learned in large multilingual SSL models can be used more efficiently to benefit low-resource domains. 
+
+
+\section{Model Compression}\label{lr_sec:model_compression}
+
+So far in this literature review, we have explored the benefits of pretraining SSL models. Knowledge learned in pretraining can benefit low-resource languages when fine-tuning. Including data from a language or related language in pretraining can improve performance further. However, as pretraining data size increases, the size of the model must increase to learn it effectively. Fine-tuning large models, even on small datasets, can still then be computationally costly. In this section, we explore the concept of model compression, focusing on The Lottery Ticket Hypothesis (LTH) and model pruning. Model compression techniques aim to reduce the size of large models while retaining high performance. We will explore how some of these techniques have been used in deep learning and how they have been applied to speech.  
 
 \subsection{Model Compression}
-\begin{itemize}
-    \item Model Distillation (Student-Teacher training) \cite{distillation}
-    \item Adaptation and Low-rank adaptation \cite{hu2021lora}
-    \begin{itemize}
-        \item Might wanna check LoRA reference isn't just the arxiv
-        \item Adapters will probably have been covered by now, but I shouldn't explain LoRA until here
-    \end{itemize}
-\end{itemize}
+Model compression is an area of study that aims to reduce the size of large pretrained models while preserving their accuracy. There are multiple active areas of research in model compression, such as low-Rank Adaptation (LoRA) \cite{hu2021lora}. LoRA \cite{hu2021lora} is a technique that adds trainable layers in between the layers or blocks of a pretrained model. The pretrained weights are frozen and only the new layers are then trained. This allows the model to benefit from pretrained weights, while training the fewest possible parameters to achieve high performance.
 
-\subsection{Pruning}
-\begin{itemize}
-    \item Lottery Ticket Hypothesis \cite{frankle2018LTH}
-    \item Then Model pruning \cite{han2015learning}
-    \item Unstructured pruning \cite{frankle2018LTH}
-    \item structred pruning \cite{li2017pruning}
-    \item Layer pruning \cite{gromov2024unreasonable}
-    \item One-Shot Magnitude Pruning + PARP \cite{frankle2018LTH, PARP}
-    \item Iterative Pruning \cite{frankle2018LTH}
-\end{itemize}
+Model distillation \cite{distillation} is another common compression technique. Distillation uses a large pretrained model to teach a smaller model from scratch. Hidden state activations from one or multiple layers of the large model are used to create a loss value. The small model is trained to emulate these weight activations for a given dataset. However, while the larger model is frozen during training, this technique can still be computationally expensive. 
 
-\subsection{Pruning for Speech}
-\begin{itemize}
-    \item Model pruning for ASR %[Many citations in bib and chapter 3]
-    %\item This section can be lifted from SLT paper, lots of depth there.
-    \item language-specific subnetworks \cite{Lu_Language_adap_xlsr, yang2023learning, PARP}
-    \item Go into a little more detail here on the findings of how these subnetworks have high overlap
-    \item We need some discussion of why these subnetworks exist and what the language-specific features they are finding are.
-    \item The answer broadly is that we don't know. This will both sets up the pruning work [Chapter 3] and then the probing and analysis work [Chapter 4].\thoughts{Note: Chapter 4 here was previously referred to as Chapter 5. Without the early Quartznet15x5 work as a chapter, it has now been bumped up to Chapter 4 and the SLT paper up to Chapter 3.}
-\end{itemize}
+In this section, we will focus on The Lottery Ticket Hypothesis (LTH) and model pruning \cite{han2015learning, frankle2018LTH}. This approach to compression aims to find the highest-value weights in a large model. They then discard as many low-value weights as possible, while retaining relative performance. High-value weights are learned parameters that contribute the most to downstream training. For our purposes, isolating the weights that contribute to different speech tasks is valuable when studying SSL ASR. 
 
-\section{Model Analysis}
-\begin{itemize}
-    \item Now we have all of the motivation for model analysis and the gaps in the current research are starting to appear.
-    \item Here we start to discuss how we can analyse what these models have learned
-\end{itemize}
+\subsection{The Lottery Ticket Hypothesis}
+\iffalse
+In 2015, Han et al. \cite{han2015learning} discovered that certain weights within a trained DNN could be zeroed or removed without impacting performance. They train multiple models for image recognition tasks and then sum the value of all the weights connected to each neuron to give each neuron a value. They remove a proportion of the lowest-value neurons, retrain the model and then test performance, they call this model pruning. They test the impact of L1 and L2 regularisation techniques to calculate the weight values.
 
-\subsection{Approaches to Model Analysis}
+\begin{equation}
+\begin{split}
+    L1(W)=\sum_{i=0} \lambda |w_i| \\
+    L2(W)=\sum_{i=0} \lambda  |w_i|^2
+\end{split}
+\end{equation}
+
+Where $W$ is all the weight connected to a neuron and $w_i$ is weight $i$. L1 regularization, $L1(W)$ is calculated as the sum of the absolute values of wieghts. L2 is the sum of the squared weights. They find that L2 regularization penalises low-value weights more than L1.
+
+They also test an iterative approach to pruning. They first remove a small proportion of neurons before retraining. They then prune more neurons and retrain again to further test performance at a higher weight sparsity. They continue to iterate this strategy until an optimal pruning ratio is found that balances model size and performance. They name this technique iterative pruning. They find that they could remove more than 80\% of the parameters in their models without affecting accuracy. They found that L1 regularization gave better accuracy directly after training, but that L2 gave better results after retraining. They found that the best technique was to iteratively prune with L2 regularization.
+\fi
+
+In 2019, Frankle et al. \cite{frankle2018LTH} published their work on what they called The Lottery Ticket Hypothesis (LTH). LTH states that: "A randomly-initialized, dense neural network contains a subnetwork that is initialized such that, when trained in isolation, it can match the test accuracy of the original network after training for at most the same number of iterations" \cite{frankle2018LTH}. They refer to these subnetworks as ``winning tickets''. They hypothesise that these tickets, if found, are much more efficient for training to high accuracy than training the entire model. These winning tickets are not specific weights that can be found before a network is trained. When a model is randomly initialised, subnetworks do not carry over, they must be found again after a DNN has been trained. 
+\iffalse
+\begin{figure}
+    \includegraphics[width=\linewidth]
+    %\includegraphics[width=\linewidth]{2_chapter2/images/model_compression/unstructured_structured_pruning_generated-image.png}
+    \caption{\hl{GENERATED PLACEHOLDER FIGURE, CREATE MY OWN LATER, THIS ONE ISN'T GOOD}}
+    \label{lr_fig:unstructured_structured_pruning}
+\end{figure}
+\fi
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth,trim={0 130 0 0},clip]{2_chapter2/images/model_compression/structured_unstructured_pruning.pdf}
+    \caption{An illustration of structured and unstructured pruning. Left depicts a fully connected DNN before pruning. Center depicts a DNN with unstructured pruning, here specific weight are removed surign pruning. Right depicts structured pruning where nodes and all the connected weights are removed during pruning.}
+    \label{lr_fig:unstructured_structured_pruning}
+\end{figure}
+
+The neural scaling principle tells us that increasing the number of parameters in a DNN can lead to higher accuracy. It also leads to more retention of information learned from large pretraining datasets \cite{kaplan2020scaling}. Having more trainable parameters in a network allows more weights to become specialised to a certain task. However, specialised weights can be redundant when finetuning to a specific domain that does not require them. LTH capitalises on this by pruning a large network of its lowest value individual weights. By reducing a network to only its high value weights, only subnetworks containing very generalisable weights are left. Finetuning to these weights alone is shown to have comparable accuracy to finetuning the entire model.
+
+There are multiple approaches to finding winning tickets in DNNs, such as: unstructured pruning \cite{frankle2018LTH} and structured pruning \cite{li2017pruning, han2015learning}. Unstructured pruning selects the highest value weights across a selected region. This is most commonly applied layer-wise or globally across the whole model. A target sparsity is set and that percentage of the lowest value weights will be removed from either a layer or the whole model. Sparsity is the target percentage of weights to prune. If the sparsity is set to 60\%, then only 40\% of weights will remain after pruning. When applying sparsity layer-wise 60\% unstructured sparsity would prune 60\% of the weights in every layer of a model. If sparsity were applied globally, then 60\% of the weights across the model would be removed.
+
+However, removing individual weights with unstructured pruning requires dedicated hardware or software libraries to achieve \cite{cheng2024survey}. GPUs are not optimised to compute the irregular matrix shapes that unstructured pruning creates for training and inference. Structured pruning solves this problem by pruning whole neurons within the model, such as in \cite{han2015learning}. Removing entire neurons and their connected weights is an easier task to implement in hardware. Pruning a neuron removes an entire row in each of the matrix calculations in the forward and backwards passes. Structured pruning, therefore, requires no extra optimisation for GPU training or inference. The trade-off here, however, is that structured pruning achieves lower final accuracies when compared to unstructured pruning \cite{mao2017exploring, yvinec2021red}. Due to its broader approach to finding winning tickets, individual high-value weights are more likely to be discarded. 
+
+Structured pruning can also be abstracted further by pruning whole layers in a model. Studies have shown that certain layers across a DNN can contribute more than others to the final accuracy of a model \cite{gromov2024unreasonable}. Layer pruning is even more computationally efficient and simple to implement than unstructured weight pruning. However, layer pruning abstracts the pruning even further from the individual high-value weights. So, accuracy is most negatively impacted with this technique when compared to weight or neuron pruning.
+
+The most common approach to finding winning tickets is a task-aware approach by pruning after fine-tuning a pretrained model. This is referred to as One-Shot Magnitude Pruning (OMP). Pruning a pretrained model before finetuning can reduce computational costs. However, this subnetwork will be task-agnostic and may not generalise well to your downstream task. By finetuning the pretrained model before pruning, the fine-tuned weights become task-specific, which have been shown to produce more accurate results \cite{frankle2018LTH, PARP}.
+
+Iterative Magnitude Pruning (IMP) says that the most efficient subnetwork may form over multiple iterations of pruning. IMP prunes a percentage of the target sparsity between each stage of finetuning \cite{frankle2018LTH}. For example, if the target sparsity was 50\% and the model was finetuned for 5 epochs 10\% of the model's total weights could be pruned at the end of every epoch. This approach would reach the target sparsity of 50\% after epoch 5 had completed. Pruning with this approach allows the remaining network to readjust its weights before more connections are removed. IMP aims to uncover weights or neurons that might otherwise be removed with blunter approaches to pruning. OMP and IMP are, so far, the most effective approaches tested to finding winning tickets in a DNN \cite{frankle2018LTH, liu2018rethinking, You2020Drawing, PARP}.
+
+\subsection{Language-Specific Subnetworks}
+Several studies have shown that task-aware subnetworks obtained using LTH on large multilingual ASR models contain weights learned for a specific language. These language-specific subnetworks can be found by fine-tuning a multilingual model to a single language before pruning. The resulting network will contain a proportion of weights that do not overlap with other language-specific subnetworks. 
+
+In 2021, Lai et al. \cite{PARP} studied language-specific networks in wav2vec 2.0 \cite{wav2vec} and XLSR-53 \cite{XLSR-53}. They finetune wav2v2ec 2.0 and XLSR-53 onto multiple monolingual sets from 10 languages and apply OMP to extract the subnetworks. To understand how these language-specific subnetworks interact, they calculate the Intersection Over Union (IOU) as seen in Equation~\ref{lr_equ:IOU}. 
+
+\begin{equation}\label{lr_equ:IOU}
+    IOU(m^a, M^b)\hat = \frac{|(m^a=1)\cap(m^b=1)|}{|(m^a=1)\cup(m^b=1)}
+\end{equation}
+
+The IOU calculates the number of weights that overlap between two LTH subnetworks in a model. They find that the IOU between language-specific subnetworks in both models and a randomly selected pruning strategy is consistently low at 33.33\%. For LTH subnetworks from different languages in wav2vec 2.0, the IOU was always greater than 96\%. For subnetworks in XLSR-53 IOU was always greater than or equal to 93\%. They also compare the IOUs for language-specific subnetworks and the task-agnostic, Magnitude Pruning at Pre-trained Initialisations (MPI). For both models, all languages had similar, >90\%, IOUs with the MPI subnetwork, although they don't report the exact results. 
+
+They claim that these results show that MPI networks are more efficient for pruning. They design a pruning technique that they name Prune Adjust and Re-Prune (PARP). PARP is based on iterative pruning starting from the MPI and using as few iterations as possible. PARP is able to produce good results, when compared to language-specific subnetworks, with only 2 epochs of training.
+
+Lai et al. \cite{PARP} compare the IOUs generated between the MPI subnetworks and IMP and OMP subnetworks. They find that at 50\% sparsity, IMP and OMP subnetworks have over 90\% IOU with each MIP subnetwork. They also find that IMP and OMP IOUs with MPI increase as sparsity increases. They then finetune a wav2vec 2.0 model for phoneme recognition to test subnetwork overlap. They measure the relative change between PER when different language-specific subnetworks are used to prune the model. They find that the relative PER change high among language-specific OMP subnetworks that do not match. For example, when wav2ve 2.0 is recognising Dutch phonemes and pruned with the Russian OMP subnetwork PER has a 7.78\% relative increase. 
+
+It is notable that when pruning a wav2vec 2.0 with OMP there are, in some cases, stark increases in the relative PER. This suggests that the small number of weights that do not overlap between language-specific subnetworks can have a substantial impact on downstream performance. The appendix \cite{PARP} also shows that the IOU is lower for XLSR-53 language-specific subnetworks, when compared to wav2vec 2.0 subnetworks. This may suggest that a multilingual model has learned to specialise more weights for language-specific tasks. It is also notable that they do not produce or assess an English language-specific subnetwork. English is the most high-resource language in both wav2vec 2.0 and XLSR-53. So, it may be beneficial to look at the IOUs between an English subnetwork and the MPI or other subnetworks. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth,trim={10 10 30 0},clip]{2_chapter2/images/model_compression/language_specific_subnetworks.pdf}
+    \caption{A depiction of task-aware language-specific subnetworks within a multilingual DNN. Depicted are weights and nodes that are specific to Language A and Language B, as well as weights and nodes that are shared between each language}
+    \label{lr_fig:language_specific_subnetworks}
+\end{figure}
+
+In 2022, Lu et al. \cite{Lu_Language_adap_xlsr} test joint training with multiple language-specific subnetworks. They pretrain their own XLSR model using the base and large models from \cite{XLSR-53}. They pretrain both base and large XLSR models on multilingual CV data \cite{ardila-etal-2020-common} for 250k updates for base and 400k for large, XLSR-10. They then continue pretraining for 50k updates on a single language subset of CV. Finally, they prune the resulting model in order to extract the language-specific subnetworks. They also extract a task-agnostic, multilingual subnetwork by pruning the pretrained multilingual model. They then continue pretraining on the multilingual data for 50k steps. All subnetworks are extracted at 40\% sparsity. After testing multiple sparsities, 40\% is found to be the optimal sparsity to produce the lowest PER.
+
+They fine-tune each pruned model to 1 hour of CV data and then measure each subnetwork for PER. They find that language-specific subnetworks produce lower PER than the multilingual subnetwork and XLSR-10 without pruning. Language-specific subnetworks also produce lower PER than all but three of the monolingual models trained in \cite{XLSR-53}. Spanish, French and Italian monolingual base models all produce lower PER than their language-specific subnetworks extracted from XLSR-10. As seen previously \cite{XLSR-53}, these high-resource languages in CV produce monolingual models that perform well for phoneme recognition. 
+
+Here, it appears that language-specific subnetworks are particularly beneficial for low-resource languages. These results contradict the findings of Lai et al. \cite{PARP}, that language-agnostic pruning is the best approach for downstream error. Although this technique is more computationally intensive than PARP \cite{PARP, Lu_Language_adap_xlsr}.
+
+
+Finally, in 2023, Yang et al. \cite{yang2023learning} show that structured language-specific subnetworks have better performance than language-agnostic approaches. They first pretrain multiple monolingual RNN-T \cite{graves2012rnnt} models on 4 of the languages from MLS \cite{MLS}. They prune these models using structured pruning with either IMP or OMP. They prune to 70\% sparsity and identify the monolingual winning tickets for each language. They then use the subnetworks found on each monolingual model for all of their experiments. They then pretrain a multilingual RNN-T model using data from all 4 languages. They train on monolingual batches and only update weights in the subnetwork related to the language in the current batch.
+
+They first compare a monolingual model with 30M parameters to a monolingual model with 100M parameters, but pruned to 70\% sparsity. They find that finetuning on a language-specific subnetwork results in lower WER than finetuning the entire 30M parameter model. It also has comparable or lower WER to a multilingual 100M parameter model without any pruning. Their multilingual model trained with language-specific subnetworks also achieves comparable WER to the monolingual models. 
+
+They show through IOU that their monolingual subnetworks have low overlap with an approximate range of 30\% to 50\%. This is in contrast to previous IOU measurements \cite{PARP}. This effect is likely due to the language-specific subnetworks being drawn from separately pretrained models. Using a subnetwork from a separate monolingual model does not guarantee that the winning ticket will transfer across, due to the random initialisation. Their findings support this by showing that randomly selected subnetworks produce only marginally higher WER.
+
+This research shows that LTH can reveal language-specific subnetworks within the weights of a large pretrained multilingual model. Finetuning or continued pretraining on the subnetworks can increase monolingual performance and reduce computational costs. However, little work has been done to analyse the information contained in these subnetworks. It has been shown that subnetworks obtained from the same model have high overlap. Some subnetworks also have different performance when fine-tuning to matched or mismatched languages. However, linguistic relationships between language-specific subnetworks have not so far been studied. Neither has the relationship between language-specific subnetworks and the balance of languages in pretraining data.
+
+
+\section{Model Analysis}\label{lr_sec:model_analysis}
+Model compression techniques are useful for understanding weight distributions in large ASR models. However, language-specific subnetworks still leave many questions about multilingual SSL unanswered. In order to better take advantage of SSL pretraining, we need to look further into how the models learn. If we can understand how SSL speech models learn language, we may be able to design better approaches to pretraining. 
+
+In this section, we cover prominent papers that have studied the information contained within pretrained SSL ASR models. These studies relate learned weights to linguistic research on speech perception. They study how each layer, or each learned weight, in a model learns different elements of speech perception and transcription. By understanding how SSL ASR models perceive speech, we can improve strategies for pretraining SSL models.
+
+%\hl{Copied from previous background sections, needs adapting}
+
+%Previous studies show significant difference between the tasks learned on each layer\cite{belinkov2017analyzing} for DeepSpeech2 \cite{amodei2016deep}, a previous supervised ASR model. They also show that different categories of phonemes are learned with higher accuracy at different layers. Choi et al. \cite{choi2024self} have found that SSL ASR speech representations exhibit more phonetic similarity than semantic similarity \cite{choi2024self}. 
+
+\subsection{Layer-wise Analysis of wav2vec 2.0}
+In 2021, Pasad et al. \cite{pasad2021layer} analysed the inner workings of wav2vec 2.0. They assess the performance of each layer of wav2vec 2.0 in multiple domains: local acoustic features, phone identity, word identity and word meaning. They use Canonical Correlation Analysis (CCA) as a statistical measure of the relationship between layer embeddings for a window of speech data and another vector. When CCA is high, there is a high correlation between the layer embedding vector and the test domain vector. These vectors contain linear projections of each of the test domains. 
+
+Pasad et al. \cite{pasad2021layer} test two pretrained wav2vec 2.0 models\footnote{\hyperlink{https://github.com/facebookresearch/fairseq/tree/main/examples/wav2vec}{github.com/facebookresearch/fairseq/tree/main/examples/wav2vec}\label{lr_la_fn:w2v2}}: base-LS960, large-VP60k. They first compare model layers when wav2vec 2.0 is finetuned to different amounts of LibriSpeech data \cite{librispeech}: pretrained, 10m, 100h and 960h. They compare the output of the feature encoder to the outputs of each block in the context network. For the pretrained model, both base and large models have high CCA in shallow layers with the feature encoder. CCA then lowers during the middle layers for both models. CCA then rises in deep layers for the pretrained model, but not the finetuned models. 
+
+They label the pretrained CCA pattern as "auto-encoder style behaviour" \cite{pasad2021layer, hinton2006reducing}, due to the rise in CCA in the deep layers. This behaviour may be an artefact of the contrastive loss function. It teaches the context network to learn codebook entries with high similarity to the feature encoder output. Fine-tuned models exhibit less of the autoencoder behaviour. The more data that is included in fine-tuning, the lower the CCA to the feature encoder is in deep blocks, blocks 9-12 in base and 18-24 in large. The finetuning loss function is CTC Loss, so the learning objective is character labels. The finetuned deep layers reflect this change in learning objective.
+
+This is further confirmed when comparing hidden states from the feature encoder and the context network to mel-spectrograms. They show that the final layer of the feature encoder shows the highest similarity to mel-spectrograms of the same frame. CCA is highest in the shallow layers of the context network and decreases for the middle and deep layers. Latent speech representations are therefore shown to resemble the linguistic features highlighted in mel-spectrograms. This also seems to show that the model is learning broad linguistic information at shallow layers. While deep layers learn more task-specific information.
+
+\begin{figure}[t]
+    \includegraphics[width=\linewidth,trim={0 40 0 60},clip]{2_chapter2/images/model_analysis/Layer-Wise_Analysis_cropped_graph.pdf}
+    \caption{An approximation of the similarity for each test domain at each layer of wav2vec 2.o. Test domains include: local acoustic features, phone identity, word identity and word meaning. Similarity scores are normalised for visualisation purposes. Taken from (Pasad et al. 2021)}
+    \label{lr_fig:language_specific_subnetworks}
+\end{figure}
+
+The context network is not only learning mel-spectrum information, but appears to learn phonemetic and acoustic features. They use the Montreal Forced Aligner (MFA) \cite{mcauliffe2017montreal} to identify phoneme time intervals within each utterance. They collect frames within the phoneme interval and take the average of the representations across all frames. They exclude the first and final third of frames within the interval to avoid coarticulation. They also test Acoustically Grounded Word Embeddings (AGWE). Word intervals are also found with MFA, then an AGWE is collected by averaging all of the frames within this interval. This gives an acoustic representation of each word. They then test the CCA at each layer output of both the pretrained and fine-tuned models.
+
+They find that similarity between hidden states and phonemes is low in shallow layers, highest in middle layers and then reduces again at deep layers. This pattern is true for both pretrained and fine-tuned models. For the shallow and middle layers, the CCA score is very close between pretrained and finetuned base models. For deep layers, the finetuned base model has a higher CCA. This is true for large-VP60k as well. However, it is only the final block that shows a significant difference in CCA between loss objectives. These results suggest the model does not forget the phonetic information learned in pretraining. Therefore, phonetic information learned in pretraining is transferable to the fine-tuning task.
+
+A similar pattern can be seen for AGWEs when analysing the pretrained model. However, for the finetuned model, CCA continues to rise in the deepest layers. This may explain the low AGWE CCA in the deep layers before fine-tuning. We know that wav2vec 2.0 codebook entries correlate with specific phonemes found in the pretraining data \cite{wav2vec}. So, contrastive loss is encouraging the model to learn phoneme representations. This may be why fine-tuning does not diverge much from already learned phonetic information. Word embeddings, however, improve after finetuning, because the SSL objective does not include fully realised words, but CTC does.
+
+Finally, they assess the similarity layer outputs from the same models before and after finetuning. They show that for shallow and middle layers, there is high CCA, showing little change in the weight distribution. However, the deepest layers, 10-12 for base and 20-24 for large, show reduced CCA. This suggests that shallow and middle layers are learning linguistic information that is transferable between auto-encoder and ASR tasks. The deepest layers learn task-specific information in both pretraining and fine-tuning. They therefore change the most between training objectives.
+
+%Overall, the work of Pasad et al. \cite{pasad2021layer} shows that the information learned during SSL pretraining is transferable to the fine-tuning task. This illustrates how wav2vec 2.0 is able to achieve low WER with small amounts of fine-tuning data \cite{wav2vec}. However, due to the contrastive loss in pretraining, the information learned is limited. The pretrained model shows high CCA scores with acoustic and phonetic speech representations. However, for semantic tasks, high similarity is only shown after finetuning with CTC. To understand how to improve pretraining, it is therefore important to understand how the model encodes acoustic and phonetic information.
+
+In 2023, Pasad et al. \cite{pasad2023comparative} published a follow-up study, this time comparing CCa among multiple SSL speech models. They again test CCA similarity for local, mel-spectrogram, phone (CCA-phone) and word features (CCA-word). They assess CCA on 4 models trained on contrastive loss: wav2vec 2.0 \cite{wav2vec}, XLSR-53 \cite{XLSR-53}, FaST-VGS5 \cite{fastvgspeng2022}, FaST-VGS+ \cite{peng2022self}. They also assess CCA for 3 model trained with comparative loss: HuBERT \cite{hsu2021hubert}, WavLM \cite{chen2022wavlm}, AV-HuBERT\cite{shi2022learning}. They find that all of the contrastive loss models show the same auto-encoder style behaviour as seen previously in wav2vec 2.0 \cite{pasad2021layer}. The CNN feature encoders also show high similarity to mel-spectrogram features in contrastive models. However, the comparative loss does not show these same behaviours. Instead, CCA-phone and CCA-word both keep increasing towards the deepest layers.
+
+They also test how CCA scores relate to performance in downstream tasks. They test whether CCA-phone or CCA-word scores relate to Phoneme Recognition (PR) and ASR tasks. They extract features from each layer of the context networks and train SuPERB models \cite{yang2021superb} for PR and ASR tasks. They find that for contrastive loss SSL models, CCA-phone correlates to both high PER and WER for the ASR task. CCA-word also correlates, but to a lesser extent. This is likely due to contrastive loss not containing a semantic objective. The layers with the highest CCA-phone are the middle transformer blocks in the context network. These experiments shows that phonetic information learned in pretraining is directly relevant to the finetuning task. It is therefore important to understand how SSL pretraining encodes phonetic features.
+
+%\subsection{Approaches to Model Analysis}
+\iffalse
 \begin{itemize}
-    \item My pruning paper \cite{storeyedbiasSSL}
-    \begin{itemize}
-        \item \hl{Ask Naomi, how to appraoch including my own paper}
-        \item Do I do it here or do I do it in the final section where I outline how the contents of litreview relates to the  thesis?
-    \end{itemize}
     \item Extracted feature comparisons \cite{li2023quantitative}
     \begin{itemize}
         \item dunno how necessary this is to cover, only one small part of the paper is at all relevant
@@ -384,104 +752,194 @@
         \item I may have covered it previously though, or it may just not be that relevant
     \end{itemize}
     \item Other different approaches? Pasad has basically become the baseline though, so this may not be necessary
+    \item \colorbox{yellow}{\textcolor{red}{Medium difficulty to write}}
+    \item \hl{I could also put codebook analysis papers here }
+    \item These papers analyse the codebook entries and how that makes the model skewed towards certain domains \cite{wang2025normalization, linke2023self, lee2024balanced}
 \end{itemize}
+\fi
 
-\subsection{Phoneme Recognition and The Montreal Forced Aligner}
+
+\subsection{Probing Transformers for Phonetic Features}
+%The findings of Pasad et al. \cite{pasad2021layer} show that there is a significant difference in how self-supervised and supervised speech models learn. With the success of SSL models in speech, understanding exactly how they learned became increasingly important.\thoughts{This intro needs to be rewritten} 
+
+%\hl{The into sentence should be something about how pasad didn't find go as deep as articulations}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{2_chapter2/images/layer_probing/probe_graphs_single_page_cropped.pdf}
+    \caption{Left: average phoneme accuracy for each layer of wav2vec 2.0 pretrained on LibriSpeech. Middle: average accuracy for each manner of articulation class. Right: average accuracy for each place of articulation class. Adapted from: (English et al. 2022)}
+    \label{lr_fig:layer_probing}
+\end{figure}
+
+With the findings of Pasad et al. \cite{pasad2021layer} we see that pretraining effectively encodes phoneme information. The next step, therefore, is to understand if SSL ASR learns further abstracted speech units, such as articulations.
+
+In 2022, English et al. \cite{english2022domain} collected phoneme accuracy data by training Multi-Layer Perceptron (MLP) probes for phoneme recognition. Each MLP consists of a single linear layer of input size 768, an output of 200, a ReLU activation function and a final layer with an output dimension of 1. They use the TIMIT dataset, which has time aligned, hand annotated phoneme intervals, to train the probes. Latent phoneme representations are collected from each layer of the wav2vec 2.0 encoder for each window of audio in the TIMIT utterances. For each annotated phoneme, the first and final third of the representations are discarded in order to control for coarticulation. A dataset of each of these phoneme realisations is collected and each probe is then trained for a single task.
+
+
+First, they recreate the "auto-encoder style" behaviour when measuring the average accuracy across all phonemes at all layers. For the manner and place of articulation, they find that layer 7, the 7th transformer block of the context network, has robust results. Both of these results line up with the findings of Pasad et al. \cite{pasad2021layer}. When measuring Manner of Articulation (MoA) they find that accuracy varies across classes. Vowels and fricatives have the highest average for MoA classes across all layers. Alveolar then has the highest average accuracy for Place of Articulation (PoA) classes. Although, all classes have the highest accuracy at layer 7. They then generate confusion matrices and plot both heatmaps and dendrograms to measure phoneme similarity. They find that the phoneme representations at layers 0, 7 and 12 show most similarity to similar phonemes, such as those that share the same MoA class. This similarity is most clear at layer 7.
+
+%\hl{This is probably enough for this paper, I need to figure out whether I do his other papers here or pasad's other paper. Also, do I need a figure?}
+
+English et al. \cite{english2023discovering} later published follow-up studies that studied how phonetic features (such as voicing, frication and nasal) are encoded in wav2vec 2.0 \cite{wav2vec}. They again probe the model and measure TIMIT phoneme accuracies. They show that frication is well encoded across shallow and middle layers, with a drop in accuracy towards deep layers. Voicing is better encoded in the middle layers, with the highest accuracy at layer 8. Finally, Nasals have consistently high accuracy across all layers. 
+
+Separately from this work, Bosch et al. \cite{ten2023phonemic} also probed wav2vec 2.0 for phonetic features and feature relationships. They found that, generally, probes were an effective approach to analysing SSL models, achieving high accuracy across layers. When analysing phonetic features and phoneme labels, they found that the middle layers identified individual phonemes clearly. Shallow layers were less able to distinguish between individual phonemes, but could recognise broad phonetic classes (BPCs). BPCs included: plosives, nasals, approximants, fricatives, high vowels, mid vowels, and low vowels. Shallow layers often mislabelled individual phonemes, but were able to distinguish well between BPCs.
+
+%Overall, these findings show that SSL models learn broad phonetic features as well as specific phoneme realisations. Building on the findings of Pasad et al. \cite{pasad2021layer}, these studies have shown that SSL loss functions teach their models to categorise phoneme realisations into clear phoneme categories. Both comparative loss assigns k-means units to broad phonetic features and creates clusters that represent phonemes.  contrastive loss assigns  
+
+
+
+%\hl{There are multiple 2022-2024 papers cormac cites that might be relevent to me, I should read them.}
+
+%\hl{There are also a lot of good pre-2020 pre-SSL layer analysis references in many of these papers.}
+
+%\subsection{SSL Loss}
+
+
+
+%The comparative models have the highest CCA-phone and CCA-word in the final transformer blocks in the encoder. The highest performing layers are the deep layers, 8-11 for HuBERT, for PR and ASR are never the deepest final layer, 12. This is despite the final layer having the highest CCA-phone score. So the information learned between contrastive and comparative SSL loss functions appears to differ.
+
+
+\subsection{Phonetic Features in SSL}
+\iffalse
 \begin{itemize}
-    \item Phoneme recognition for older models and MFA \cite{mcauliffe2017montreal}
-    \item I can mention phoneme annotated data like TIMIT \cite{timit} and the lack of phoneme data available before MFA
-    \item not sure exactly where to fit this in, it could equally go after Pasad and maybe even after Cormac's probing stuff since they only use TIMIT. Come back to this later.
+    \item Ask the question: What amount of detail are transformers learning and why?
+    \item Start with Dan's HuBERT MoA stuff
+    \item Briefly cover cormac's MoA stuff and then include the co-occurrence and coarticulation stuff. That way we have pointed out the level of detail they have learned. This could also go above Dan's stuff actually.
+    \item With dan's stuff we have covered the level of detail in the HUBERT loss function so we want to analyse how contrastive loss may be biasing wav2vec 2.0
+    \item Do we want to callback to the previous section here or do we want to move it entirely?
+    \item The paper on codebook representations would go here.
+    \item We then need a more opinion-based discussion on what this means and why these things need to be analysed. 
+    \item Such as why does XLSR have less pure entries?
+    \item Are the entries multi or monolingual
+    \item Dan hints at different accents having an effect on units, but doesn't go into detail. Multilingual is noted as a future work project.
+    \item Although broad features are learned, are they effectively shared and if so/if not why?
+    \item How does the data source affect this?
+    \item Possibly this discussion would require it's own short section and/or written after everything else.
 \end{itemize}
+\fi
 
-\subsection{Layer-wise Analysis of wav2vec 2.0}
-\begin{itemize}
-    \item This paper deserves a decent amount of attention
-    \item Layer-wise analysis of wav2vec 2.0 \cite{pasad2021layer}
-    \begin{itemize}
-        \item This paper covers some linguistic concepts such as phonemes, articulation and mel-spectrograms
-        \item Do I discuss the linguistics here or in the spectrogram HMM section?
-    \end{itemize}
-    \item This paper sets up the idea that each layer does something different
-    \item It also covers the fact that there is no semantic or word identity knowledge learned in pretraining
-    \item It covers how the CNN feature extractor essentially learned to independently produce mel-spectrograms without being trained on them.
-    \item It covers a lot of essential stuff basically
-    %\item \hl{we need to cover some basic linguistics at least possibly it could be here, it certainly needs to be before the probing section}
-\end{itemize}
 
+%\hl{Need to connect these}
+
+In 2022, Wells et al. \cite{wells2022phonetic} analysed HuBERT transformer blocks and how they related to MoA classes. They create k-means clusters derived from the outputs of layer 6 of the transformer encoder. The outputs are extracted from the LibriSpeech 100 hour clean subset \cite{librilight}. They test 4 k-means models with 50, 100, 250 and 500 units. They test phones for unit purity similar to the experiments in \cite{hsu2021hubert} and extrapolate this to MoA classes. The test phone purity for units with the multi-accented English L1 speech from the VCTK corpus of English speech \cite{yamagishi2019cstr}.
+
+%Wells et al. \cite{wells2022phonetic} find that phone purity is low at a model size of 50. Purity increases as the number of units increases, with the 500 units model having the highest purity. However, unit purity decreases with an increase in model size. These results suggest that as model size increases more units cluster to single phonemes. The number of differently realised phonemes aligned to a cluster, but the units are more likely to represent parts of different phonemes. This aligns with the claims in \cite{hsu2021hubert} that units represent articulations rather than phonemes directly. 
+
+They find that k-means units align to aspiration, closure and release bursts, among other articulations. Monophthong vowels, vowels consisting of a single phoneme, are relatively low in purity, meaning each phoneme often shares many units. However, the phonemes that share these units are closely related, either similar vowels or voiced consonants with the same articulations. Both the manner and place of articulation across vowels are generally well represented by the clusters. Diphthongs are a single vowel sound created by gliding between the articulations of two separate vowels \cite{ipahandbook_1999}. They find that units can be assigned to specific diphthongs and even represent the gliding coarticulation. These findings show that contrastive SSL loss can also embed clear phonetic features. In 2023, Sicherman et al. \cite{sicherman2023analysingdiscrete} confirm many of the findings from Wells et al. \cite{wells2022phonetic} with their visualisation of k-means units. They collect representations from HuBERT \cite{hsu2021hubert} and train k-means on the LibriSpeech test100-clean subset \cite{librispeech}. When visualising unit clusters, they find that units associated with the same articulations cluster together. 
+
+English et al. \cite{english2023discovering} also study the co-occurrence of phonetic features. Exclusive features that can not co-occur, such as articulations, are often considered mutually exclusive by wav2vec 2.0. However, features such as frication and voicing often co-occur. Voicing is not mutually exclusive with any articulation, and wav2vec 2.0 seems to have learned this. Feature co-occurances are shown in their later paper \cite{english2024searching} to follow similar patterns to phonemeic associations found in linguistics studies \cite{sagey1986representation}. These associations were found in wav2vec 2.0 by probing layer 9 of the context network. In their final paper on probing wav2vec 2.0 \cite{wav2vec}, English et al. \cite{english2024following} also show that wav2vec 2.0 can accurately detect coarticulation between phonemes. 
+
+\subsection{Phonetic Features in the Quantizer}\label{lr_subsec:analysis_quantizer}
+From the wav2vec 2.0 appendix \cite{wav2vec}, we know that many of the codebook entries in the quantizer correlated to specific phonemes. This suggests that the wav2vec 2.0 quantizer also converges towards specific phonetic features. In 2023, Abdullah et al. \cite{abdullah2023information} analysed wav2vec 2.0 and XLSR-53 codebook entries for phoneme entropy. They ran the quantizers for each model on TIMIT data \cite{timit} to assess how many entries were activated across every phoneme in the dataset. If a phoneme activated a large number of entries across multiple realisations, it could be considered to have high entropy. They find that phonemes are more entropic in wav2vec 2.0 than XLSR-53. For wav2vec 2.0, 56.6\% of the entries had a non-zero count for phoneme activations, compared to just 24.2\% of XLSR-53 entries. 
+
+They also find that no phoneme is minimally entropic, they do not activate only a single entry in either model. They then find that vowels are more entropic than consonants. Nasals, approximants and fricatives are the most entropic consonants. Within this finding, voiced fricatives are more entropic than voiceless fricatives. Affricates are found to be the least entropic category. Finally, they perform hierarchical clustering on quantized representations for each phoneme. They find for both models, most phoneme categories cluster towards other phonemes in their MoA class. Approximant and nasals form the closest clusters to vowels. This suggests that vowels share much of their latent space both within the class and between other, similar, MoA classes.
+
+\begin{figure}%[H]
+    \centering
+    \includegraphics[width=\linewidth]{2_chapter2/images/model_analysis/quantizer_analysis/cross-lingual-xlsr-53_quantizer_cluster_graph.pdf}
+    \caption{Similarity clusters for languages in multiple XLSR Models for codebook entry activations in the quantizer. The CV-12 model is XLSR pretrained on 12 models from Common Voice, CV-12 model+ zh-HK is the same dataset with Hong Kong cantonese included in pretraining. BABEL-17 is pretrained on 17 BABEL languages. Adapted from: (Conneau et al. 2020)}
+    \label{lr_fig:xlsr_53_multilingual_quantizer}
+\end{figure}
+
+These results are revealing when assessing the information the wav2vec 2.0 framework learns during pretraining. However, some information is still missing. It is notable that XLSR-53 has lower overall entropy than wav2vec 2.0, and that the TIMIT dataset only contains English realisations of each phoneme. In the original XLSR-53 paper \cite{XLSR-53}, it was found that the frequency distributions for selected entries could be language-specific, as seen in Figure~\ref{lr_fig:xlsr_53_multilingual_quantizer}. These distributions correlated with language families, with little overlap between unrelated languages. This could explain the low entropy for XLSR-53 on TIMIT phonemes. It is possible that multiple entries are being used for the same phonetic feature realised in different languages. In this case, testing with monolingual data might produce a low entropy score. If true, low cross-lingual entropy might contribute to the increase in downstream error shown on individual languages for multilingual models. 
+
+However, so far, no study has provided definitive evidence for this hypothesis. There has been no study on a multilingual quantizer that proves that entries are not shared. Neither has there been a definitive study on how well multilingual SSL ASR models learn multilingual phonemes or phonetic features. There has also been little work on quantifying how language balance in multilingual pretraining impacts overall performance. For the remainder of this thesis, we explore how multilingual SSL ASR models learn. We assess what information they have retained after pretraining and how it affects downstream performance. To achieve this, we use LTH and layer probing to analyse weight distributions and hidden states. We asses models such as wav2vec 2.0, XLSR-53 and XLS-R. We then use our findings to suggest how multilingual SSL ASR can be improved in the future.
+
+
+%As of the publication of this thesis, there have been no explicit studies on multilingual phonemes and their correlation to codebook entries. Abdullah et al. \cite{abdullah2023nature} published two studies that examined XLS-R embeddings for an LID task. They found that when probing the pretrained XLSR-53 model for LIDs, the model performed poorly. This may suggest that language-specific information may not be encoded in the pretrained-only model. These results were supported in a later study \cite{abdullah2024wave} where the same team compared results between the pretraiend an finetuned XLS-R. They found that when XLS-R was finetuned for an LID task, the final layer had clear, distinct clusters of latent speech representations. Each language in the finetuning data had a separate cluster and related languages clustered closer together than unrelated languages. \thoughts{I need to go through that second paper in more detail.}
+
+%While these findings are certainly interesting, they do not definitively answer the question of how wav2vec 2.0 models learn multilingual phonetic features. The aim of XLSR is to learn cross-lingual representations in a shared latent space. So, showing that their representations poorly predict LIDs seems to support success in this aim. However, it also appears to contradict the findings in \cite{XLSR-53} on language representation in the XLSR-53 codebook entries. The contrastive loss function appears to be learning representations in latent space shared by, at most, related languages, but not unrelated languages. The latent space also has low entropy for at least English phonemes. It also contradicts the consistent finding that multilingual pretraining results in higher error on high-resource languages, when compared to monolingual pretraining \cite{all the previous citations}. 
+
+%As of writing this thesis, no satisfactory explanation in the architecture of wav2vec 2.0 family has been given for these results. More research is necessary to understand how the XLSR quantizer learns speech representations. Additionally, no research has truly quantified how the balance of data in XLSR-53 or XLS-R affects their downstream performance. Would LIDs be clearer if the data had been more balanced between languages? Does entropy increase or decrease for a language depending on the balance of languages in pretraining? Which pretraining language has the most impact on pretraining and why? Are any of these things important to the finetuned performance of a wav2vec 2.0 model?\thoughts{This paragraph definietly needs a rethink!!}
+
+%\hl{Do I want to end this here or add something about the adaptability of SSL models?}
+
+%\hl{So after here we can have the quantizer analysis papers}
+
+
+%\hl{iffalsed section here, removed but some relevant ideas}
+\iffalse
 \subsection{Model Analysis}
 \begin{itemize}
     %\item My pruning paper \cite{storeyedbiasSSL}
     %\begin{itemize}
     %    \item \hl{Ask Naomi, how to appraoch explaining my own paper}
     %\end{itemize}
+    \item \colorbox{green}{\textcolor{red}{Easy to write}}
+    \item \colorbox{purple}{\textcolor{white}{In Chapter 5 Background}}
+    \item \hl{Although, it would be good to go into more depth on cormasc's other papers}
     \item Probing as a concept \cite{immer2021probing, schneiderleveraging}
     \item Cormac's probing papers \cite{english2022domain, plusothers}
     \item overall accuracy at each layer
     \item Manner of articulation accuracy
     \item Results and theories on how SSL ASR models learn speech
 \end{itemize}
+\fi
 
-\subsection{Open Questions}
-\begin{itemize}
-    \item Maybe this can go in the next section
-    \item What information is currently missing from the literature
-    \item Bring together everything we know about SSL ASR and everything we don't know about multilingual SSL ASR.
-    \item \textbf{Now we have all of the information we need, we can set up the Thesis}
-\end{itemize}
+%\section{Research Questions}
 
-\hl{A few different options for how to end}
-\begin{itemize}
-    \item I could hasve a section with the research questions
-    \item However, I should have already asked them throughout the LR
-    \item Either explicitly and I'm just restating them here or implicitly and clearly
-    \item 
-\end{itemize}
+%\newpage
+\section{Datsets and Models}\label{lr_sec:datasets_models}
+Here we outline all of the datasets and models that we use in the experiments in this chapter. 
 
+\begin{table}[h]
+\centering
+\begin{tabular}{l|lllll}
+\hline
+\textbf{Models}           & \textbf{Task} & \textbf{Parameters} & \textbf{Loss Function} & \textbf{GPUS} \\ \hline
+\textbf{wav2vec 2.0 base} & Pretraining   & 90M                 & Contrasitive           & 1 x  RTX A6000      \\
+\textbf{wav2vec 2.0 base} & Finetuning    & 90M                 & CTC                    & 1 x  RTX A6000      \\
+\textbf{XLS-R base}       & Finetuning    & 300M                & CTC                    & 8 x  GeForce 2080ti \\ \hline
+\end{tabular}
+\caption{Each model used in this thesis, with the task, number of parameters, loss function and GPUs used for each task.}
+\label{lr_tab:models_in_experiments}
+\end{table}
 
-\section{Review and Relevance to this Thesis}
-\begin{itemize}
- \item This section will outline the relevance of everything in the LR to our work
-    \item Give a summary of the open areas of SSL ASR research based on everything said so far
-    %\begin{itemize}
-    %   \item Do I need to put explicit research questions here? Mark, Ayushi and George haven't
-    %\end{itemize}
-    \item \textbf{Cover the questions answered in chapter 3 [SLT Paper]}
-    \item Matched and related languages are more efficient for SSL ASR accuracy and parameter counts
-    \item So, how do multilingual models learn multiple languages and how shared are the features they learn really?
-    \item How do they apply this knowledge when finetuned?
-    \item Are language-specific features learned and are they leveraged in finetuning?
-    \item Let's use OMP structured pruning to find out.
-    
-    %\item Now we know that they do not transfer from matched or related language weights for XLS-R how are they learning multilingual features?
-    \item \textbf{After our pruning experiments we want to asses multilingual SSL ASR further, Specifically:}
-    \item How would XLS-R behave in a situation controlled for the ratio of languages in pretraining and the model size?
-    \item We know that pretraining data affects finetuned results, but pretraining only learns abstracted speech features and not, semantic knowledge \cite{pasad2021layer}.
-    %\item How shared really are the cross-lingual features it learns?
-    \item So we now need to evaluate the pretrained model for phoneme and articulation accuracy and understand how multilingual data affects both of these.
-    \item We can do this by probing layer 7 of the encoder \cite{english2022domain}
-    \item \textbf{Cover the questions that will be answered in Chapter 4 [Probing analysis (previously Chapter 5)]}
-    \item So, how abstracted from speech are the features learned during SSL and how does the language they are spoken in affect this?
-    %\begin{itemize}
-    %    \item i.e. if the model learns shared cross-lingual articulations just not words can we design
-    %\end{itemize}
-    \item What are the main contributors to high multilingual SSL ASR accuracy?
-    \begin{itemize}
-        %\item Pretraining to finetuning language relationships?
-        \item Size of the model?
-        \item Quantity of data overall?
-        \item Quantity of matched-language data?
-        \item Quantity of related-language data?
-        \item Quantity of relevant phonemes or relevant articulations?
-    \end{itemize}
-    \item How can our findings be leveraged to improve multilingual SSL ASR performance?
-    %\item if it is quantity of relevant phonemes and articulation, matched and related language pretraining is explained with some new insights and potential new approaches.
-    %\item If it is the quantity of data size or matched language, then multilingual pretraining is a provably inefficient approach
-    
-    \item Then either end here or have a very brief conclusion.
-    %\item Then give brief overview of each of the chapters and the connections to the LR
-\end{itemize}
+Table~\ref{lr_tab:models_in_experiments} shows each model used in the experiments throughout this thesis. It describes the tasks the model performs, either pretraining or fine-tuning. The loss functions used, contrastive or CTC and the number and models of GPUs used. For XLS-R the model is finetuned from a pretrained state for experiments in Chapter~\ref{chapter4}. We use the 0.3B parameter model with the pretrained checkpoint taken from HuggingFace\footnote{\hyperlink{https://huggingface.co/facebook/wav2vec2-xls-r-300m}{huggingface.co/facebook/wav2vec2-xls-r-300m}}. For pretraining wav2vec 2.0 models, we pretrain from scratch using the fairseq pretraining library\footnote{\href{https://github.com/dqxiu/fairseq-sh/blob/main/examples/wav2vec/README.md}{github.com/dqxiu/fairseq-sh/blob/main/examples/wav2vec/README.md}}. When fine-tuning wav2vec 2.0 we fine-tune from our own pretrained models. 
 
-\hl{Do I need a separate section for datasets and/or models used in these experiments? We will have covered all of them elsewhere in the LR. I could bullet point all of the most relevant ones for clarity though.}\naominote{Yes essentially, and I could have a table with the important information for each dataset.}
+\begin{table}[h]
+\centering
+\begin{tabular}{l|ll|llll}
+\hline
+ & & &  & \textbf{Hours} &   \\ 
+\textbf{Dataset}        & \textbf{Language} & \textbf{Region} & \textbf{Train} &  \textbf{Val}   &  \textbf{test}  \\ \hline
+\textbf{LibriSpeech} \cite{librispeech} & English & USA & 960  &  5 & 5 \\
+\textbf{MLS Spanish} \cite{MLS} & Spanish & Spain & 920 &  10 & 10 \\
+\textbf{LibriSpeech Probing} \cite{librispeech} & English & USA & 10 & 10 & -  \\
+\textbf{MLS Spanish Probing} \cite{MLS} & Spanish & Spain & 10 & 10 & -  \\
+\textbf{MLS French Probing} \cite{MLS} & French & France & 10 & 10 & - \\
+\textbf{MLS Polish Probing} \cite{MLS} & Polish & Poland & 10 & 10 & - \\
+\textbf{FLEURs} \cite{FLEURS} & 102 languages & - & 10   & 1 & 1 \\ \hline
+\end{tabular}
+\caption{Each dataset used in this thesis, the number of training, test and validation hours as well as the languages and regions included.}
+\label{lr_tab:datasets_in_experiments}
+\end{table}
+
+Table~\ref{lr_tab:datasets_in_experiments} shows each of the datasets that we use throughout our experiments. We provide the language spoken in each dataset and the region the speakers are from. This is except for FLEURs, from which we use too many of the languages to list in total. A full list of the languages in FLEURs can be found on HuggingFace\footnote{\hyperlink{https://huggingface.co/datasets/google/fleurs}{huggingface.co/datasets/google/fleurs}}. We then list the number of hours from each dataset that we use in our experiments. The 10 hour subsets of LibriSpeech and MLS Spanish \cite{librispeech, MLS} are subsets we have created and are explained in detail in Chapter~\ref{chapter5}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|lllll}
+\hline
+\textbf{Task}        &  \textbf{Model} &   \textbf{Dataset}                     \\ \hline
+\textbf{Pretraining} & wav2vec 2.0 base & MLS Spanish 920h         \\
+\textbf{Pretraining} & wav2vec 2.0 base & MLS Spanish 920h         \\
+\textbf{Fine-Tuning} & wav2vec 2.0 base & LibriSpeech 10h \\
+\textbf{Fine-Tuning} & wav2vec 2.0 base & MLS Spanish 10h  \\
+\textbf{Fine-Tuning} & wav2vec 2.0 base & FLEURs 10h  \\
+\textbf{Fine-Tuning} & XLS-R base       & FLEURs mutliple languages 10h   \\ 
+\textbf{MLP Training} & MLP & LibriSpeech 10h  \\
+\textbf{MLP Training} & MLP & MLS Spanish 10h  \\ 
+\textbf{MLP Training} & MLP & MLS French 10h  \\
+\textbf{MLP Training} & MLP & MLS Polish 10h  \\ \hline
+\end{tabular}
+\caption{The tasks and which models and datasets they were performed on.}
+\label{lr_tab:models_datasets_training}
+\end{table}
+
+Finally, in Table~\ref{lr_tab:models_datasets_training}, we list each task performed, either fine-tuning or pretraining. We then list which models and datasets are used for each task across out experiments. MLP training here refers to Multi-Layer Perceptron probes that are trained on the outputs of the transformer blocks from our pretrained wav2vec 2.0 models. The layer outputs are collected by running the models on the data listed.
+
 
 \iffalse
 \section{Research Questions}
@@ -511,68 +969,12 @@
 \end{itemize}
 \fi
 
-\section{Conclusion}
-\begin{itemize}
-    \item Short conclusion, no more than 1 page, could even merge with the previous section
+%\section{Conclusion}
+%\begin{itemize}
+%    \item Short conclusion, no more than 1 page, could even merge with the previous section
     
-\end{itemize}
-
-\iffalse
-\section{Speech Technology and Automatic Speech Recognition}
-%\label{chapter2:Speech_technology_and_automatic_speech_recognition}
+%\end{itemize}
 
 
-\subsection{Speech Representations}
-%\label{chapter2:limitations_of_conventional_approaches}
-% FFT, Spectrogram, Mel-Cepstrum-Coefficients (and then CNN feature extraction?)
 
-\subsection{Deep Neural Nets}
-
-\subsection{Feature Extraction Via CNNs}
-%First feature extractors, RESNET etc.
-
-\subsection{DNNs in ASR}
-%First uses of DNNs for ASR
-
-\subsection{CNNs in Speech}
-
-\section{Language models}
-%\label{chapter2:perceptual_criteria_vqa}
-
-\subsection{Classic Language Modelling}
-\label{ssec:vmaf_non_differentiable}
-%Beam search
-
-\subsection{Transformers} 
-%Deep learning
-%LSTM and Transformers
-
-\section{Self-supervised learning}
-\label{litreview:nn_artifact}
-
-\subsection{Large-Scale ASR Training}
-
-%\subsection{Neural based Approaches for Artifact Suppression}
-
-\section{Data Bias in Speech}
-
-\subsection{Low-resource and Zero-shot Learning}
-
-\subsection{Dominance of English Data in Speech}
-
-\section{Model Evaluation}
-%\label{chapter2:training_NN_percept_crit}
-
-\subsection{Evaluation Through Inference}
-
-\subsection{Evaluation Through Weight Activation}
-
-\subsection{Evaluation Through Model Compression}
-
-\section{Open Questions}
-
-\section{Datasets}
-
-\section{Conclusion}
-\fi
-% Put actual numbers in papers 
+\nomenclature[Z]{CCA}{Canonical Correlation Analysis}

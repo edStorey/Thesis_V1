@@ -69,12 +69,17 @@
 }
 
 %%% RNN-T models foundation paper
+
+
 @article{graves2012rnnt,
   title={Sequence transduction with recurrent neural networks},
   author={Graves, Alex},
-  journal={arXiv preprint arXiv:1211.3711},
+  journal={Representation Learning Worksop, ICML},
   year={2012}
 }
+
+Graves, A.: Sequence transduction with recurrent neural networks,
+in Representation Learning Worksop, ICML, 2012.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -214,13 +219,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%% This is the arXiv citation, it can be cited from In International Conference on Learning Representation, pages 1–13, 2022. (found in https://arxiv.org/pdf/2402.04009.pdf) but most people seem to just use the arXiv paper
-@misc{hu2021lora,
-      title={LoRA: Low-Rank Adaptation of Large Language Models}, 
-      author={Edward J. Hu and Yelong Shen and Phillip Wallis and Zeyuan Allen-Zhu and Yuanzhi Li and Shean Wang and Lu Wang and Weizhu Chen},
-      year={2021},
-      eprint={2106.09685},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+
+@inproceedings{
+hu2021lora,
+title={Lo{RA}: Low-Rank Adaptation of Large Language Models},
+author={Edward J Hu and yelong shen and Phillip Wallis and Zeyuan Allen-Zhu and Yuanzhi Li and Shean Wang and Lu Wang and Weizhu Chen},
+booktitle={International Conference on Learning Representations},
+year={2022},
 }
 
 %% Model Distillation
@@ -286,8 +291,8 @@ year={2019},
 %%%% Language Adaptive Cross-Lingual Speech Representation Learning with Sparse Sharing Sub-Networks
 @INPROCEEDINGS{Lu_Language_adap_xlsr,
   author={Lu, Yizhou and Huang, Mingkun and Qu, Xinghua and Wei, Pengfei and Ma, Zejun},
-  booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
   title={Language Adaptive Cross-Lingual Speech Representation Learning with Sparse Sharing Sub-Networks}, 
+  booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
   year={2022},
   pages={6882-6886},
 }
@@ -400,7 +405,6 @@ title={Rethinking the Value of Network Pruning},
 author={Zhuang Liu and Mingjie Sun and Tinghui Zhou and Gao Huang and Trevor Darrell},
 booktitle={International Conference on Learning Representations},
 year={2019},
-url={https://openreview.net/forum?id=rJlnB3C5Ym},
 }
 
 
@@ -433,11 +437,14 @@ url={https://openreview.net/forum?id=rJlnB3C5Ym},
 }
 
 %%%% Meta paper on layer pruning
-@article{gromov2024unreasonable,
-  title={The unreasonable ineffectiveness of the deeper layers},
-  author={Gromov, Andrey and Tirumala, Kushal and Shapourian, Hassan and Glorioso, Paolo and Roberts, Daniel A},
-  journal={arXiv preprint arXiv:2403.17887},
-  year={2024}
+@inproceedings{gromov2024unreasonable,
+ author = {Gromov, Andrey and Tirumala, Kushal and Shapourian, Hassan and Glorioso, Paolo and Roberts, Daniel A.},
+ booktitle = {International Conference on Learning Representations},
+ editor = {Y. Yue and A. Garg and N. Peng and F. Sha and R. Yu},
+ pages = {81906--81920},
+ title = {The Unreasonable Ineffectiveness of the Deeper Layers},
+ volume = {2025},
+ year = {2025}
 }
 
 %%% Early paper on stuctured pruning
@@ -447,7 +454,6 @@ title={Pruning Filters for Efficient ConvNets},
 author={Hao Li and Asim Kadav and Igor Durdanovic and Hanan Samet and Hans Peter Graf},
 booktitle={International Conference on Learning Representations},
 year={2017},
-url={https://openreview.net/forum?id=rJqFGTslg}
 }
 
 %%% Finding subnetworks before training begines
@@ -457,7 +463,6 @@ title={Drawing Early-Bird Tickets: Toward More Efficient Training of Deep Networ
 author={Haoran You and Chaojian Li and Pengfei Xu and Yonggan Fu and Yue Wang and Xiaohan Chen and Richard G. Baraniuk and Zhangyang Wang and Yingyan Lin},
 booktitle={International Conference on Learning Representations},
 year={2020},
-url={https://openreview.net/forum?id=BJxsrgStvr}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

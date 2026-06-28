@@ -83,6 +83,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
+%% Custom enumeration
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+
 %% Bibliographical stuff
 %\usepackage[round,sort,comma,numbers]{natbib}
 %above commented out by HS to get [X] references instead of (X)
@@ -123,6 +127,7 @@
 \newcommandx{\delphinenote}[2][1=]{\todo[linecolor=red,backgroundcolor=Plum!25,bordercolor=red,#1]{#2}}
 \newcommandx{\perplexnote}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=gray!40,bordercolor=OliveGreen,#1]{#2}}
 \newcommandx{\summary}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=green!60,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\unexplained}[2][1=]{\todo[linecolor=yellow,backgroundcolor=Plum!25,bordercolor=yellow,#1]{#2}}
 
 \usepackage{soul}
 
@@ -181,6 +186,8 @@
 {\normalfont\huge\bfseries}{\thechapter}{1cm}{} 
 \usepackage{amsmath}
 
+
+\usepackage{wrapfig}
 % BEGIN: For IPA support
 % Comment out serif override just for IPA if needed
 % \renewcommand{\familydefault}{\sfdefault}
@@ -212,10 +219,28 @@ I have also completed the Online Tutorial on avoiding plagiarism `Ready Steady W
 Signed:~\rule{5cm}{0.3pt}\hfill Date:~\rule{5cm}{0.3pt}
 
 \chapter*{Abstract}
-A short summary of the problem investigated, the approach taken and the key findings. This should not be more that around 400 words.
+%A short summary of the problem investigated, the approach taken and the key findings. This should not be more than around 400 words. They must be on a separate page.
+
+In recent years, Automatic Speech Recognition (ASR) has vastly improved with the introduction of transformers and Self-supervised Learning (SSL). SSL models do the bulk of language learning in pretraining on large unlabelled datasets. These pretrained models can be fine-tuned to smaller datasets, producing impressive accuracy with minimal compute power. Early SSL models were pretrained on data from a single language, monolingual pretraining. However, it was found that if the fine-tuning language did not match the pretraining language, fine-tuned accuracy would decrease. 
+
+To improve cross-lingual accuracy, SSL ASR models can be pretrained on multiple languages, multilingual pretraining. Pretraining on multilingual data improves downstream accuracy for mismatched and low-resource languages. However, multilingual pretraining has a trade-off. The more languages added to the pretraining data, the worse the fine-tuned accuracy becomes for a single language. 
 
 
-The must be on a separate page.
+%%%% Alterantive pargraph
+This trade-off between multilingual pretraining and monolingual downstream accuracy can be offset by increasing the model size. However, increasing the model size increases the compute power required to train the model. Increasing computational costs disproportionately impact low-resource languages, for which multilingual models have the most positive effect on accuracy. Therefore, this thesis seeks to understand multilingual SSL ASR models to guide effective pretraining strategies.
+
+We first examine how the large open-source multilingual model XLS-R stores language information. We analyse XLS-R weight distributions by identifying language-specific subnetworks through the use of the Lottery Ticket Hypothesis (LTH). We first fine-tune XLS-R to a single language and then apply unstructured pruning to find the language-specific subnetwork. We prune to increasing proportions of the model weights, in steps of 10\%, to identify the optimal network sparsity. We then repeat this process across multiple languages. We fine-tune each subnetwork to multiple languages and measure the Character Error Rate (CER). We find that XLS-R can have 50\% of its weights pruned with no increase in the CER. It can be further pruned to 70\% with only a minimal increase in CER. These findings applied to all languages tested.
+
+We then show that the English language-specific subnetwork always produces the lowest CER when compared to subnetworks for other languages. English is the language that contains the most hours in pretraining. We therefore hypothesise that XLS-R dedicates more of its weights to English speech information than the other languages in its pretraining data. We prove this by showing that when fine-tuned to languages related to Spanish, the English language-specific subnetwork produces lower CER than the Spanish subnetwork. We also analyse the Intersection Over Union (IOU) between language-specific subnetworks. We find that the English language-specific subnetwork has the highest IOU between it and the pretrained model. We also find that the English subnetwork has a higher IOU with languages related to Spanish than the Spanish subnetwork. %This shows that XLS-R does not use information learned from related languages when performing monolingual fine-tuning. 
+
+
+To further understand how this imbalance in pretraining hours affects multilingual pretraining, we next pretrain 7 of our own multilingual SSL ASR models. Of these models, 1 is a monolingual English model and 1 is a monolingual Spanish model. The  5 remaining models contain various ratios of these 2 languages. SSL pretraining only teaches phonetic features to the model, whereas semantic learning is done during fine-tuning. To test multilingual language learning, we therefore train Multi Layer Perceptrons (MLPs) on XLS-R layer outputs to probe for phoneme accuracy. 
+
+We collect phoneme accuracy data from 4 languages: English, Spanish, French and Polish. We first test matched-language phonemes for the English and Spanish pretraining languages. We find that phoneme accuracy increases proportionally to the amount of matched language data in pretraining. We also find that for languages unseen in pretraining, French and Polish, phoneme exposure contributes to phoneme accuracy. If a phoneme is present in the pretraining data, the average accuracy for that phoneme will be higher even when spoken in an unseen, mismatched language. 
+
+We further investigate phonetic features by grouping our phonemes into Manner of Articulation (MoA) classes. We find that MoA accuracy can also increase as the amount of matched-language data in pretraining is increased. However, how much it increases depends on the MoA class and the language it is spoken in. Class exposure in pretraining can also increase individual phoneme accuracy, even for unseen languages. However, the impact of this effect is also dependent on the MoA class. 
+
+Finally, we suggest future work that our contributions could be applied to. We suggest multiple research directions that our contributions could be applied to in order to improve current multilingual pretraining approaches. Overall, we hope that these contributions can lead to high accuracy, low computation, multilingual SSL ASR.
 
 \newpage
 \onehalfspacing\raggedright %\raggedright turns off justification and hypenation
@@ -223,9 +248,120 @@ The must be on a separate page.
 
 
 \section*{\Huge{Acknowledgements}}
-Thanks Mum!
+%Thanks Mum!
 
-You should acknowledge any help that you have received (for example from technical staff), or input provided by, for example, a company.
+%You should acknowledge any help that you have received (for example from technical staff), or input provided by, for example, a company.
+\iffalse
+\begin{itemize}
+    \item Naomi
+    \begin{itemize}
+        \item Support
+        \item patience through thick and thin
+        \item allowed me to learn and grow
+        \item That support gave me the space I needed gave me chances other people didn't
+        \item I truly appreciate everything she's done for me
+    \end{itemize}
+    \item Sigmedia
+    \begin{itemize}
+        \item The old guard: DJ, Meegan, Mark, Ayushi, Sam O'C-R, Sam K, Seb, Sophia, Ciaron, Shu Darren, Clement, Vibhoothi, Shashwat, Danilo, Stephen, Arman, Justine?
+        \item the new guard: Zhaofeng, Aris, Vicky, Rishabh, Delphine, Vu, Julien, Conal, Udit, Ilaria and Mel, boldo, Dee
+        \item the academics
+        \item the support staff
+        \item maybe Fionn and disabilities can go here
+    \end{itemize}
+    \item Peter
+    \begin{itemize}
+        \item gave me a chance
+        \ietm taught me a lot
+    \end{itemize}
+    \item Edinburgh
+    \begin{itemize}
+        \item Andres, Catherine, Hoa, Jason, Dan, Johanna, Sarenne
+        \item thanks for the lunch break and teh very publishable ideas!
+        \item I loved being in Edinburgh
+    \end{itemize}
+    \item D-Real
+    \begin{itemize}
+        \item To all and for the funding
+        \item Stephen Specifically, maybe carol too
+        \item a broader mention of everyone I knew from d-real
+    \end{itemize}
+    \item friends
+    \begin{itemize}
+        \item Johanna, Anna-Lisa, Rob and Lauren - All the guiness, all of the pool, all the shared PhD trauma, you guys are great
+        \item Fortismere friends here?
+        \item Shoutout to the York lot?
+    \end{itemize}
+    \item housemates
+    \begin{itemize}
+        \item To all the various housemates
+        \item Particularly Maria and Connor
+    \end{itemize}
+    \item Family
+    \begin{itemize}
+        \item O'Driscolls? Storeys?
+        \item Do I talk here about grandparents? Specifically Nana
+        \item Either here or at the very end I should mention Anette
+    \end{itemize}
+    \item Close Family
+    \item Ellie and Sam
+    \item Mum and Dad
+    \begin{itemize}
+        \item Huge support they have always given me
+        \item Particularly supportive throughout this PhD
+        \item I appreciate everything they do for me and I could not have finished this PhD, or many other things, without them.
+        \item I love you both and thank you.
+    \end{itemize}
+    \item Maybe Nana here?
+    \begin{itemize}
+        \item She went through a lot and did everything for her family
+        \item she became a deputy head mistress because she knew what education meant for someone
+        \item I wish she were here to see me graduate 
+    \end{itemize}
+    \item Something about Auntie Annette
+    \begin{itemize}
+        \item she passed too young and I miss her
+        \item She was always so supportive of everything I did
+        \item always so positive, always excited to ask me about my life, always so proud of me no matter what I was doing.
+        \item She was a great source of support while Nana was ill and after she passed away
+        \item Auntie Annette passed away just before I went to Dublin and I still miss her dearly
+        \item I wish she was here to see me graduate, I will miss her over-excited hug the first time I would have seen her after graduating
+        \item I can't even express how much I miss my auntie
+    \end{itemize}
+\end{itemize}
+\fi
+
+This PhD has been a life-changing experience for me on many levels and I wouldn't have made it this far without the help of a lot of people.
+
+First and foremost I need to thank my supervisor Professor Naomi Harte, who gave me this chance in the first place. Naomi has stuck by me at every point of this PhD, through the lows and the highs. She is a great role model whom I have learned technically, academic and personally.\thoughts{not sure about this line, also I should say something mroe bout naomi's technical knowledge.} She was not afraid to give me the tough truth when I needed to hear it, but was also incredibly supportive when my back was up against the wall. Many people would not have gone as far as Naomi has to support me over the last few years and I will never forget that, thank you.
+
+I must also thank Professor Peter Bell, who was my supervisor during my internship at the University of Edinburgh. Peter agreed to let me visit the informatics department in Edinburgh after I accosted him at Interspeech 2023 asking for help. He was kind and helpful and I learned a lot from his incredible knowledge of ASR. This internship led to my first publication and I will never forget that either. While I won't list them all, everyone I met at Edinburgh was also fantastic. Whether it was the great lunch chats, the weekend rugby or Johanna's great generosity of giving me a bed for my first weeks there. You all made such a difference to my time in Edinburgh, thank you.
+
+This PhD would not have been possible without the lovely colleagues and friends I have met along the way. Professor Anil Kokaram has created a workplace that makes us all want to come in and see our colleagues every day. For that I thank him. I want to thank my Sigmedia PhD and PostDoc peers for making me look forward to work every day. To Sebastien, Mark and Ayushi and DJ who were here when I arrived. To Sophia, Ciaron, Clement, Darren, Viboothi, who started at the same time as me. To Sam O'Connor-Russel, Sam Kotey, Justine, Shashwat, Danilo, Arman, Shu and Meegan, who joined soon after. To Zhaofeng, Julien, Conal, Udit, Boldo, Sigmedia the next generation. To Aris, Vicky, Rishabh, Delphine and Vu, the most recent additions to our speech lab. To Dee, Ilaria, Mel, Stephen, whom I link simply by all being wonderful people. Whether it was what I learned from each of you, how I grew alongside you or whether you simply provided good company to enjoy a beer or a puck about. You have all made a huge impact on my life and my PhD possible, thank you. 
+
+Additionally, to the Academics and Staff of Sigmedia, of whom I have run out of space to name. Every member of this team has been kind and patient, whilst just being excellent at each of their respective jobs. I've worked in many places and really never met a team like you. A special mention to John, who always gives me a good laugh while solving my various printer issues and Michael, who is about to enjoy a very well-deserved retirement. The Broader Trinity staff have also been excellent. Especially Fionn O'Sullivan and Declan Reilly who have been a huge part of getting me to the end, thank you.
+
+Outside of Sigmedia I would like to thank my funding body D-Real and Professor Carol O'Sullivan who heads it. I literally would not have been to do without you. Extra thanks to Stephen Carol who was the administrator for most of my time at D-Real. He always had time to help with any minor or major issue whenever I needed anything. His organisation of writing sessions, writing retreats and various D-Real events made this PhD. More broadly I would like to thank everyone else involved with D-Real, especially the other students who made every D-Real event that much better. Thank you all.
+
+This PhD would not have been possible without the support of my friends. I would like to thank Johanna, Anna-Lisa, Rob and Lauren, who have become lifelong friends. Every pint of Guinness, every game of pool, every brunch and day trip made me so happy, thank you so much. I'll see you all soon. I would also like to mention my friends from back home, in North London. I'm a doctor guys, none of us saw this coming! That bedrock of friendship to come back to has been so important. Wherever I was, whenever it was, you've always been such a source of strength for me and has made this PhD and many other things in my life possible, thank you. To those I met at the University of York, the place that really started this journey, thank you. A special shoutout to my old housemates, Clemmie, Lauren, Jen and Sam as well as their respective partners. As well to the various housemates I've had in Dublin, you've been great. Especially Maria and Connor who always had time for chat at the end of the day.
+
+Briefly I would like to thank my extended family. The Storeys and O'Driscolls are made up of incredible people, who I am incredibly lucky to be related to. Every christmas gathering we do in the O'Driscoll family makes my year. It is difficult to summarise how much the O'Driscoll family means to me but, all of you, in each of your own ways, have provided such support and confort to me over the years, thank you. The Storey family are also incredible, they are inspirational, fun, smart and also supportive and mean the world to me, thank you also. I have far, far, too many family members to list by name unfortunately and it would be unfair to pick out individuals. However, I really believe that I would not be the person I am without all of you. This PhD is, in my eyes, is an achievment of our families and what makes us all special, not just me. So, thank you all, you're incredible. 
+
+To my sister Ellie. Ellie is about to become a doctor herself having recently completed her own doctorate. Having the support of a sister who knows and understands me, has many of the same experiences and, more recently, even understands how difficult getting a doctorate is has been invaluable. Ellie is often someone I think of as just a better version of myself, she is often inspirational to me and I'm lucky to have her as a sister. Thanks sis and congratulations on your own achievement! To my soon to be brother-in-law Sam, keep doing what your doing mate. It's a joy hanging out with you when I come back to London and you have been a great support to during this time, thank you.
+
+The most important thanks should go to my parents, Marie and Graham. My long-suffering parents have always been there for me, no matter what I was going through. They have never given up hope on me, they have always been there when I needed them and they have supported me in every decision I have ever made. For a multitude of reasons I won't list here, this PhD would in no way have been posisble without them. I love you both and don't say thank you nearly enough, for everything you do for me. So here I thank you, you mean the world to me.
+
+\subsubsection{Those who could not be here}
+I would like to set aside some space to address those who I have lost and therefore cannot be here. Firstly my Grandma Maureen, who died when I was young. I didn't get to know her well but I did see the loss that everyone felt when she went. I remember her warmth and kindness and I wish she were still here now. Grandad Dick died when I was older, but still young. He had a hard life, but never let it stop him bringing happiness to all the people around him. Sadly, the best example of this I have is his funeral, where I was amazed to see what seemed like the entirey of East London come out to mourn him. I wish I knew you both better, but I still miss you and wish you were both here now. Grandad Bob I knew a little better, he passed when I was a teenager. He was an Electrical Engineer, like me, he loved science and was proud that it was one of my favourite subjects in school. I still have the copy of Bill Bryson's "A Short History of Nearly Everything" he gave me and I sometimes read the note he wrote to me on the inside cover. I would have liked for him to have been here now to see me follow in his footsteps.
+
+Nana Mary, my final grandparent, survived into my twenties, of all my grandparents I knew her best. Mary O'Driscoll, born Mary Burke, was a farm girl born in county Galway. She lived in a rough time in Irish history and as a young woman had to move to London to find work. There, she met my grandfather Richard [Dick] O'Driscoll. They got married and had six lovely children, the first of which was my mother Marie. Life could be hard as an Irish person in London at this time. So, after my youngest uncle was old, enough Nana would go back into the workforce. She got a job as a teacher in a local catholic shool and made her way up to deputy headmistress. This job would allowed Nana and Grandad to buy their home in Ilford. This is the home I would eventually go to visit her in many years later. Through her work and the tough times she endured, Nana had a great belief in the importance of education. It is tool to help keep her family safe and comfortable, but also a tool to help all people better understand everything and everyone around them. She passed away a few years before I moved to Ireland to study. So I can only imagine what it would have meant to her to see her grandson gradute from Trinity College Dublin. I wish she was here to see it, it would have meant the world to me. Since she isn't here, the next best thing I can do is to write about her in this thesis, for her memory to be kept on record in the Trinity Acrhives. Nana Mary, was an incredible role model for me and I think this is the least she deserves.
+
+%Lastly I would like to remember my Auntie Annette, Annette White, born Annette O'Driscoll, who passed away a little after Nana. She passed away young from cancer and I miss her so much. Auntie Annette was always there to support me, always excited and interested in hearing about whatever I was doing at the time. She had endless positivity and joy when hearing about my life and just about anything else she talked about. 
+
+Lastly I would like to remember my Auntie Annette, Annette White, born Annette O'Driscoll, who passed away a little after Nana. When we used to go and visit the White family in Portsmouth, I would enter the house and often be greated by the sound of Auntie Anette singing to herself in another room. She would be singing one of her favourite songs, but, as always, would have forgotten many of the words. I would walk towards the sound of her singing, I would hear her making up for the forgotten words by inserting her own additions into the song. Often she would replace the missing parts of the song with the ingredients to whatever meal she was currently preparing, such as a fruit salad. As I got closer she would see me, she would immediately stop singing about melons and apples and rush over to give me a big cuddle. She sit down and ask me endless questions about my life and be so happy with and excited about whatever answer I gave. I feel so sad when I remember that I will not be able to tell her all about my PhD graduation. To think how happy and proud she would have been and how happy that would have made me feel. I would like to share a million different stories about Auntie Annette, but after writing this I simply can't stop crying.\thoughts{probably shouldn't have this here} So, instead, I will simply send my love, and my thanks for all the years we had, to her. As well, I send my love and thanks to the whole of the White family, who have been through so much and whom I love dearly.
+
+
+
 \tableofcontents
 \listoffigures
 \listoftables
@@ -270,13 +406,13 @@ Note that Roman mathematical symbols are typically in a serif font in italics.
 %\input{background/background.tex}
 %\input{project/project.tex}
 \input{2_chapter2/chapter2.tex}
-\input{3_chapter_3/chapter_3_new}
+%\input{3_chapter_3/chapter_3_new}
 \input{4_chapter_4/chapter4.tex}
 \input{5_chapter5/chapter5}
-\input{6_discussion/discussion.tex}
-%\input{conclusion/conclusion.tex}
+%\input{6_discussion/discussion.tex}
+\input{conclusion/conclusion.tex}
 \bibliographystyle{IEEEtran} %Changed to IEEETran by HS
-\bibliography{bibs/sample, bibs/workchapter1, bibs/workchapter2, bibs/workchapter3}
+\bibliography{bibs/sample, bibs/workchapter1, bibs/workchapter2, bibs/workchapter3, bibs/literaturereview}
 %\bibliography{bibs/workchapter2}
 \appendix
 \renewcommand{\thechapter}{A\arabic{chapter}}
