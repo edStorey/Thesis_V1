@@ -5,7 +5,7 @@
 %\captionsetup{labelfont=bf}
 
 %\chapter{LANGUAGE BIAS IN SELF-SUPERVISED LEARNING FOR AUTOMATIC SPEECH RECOGNITION}
-\chapter{Language Bias in Self-Supervised Learning for Automatic Speech Recognition}
+\chapter{Language-Specific Subnetworks and Bias in SSL for ASR}
 \label{chapter4}%% Change label when proper section title has been decieded
 
 %\name[affiliation={1,2}]{Edward}{Storey}
@@ -23,45 +23,11 @@
 
 %\newcommand{\red}[1]{\textcolor{red}{#1}}
 
-%\begin{document}
-\iffalse
-\begin{itemize}
-    \item I need something to start this chapter that references the last chapter and carries on from there.
-    \item it would start here with no section header, that is what mark and DJ have done Ayushi has this section named introduction
-    \item previous chapter is all about small models and efficiency, this chapter is all about a large model and how effective it really is
-    \item maybe I could use some of the abstract for this one?
-\end{itemize}
-\fi
-
-
-%\maketitle
-\iffalse
-\begin{abstract}
-Self-supervised learning (SSL) is used in deep learning to train on large datasets without the need for expensive labelling of the data. Recently, large Automatic Speech Recognition (ASR) models such as XLS-R have utilised SSL to train on over one hundred different languages simultaneously. However, deeper investigation shows that the bulk of the training data for XLS-R comes from a small number of languages. Biases learned through SSL have been shown to exist in multiple domains, but language bias in multilingual SSL ASR has not been thoroughly examined. In this paper, we utilise the Lottery Ticket Hypothesis (LTH) to identify language-specific subnetworks within XLS-R and test the performance of these subnetworks on a variety of different languages. We are able to show that when fine-tuning, XLS-R bypasses traditional linguistic knowledge and builds only on weights learned from the languages with the largest data contribution to the pretraining data.
-\end{abstract}
-\fi
+%\begin{document
 %\todo{add in section here linking to the previous chapter}
 \section{Introduction}\label{pru_sec:introduction} %\change{title needs changing}
-\iffalse
-\begin{itemize}
-    \item In the previous chapter we explored CNN based ASR for small models for small applications
-    \item we analysed CNN models from multiple angle
-        \begin{itemize}
-            \item WER, CER
-            \item IWER
-            \item Accents
-            \item monolingual vs multilingual
-            \item adapters
-        \end{itemize}
-    \item We concluded that even with good data and lots of training time small CNNs are simply too limited and the training time performance is not worth the lack of accuracy
-    \item If small parameter counts and inefficient \hl{whats the words for CNNs, transformers, LSTMs etc as a group?} don't produce the results we want wht does?
-    \item XLS-R is a multilingual SSL ASR etc etc
-    \item we can talk about the size and inefficiency of transformers, we can talk about how CNN were still used as a feature extractor
-    \item Do I need to mention that I had more access to compute power? This was a deciding factor in my experiments
-    \item XLS-R reports good results but is it actually better, the size and pretraining data are a deciding factor but what are they doing and how are they learning?
-\end{itemize}
-\fi
-In the previous chapter we explored Automatic Speech Recognition (ASR) through a small Convolutional Neural Network (CNN) model with a low parameter count. We explored how to make efficient training datasets for small ASR models in order to improve accuracy of second language (L2) accented speech. In order to improve L2 speech from first language (L1) Spanish speakers speaking L2 English we trained Quartznet 15x5 \cite{quartznet} on data that contained mixed training data from both Spanish and English in order to introduce models to phonemes may exist as minimal pairs \cite{trubetzkoy1969principles, zhang_compartitive_spa_eng}\info{principles of phonology. Added after sending to naomi: comparative analysis of spanish and english} in L2 English from an L1 Spanish speaker. We found that by mixing datasets Quartznet 15x5 suffered higher error rates in both languages and on L2 accented English. \thoughts{somewhere in this introduction we need to add a reference to my paper}
+
+%In the previous chapter we explored Automatic Speech Recognition (ASR) through a small Convolutional Neural Network (CNN) model with a low parameter count. We explored how to make efficient training datasets for small ASR models in order to improve accuracy of second language (L2) accented speech. In order to improve L2 speech from first language (L1) Spanish speakers speaking L2 English we trained Quartznet 15x5 \cite{quartznet} on data that contained mixed training data from both Spanish and English in order to introduce models to phonemes may exist as minimal pairs \cite{trubetzkoy1969principles, zhang_compartitive_spa_eng}\info{principles of phonology. Added after sending to naomi: comparative analysis of spanish and english} in L2 English from an L1 Spanish speaker. We found that by mixing datasets Quartznet 15x5 suffered higher error rates in both languages and on L2 accented English. \thoughts{somewhere in this introduction we need to add a reference to my paper}
 
 %By using large transformer based models with a high parameter count more specific information can be stored in a model due to the model scalability hypothesis \cite{zhang2022bigssl, pu21_interspeech}. Due to this hypothesis state of the art ASR models scale to hundreds of millions of parameters and utilise Self-Supervised Learning (SSL) to process much larger datasets and retain more information \cite{wav2vec, chen2022wavlm, whisper}. Research published during the undertaking of the research in Chapter \ref{WC1}\info{previous chapter on QuartNet} shows how transformers and SSL can improve multilingual learning and downstream error rates for multiple languages in one model by using large transformer based SSL ASR models \cite{XLSR-53, babu2021xlsr}. 
 
@@ -73,9 +39,9 @@ In the previous chapter we explored Automatic Speech Recognition (ASR) through a
 
 \info{Some of this may need rewriting after the previous chapter has been fully written}
 %\newpage
-We hypothesised that Quartznet 15x5 was not able to retain enough information from both languages is because of the comparably low parameter count of the model when compared to more recent models such as wav2vec 2.0 \cite{wav2vec}. CNNs have also been shown to be less efficient for processing sequential data such as speech audio, when compared to transformers \cite{vaswani2017attention}. Large transformer based ASR models can, unlike smaller models, have enough parameters to process numerous languages within a single model and achieve low error rates when finetuned even on low-data languages \cite{babu2021xlsr, whisper}. It has been consistently shown that fine-tuning large pretrained models provides the best accuracy on a single language task, when compared to smaller models \cite{Huang_CrossLingual, Toshniwal_MultiLingLSTM}. 
-\newpage
-Due to the neural scaling principle \cite{zhang2022bigssl, pu21_interspeech} having hundreds of millions of parameters allows SSL model to be pretrained on hundreds of thousands of hours of speech data and retain the information, leading to increased accuracy and lower finetuned error rates. SSL is increasingly utilised to process such large amounts of data without the need for expensive labelling and has become common in open-source ASR \cite{wav2vec, hsu2021hubert, chen2022wavlm}. However, previous commercial and open-sourced supervised learning models have been shown to produce higher errors when presented with speech data outside the domain of their training data \cite{koenecke2020racial, towards_inclusive}. 
+%We hypothesised that Quartznet 15x5 was not able to retain enough information from both languages is because of the comparably low parameter count of the model when compared to more recent models such as wav2vec 2.0 \cite{wav2vec}. CNNs have also been shown to be less efficient for processing sequential data such as speech audio, when compared to transformers \cite{vaswani2017attention}. Large transformer based ASR models can, unlike smaller models, have enough parameters to process numerous languages within a single model and achieve low error rates when finetuned even on low-data languages \cite{babu2021xlsr, whisper}. It has been consistently shown that fine-tuning large pretrained models provides the best accuracy on a single language task, when compared to smaller models \cite{Huang_CrossLingual, Toshniwal_MultiLingLSTM}. 
+%\newpage
+Large multilingual SSL ASR models can be pretrained on hundreds of languages simultaneously. This data can consist of thousands of hours of speech. However, due to the neural scaling principle \cite{zhang2022bigssl, pu21_interspeech}, these models must be scaled to hundreds of millions of parameters to retain the information. SSL is increasingly utilised to process large amounts of data without the need for expensive labelling and has become common in open-source ASR \cite{wav2vec, hsu2021hubert, chen2022wavlm}. Previous commercial supervised learning models have been shown to produce higher error rates when presented with speech data outside of their training data domain \cite{koenecke2020racial, towards_inclusive}. 
 
 Studies have shown that the data that SSL ASR models are trained on can impact downstream tasks. Boito et al. \cite{sslbias_gender} have experimented with wav2vec 2.0 by pretraining on data that was not balanced equally in gender and then fine-tuning to gender-balanced data. They found that if pretraining data was not gender-balanced, the error would increase when fine-tuning to gender-balanced speech. Meng et al. \cite{sslbias_speechrate} showed that biasing pretraining data towards slow speech rates for SSL transformer-based models improves downstream accuracy, whereas fast speech in pretraining has a performance drop. 
 
@@ -83,16 +49,19 @@ To show the impact of this pretraining Fuckner et al. \cite{sslbias_Dutch} inves
 
 %\newpage
 With this in mind it is vital to analyse the data open-source SSL ASR models are trained on. SSL excels when trained on large datasets and the most abundant source of speech data is English language data. Several models \cite{wav2vec, hsu2021hubert} used for multilingual ASR are trained solely on English data such as LibriSpeech \cite{librispeech} or Libri-Light \cite{librilight}. Other SSL models are pretrained on multilingual data \cite{babu2021xlsr, XLSR-53}, but they will often contain more English data than other languages. Multilingual LibriSpeech (MLS) \cite{MLS} is commonly used as a source of multilingual data for SSL pretraining. However, out of the 50k hours of speech data in MLS 44k are English, since the remaining 8 languages share the other 6k hours of data this becomes a very imbalanced dataset to pretrain a model on. 
-\newpage
+%\newpage
+
 The research conducted in this chapter will identify the impact that the imbalance of English data in SSL pretraining has on open-source commercial ASR and understand how large multilingual models are learning language. This will allow us to better understand how large commercial SSL ASR outperforms our previous experiments and whether they are worth the trade-off in size and training time. In order to achieve this, we require techniques that identify low-level behaviours of large deep learning models. Model compression techniques such as model distillation \cite{distillation}, low-rank adaptation \cite{hu2021lora} and model pruning \cite{han2015learning} all look to exploit specific behaviours in large pretrained deep learning models in order to reduce the size of a model without affecting performance. Compression techniques all rely on taking advantage of specific behaviours of a model to decrease training time. By analysing which approaches to model compression yield better accuracy with more compressed models we can better understand how a large DNN is behaving. 
 
 Model pruning compresses large DNN by removing or zeroing unnecessary weights and nodes within a DNN. The Lottery Ticket Hypothesis (LTH) \cite{frankle2018LTH} states that when pruning a model groups of weights called ``winning tickets'' can be found. Winning tickets are subnetworks within a larger DNN that contribute more to learning than other weights. Through the use of LTH, several studies have shown the existence of language-specific subnetworks within large ASR models \cite{PARP}. These subnetworks of weights contribute more to learning on a downstream language than other groups. These language-specific subnetworks have been used to improve accuracy in sparsely pruned networks for data of the same or related languages \cite{Lu_Language_adap_xlsr, yang2023learning}. By analysing the differences between subnetworks for different languages in a pretrained multilingual model, we can understand how the model is learning language-specific information.
 
 For this chapter we chose to test XLS-R \cite{babu2021xlsr}, XLS-R is an open-source SSL ASR model based on the same architecture as wav2vec 2.0 \cite{wav2vec}, but expanded to include larger layers and more transformer blocks in the encoder. We evaluate the 300 million parameter version that was pretrained through SSL on multilingual data from 128 different languages. This chapter will utilise LTH in order to identify language-specific weights and subnetworks within XLS-R and evaluate the extent to which language balance in the pretraining data affects bias towards or against performance on various languages in downstream fine-tuning tasks.
 
-\newpage
+%\newpage
 \section{Background}\label{pru_sec:background}
-In the previous chapter we attempted to improve Word Error Rates (WER) for multilingual speech and second language (L2) accents on a low parameter-count Convolutional Neural Network (CNN) Automatic Speech Recognition (ASR) model. We found that multilingual training increased WER on small models and that large transformer based Self-Supervised Learning (SSL) models were able to achieve much lower WER on the same data. For this section we will explain the methods used to train multilingual SSL ASR models. We will then introduce the concepts behind model compression techniques and why they are useful in understanding how large models learn language. Finally we will explain the methodology we used to apply model compression to multilingual SSL ASR and the results we expect to see.\info{remember to revisit after the previous chapter is written}
+%In the previous chapter we attempted to improve WER for multilingual speech and second language (L2) accents on a low parameter-count Convolutional Neural Network (CNN) Automatic Speech Recognition (ASR) model. We found that multilingual training increased WER on small models and that large transformer based Self-Supervised Learning (SSL) models were able to achieve much lower WER on the same data. 
+
+In this section we will explain the methods used to train multilingual SSL ASR models. We will then introduce the concepts behind model compression techniques and why they are useful in understanding how large models learn language. Finally we will explain the methodology we used to apply model compression to multilingual SSL ASR and the results we expect to see.\info{remember to revisit after the previous chapter is written}
 
 \subsection{Self-Supervised Learning and XLS-R} \label{pru_ssec:SSL_and_XLSR}
 Among widely cited open source SSL ASR models, wav2vec 2.0 and HuBERT were trained on Librispeech \cite{librispeech} and Libri-Light \cite{librilight}, which only include English language data \cite{wav2vec, hsu2021hubert}. XLS-R \cite{babu2021xlsr}, however, is a large SSL ASR model pretrained on 128 different languages. It is built on the same architecture as wav2vec 2.0 but expanded to 24 or 48 transformer blocks with an embedding size of 1024 in the encoder. 
@@ -500,11 +469,8 @@ As such, in the next chapter we pretrain wav2vec 2.0 \cite{wav2vec}, a cousin mo
 %\section{FILLER SECTION}
 
 \nomenclature[A]{L2}{Second Language}
-\nomenclature[A]{OMP}{One-Shot Magnitude Pruning}
-\nomenclature[A]{IMP}{Iterative Magnitude Pruning}
 \nomenclature[A]{RNN-T}{Recurrent Neural Network Transducer}
-\nomenclature[A]{IOU}{Intersection Over Union}
-\nomenclature[A]{LoRA}{Low-Rank Adaptation}
+
 
 %\section{ACKNOWLEDGEMENTS}
 %\textit{\footnotesize This work was conducted with the financial support of the Science Foundation Ireland %Centre for Research Training in Digitally-Enhanced Reality (d-real) under Grant No. 18/CRT/6224 and ADAPT SFI %Research Centre under Grant No. 13/RC/2106 P2. For the purpose of Open Access, the author has applied a CC BY %public copyright licence to any Author Accepted Manuscript version arising from this submission} 
