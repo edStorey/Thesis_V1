@@ -1,4 +1,5 @@
 \documentclass[a4paper,oneside,12pt]{book}
+%\documentclass[a4paper,oneside,11pt]{book}
 %\documentclass[numbered,print,index]{Classes/PhDThesisPSnPDF}
 \usepackage{helvet}
 \renewcommand{\familydefault}{\sfdefault}
@@ -6,10 +7,10 @@
 \RequirePackage[intoc]{nomencl}
 \makenomenclature
 \renewcommand{\nomgroup}[1]{%
+\ifthenelse{\equal{#1}{A}}{\item[\textbf{Acronyms / Abbreviations}]}{%
 \ifthenelse{\equal{#1}{K}}{\item[\textbf{Key Concepts and Phrases}]}{%
-\ifthenelse{\equal{#1}{A}}{\item[\textbf{Roman Symbols}]}{%
+\ifthenelse{\equal{#1}{Z}}{\item[\textbf{Roman Symbols}]}{%
 \ifthenelse{\equal{#1}{G}}{\item[\textbf{Greek Symbols}]}{%
-\ifthenelse{\equal{#1}{Z}}{\item[\textbf{Acronyms / Abbreviations}]}{%
 \ifthenelse{\equal{#1}{R}}{\item[\textbf{Superscripts}]}{%
 \ifthenelse{\equal{#1}{S}}{\item[\textbf{Subscripts}]}{%
 \ifthenelse{\equal{#1}{X}}{\item[\textbf{Other Symbols}]}
@@ -17,10 +18,11 @@
 }% matches mathematical symbols > X
 }% matches Subscripts           > S
 }% matches Superscripts         > R
-}% matches Abbreviations        > Z
+}% matches Key Words and Phrases        > K
 }% matches Greek Symbols        > G
 }% matches Roman Symbols        > A
-}% matches Key Words and Phrases        > K
+}% matches Abbreviations        > Z
+
 
 % To add nomenclature in the header
 \renewcommand{\nompreamble}{\markboth{\nomname}{\nomname}}
@@ -54,8 +56,11 @@
 %   It will be used for the title page and for the embedded PDF information
 %----------------------------------------------------------------------------------------
 
-\newcommand{\thesistitle}{Title of Work} % Your thesis title, this is used in the title and abstract
-\newcommand{\degree}{PhD Electronic and Electrical Engineering} % Your degree name, this is used in the title page and abstract
+%\newcommand{\thesistitle}{Title of Work} % Your thesis title, this is used in the title and abstract
+
+%\newcommand{\thesistitle}{Language Bias and Phonetic Learning in Multilingual Self-Supervised Learning}
+\newcommand{\thesistitle}{Language Bias and Phonetic Feature Learning in Multilingual SSL ASR}
+\newcommand{\degree}{Doctor of Philosophy} % Your degree name, this is used in the title page and abstract
 \newcommand{\typeofthesis}{dissertation} % dissertation, Final Year Project, report, etc.
 \newcommand{\authorname}{Edward Storey} % Your name, this is used in the title page and PDF stuff
 %% Do not put your Student ID in the document, as TCD will not publish
@@ -66,7 +71,7 @@
 %Edited by HS for engineering
 
 %% Comment out the next line if you don't want a department to appear
-\newcommand{\department}{\href{http://researchgroup.university.com}{Sigmedia Research Lab}} % Your research group's name and URL, this is used in the title page
+\newcommand{\department}{\href{http://researchgroup.university.com}{Department of Electronic and Electrical Engineering}} % Your research group's name and URL, this is used in the title page
 
 \AtBeginDocument{
 \hypersetup{pdftitle=\thesistitle} % Set the PDF's title to your title
@@ -251,107 +256,57 @@ Finally, we suggest future work that our contributions could be applied to. We s
 %Thanks Mum!
 
 %You should acknowledge any help that you have received (for example from technical staff), or input provided by, for example, a company.
+
+%This PhD has been a life-changing experience for me on many levels and I wouldn't have made it this far without the help of a lot of people.
+%This PhD would not have been possible without the who helped me get here.
+
+First and foremost, I would like to thank my supervisor, Professor Naomi Harte. Her knowledge and experience in the field of speech have been invaluable throughout this PhD. As well as technical experience, Naomi has been a great mentor. She would tell me hard truths when I needed to hear them. She would also go above and beyond to support me when things got tough. I'm grateful for every minute of this PhD, and this thesis simply would not have been possible without her. Thank you, Naomi.
+
+%She is a great role model whom I have learned from technically, academic and personally.\thoughts{not sure about this line, also I should say something mroe bout naomi's technical knowledge.} She was not afraid to give me the tough truth when I needed to hear it, but was also incredibly supportive when my back was up against the wall. Many people would not have gone as far as Naomi has to support me over the last few years and I will never forget that, thank you.
+
+I would also like to thank Professor Peter Bell, who was generous enough to give me an internship at The University of Edinburgh and supervise me throughout. His mentoring during my internship led to my first publication, for which I will forever be grateful. Thank you Peter. Everyone I met at Edinburgh was also fantastic. Whether it was the lunch chats or company at the pub and at home, you all made the experience so special. I would particularly like to thank Johannah, who so generously put a roof over my head for my first few weeks in the city. Thank you all.
+
+%This PhD would not have been possible without the lovely colleagues and friends I have met along the way. 
+
+%The environment that Professor Anil Kokaram has created a truly welcoming workplace by filling it with brilliant people. 
+
+%I have to thank Professor Anil Kokaram, who has fostered an office environment I genuinely enjoyed going to every day. This environment was made so enjoyable by all of my Sigmedia (et al.) peers, whom I would be remiss not to thank. To Seb, Mark, Ayushi and DJ who were here when I arrived. To Sophia, Ciaron, Clement, Darren and Viboothi, who started with me. To Sam O'Connor Russel, Sam Kotey, Justine, Shashwat, Danilo, Arman, Shu and Meegan, who joined soon after. To Zhaofeng, Julien, Conal, Udit and Boldo, the next generation. To Aris, Vicky, Rishabh, Delphine and Vu, who are excellent additions to our team. To Dee, Ilaria, Mel and Stephen, who I link simply by all being wonderful people. Each of you has made your own positive impact on my life and helped to make my PhD possible. Thank you. 
+
+I have to thank Professor Anil Kokaram, who has fostered an office environment I genuinely enjoyed going into every day. The people who made it enjoyable were all of my Sigmedia (et al.) peers, whom I would be remiss not to thank. So, to: Seb, Mark, Ayushi, DJ, Sophia, Ciaron, Clement, Darren, Viboothi, Sam O'Connor Russel, Sam Kotey, Justine, Shashwat, Danilo, Arman, Mohsen, Stephen, Shu, Meegan, Zhaofeng, Julien, Conal, Udit, Boldo, Aris, Vicky, Rishabh, Delphine, Vu, Dee, Ilaria and Mel. I hope I haven't missed anyone. Every single one of you has had such a positive impact on my life and helped to make my PhD possible. Thank you all so much. 
+
+As well, to the Academic, technical and support staff of the department. Every member of this team has been so lovely to work with, I genuinely could not have asked for more. The Broader Trinity staff also deserve some thanks. Especially Fionn O'Sullivan and Declan Reilly, who have been a big part of getting me to the end. I would also like to thank everyone involved in my funding body D-Real, especially Stephen Caroll, who always went the extra mile. As well as the other students in D-Real, who made it all so enjoyable. Thank you all.
+
+This PhD would not have been possible without the support of my friends. To Johanna, Anna-Lisa, Rob and Lauren, who have become lifelong friends. Every pint of Guinness, every game of pool and every day trip with you all made the stress of a PhD so worth it. Thank you. To my friends back home in North London. I'm a doctor, guys. Let's be honest, none of us ever saw this coming! Thank you all for always being there. To all the friends I made in York, who are still with me all these years later. Thank you. To the various housemates I've had in Dublin, especially to Maria and Connor, who always had time for a chat. Thank you too.
+
+%Your bedrock of friendship for such a long time has helped so much. Thank you.
+
+%That bedrock of friendship to come back to has been so important. Wherever I was, whenever it was, you've always been such a source of strength for me and has made this PhD and many other things in my life possible, thank you. To those I met at the University of York, the place that really started this journey, thank you. A special shoutout to my old housemates, Clemmie, Lauren, Jen and Sam as well as their respective partners. As well to the various housemates I've had in Dublin, you've been great. Especially Maria and Connor who always had time for chat at the end of the day.
+
+%I would also like to thank my extended family. I tried to summarise how the the Storeys and the O'Driscolls have helped me, in a single sentence, but it was impossible. They're all too unique and brilliant, but also, there are just so many of them, and it would be unfair to single out anyone personally. So instead, I will say this: I would not be the person I am without each and every one of you. Therefore, you can, and should, all take a little credit for this achievement. Thank you all.
+
+I would also like to thank my extended family. I initially tried to summarise all of the ways that the Storeys and the O'Driscolls have helped and supported me in a single sentence, but it was impossible. Each of them are just too unique and brilliant to be summarised, also there's just a lot of them. \iffalse However, I have so many relatives that listing them all individually would require adding an extra chapter to this thesis. \fi So instead, I will just say this: I would not be the person I am without each and every one of you; this is, in many ways, your achievement too. Thank you all.% Therefore, you can, and should, all take a little credit for this achievement. Thank you all.
+
+
+
+%Briefly, I would like to thank my extended family. The Storeys and O'Driscolls are made up of incredible people, who I am incredibly lucky to be related to. Every christmas gathering we do in the O'Driscoll family makes my year. It is difficult to summarise how much the O'Driscoll family means to me but, all of you, in each of your own ways, have provided such support and confort to me over the years, thank you. The Storey family are also incredible, they are inspirational, fun, smart and also supportive and mean the world to me, thank you also. I have far, far, too many family members to list by name unfortunately and it would be unfair to pick out individuals. However, I really believe that I would not be the person I am without all of you. This PhD is, in my eyes, is an achievment of our families and what makes us all special, not just me. So, thank you all, you're incredible. 
+
+%To my sister Ellie. Ellie is about to become a doctor herself having recently completed her own doctorate. Having the support of a sister who knows and understands me, has many of the same experiences and, more recently, even understands how difficult getting a doctorate is has been invaluable. Ellie is often someone I think of as just a better version of myself, she is often inspirational to me and I'm lucky to have her as a sister. Thanks sis and congratulations on your own achievement! To my soon to be brother-in-law Sam, keep doing what your doing mate. It's a joy hanging out with you when I come back to London and you have been a great support to during this time, thank you.
+
+Lastly, I wish to thank my immediate family. First, to my sister Ellie, who has recently completed her own doctorate. Having a supportive sister who understands me and has been there for me all these years makes such a difference. \iffalse Especially during a stressful PhD. \fi To Sam, my soon to be brother-in-law, your friendship is a great support too and does not go unappreciated. Thank you both. The most important thanks should be given to my parents, Marie and Graham. \iffalse My parents have always been there for me.\fi For a multitude of reasons I won't list here, this PhD would not have been possible without them. I don't thank them nearly enough for everything they do for me. So here I will say thank you, mum and dad, your continued support \iffalse through thick and thin that\fi means the absolute world to me.
+
+\subsubsection{In Memoriam Decication}
+
+I would also like to dedicate this thesis to a few people who are no longer with us. Firstly, to my paternal grandparents, Robert [Bob] and Maureen Storey (born Maureen Lennard), as well as my maternal grandfather, Richard [Dick] O'Driscoll. All three of them passed away when I was young, but I still miss them all dearly. 
+
+To my maternal Grandmother, Mary O'Driscoll (born Mary Burke), who lived well into my twenties and, as such, I was closest to. Nana Mary was born in County Galway almost a century ago. \iffalse In her twenties, she would move to London and settle there.  She worked hard for her family, becoming a teacher and eventually the deputy headmistress at a local school.\fi She was someone who knew the importance of education. She knew what having it could do for her and for her loved ones. \iffalse Sadly, she passed away before I moved to Ireland to study.\fi I can only imagine what it would have meant to her, to see her grandson graduate from Trinity College Dublin. \iffalse I wish she were still here today. \fi \textit{Go raibh maith agat, a mhamó}. 
+
+Finally, to my maternal Aunt, Annette White (born Annette O'Driscoll), who passed away young, from cancer, a few years after Nana Mary. Auntie Annette was one of the most joyful and supportive people in my life before she passed.  \iffalse I know she would have been over the moon to see me graduate.\fi I can't describe how much I miss her, and I've cried too much already today trying to do so. So, instead, I would simply like to dedicate this thesis to both the White family and to her, \iffalse Madam Blanc,\fi my Auntie Annette. %As well, to the White family, whom I love and who have been through so much. 
+
+%I felt when I realised I would never be able to show her my certificate and graduation. 
+
+ %Despite several attempts at writing this section, 
+
 \iffalse
-\begin{itemize}
-    \item Naomi
-    \begin{itemize}
-        \item Support
-        \item patience through thick and thin
-        \item allowed me to learn and grow
-        \item That support gave me the space I needed gave me chances other people didn't
-        \item I truly appreciate everything she's done for me
-    \end{itemize}
-    \item Sigmedia
-    \begin{itemize}
-        \item The old guard: DJ, Meegan, Mark, Ayushi, Sam O'C-R, Sam K, Seb, Sophia, Ciaron, Shu Darren, Clement, Vibhoothi, Shashwat, Danilo, Stephen, Arman, Justine?
-        \item the new guard: Zhaofeng, Aris, Vicky, Rishabh, Delphine, Vu, Julien, Conal, Udit, Ilaria and Mel, boldo, Dee
-        \item the academics
-        \item the support staff
-        \item maybe Fionn and disabilities can go here
-    \end{itemize}
-    \item Peter
-    \begin{itemize}
-        \item gave me a chance
-        \ietm taught me a lot
-    \end{itemize}
-    \item Edinburgh
-    \begin{itemize}
-        \item Andres, Catherine, Hoa, Jason, Dan, Johanna, Sarenne
-        \item thanks for the lunch break and teh very publishable ideas!
-        \item I loved being in Edinburgh
-    \end{itemize}
-    \item D-Real
-    \begin{itemize}
-        \item To all and for the funding
-        \item Stephen Specifically, maybe carol too
-        \item a broader mention of everyone I knew from d-real
-    \end{itemize}
-    \item friends
-    \begin{itemize}
-        \item Johanna, Anna-Lisa, Rob and Lauren - All the guiness, all of the pool, all the shared PhD trauma, you guys are great
-        \item Fortismere friends here?
-        \item Shoutout to the York lot?
-    \end{itemize}
-    \item housemates
-    \begin{itemize}
-        \item To all the various housemates
-        \item Particularly Maria and Connor
-    \end{itemize}
-    \item Family
-    \begin{itemize}
-        \item O'Driscolls? Storeys?
-        \item Do I talk here about grandparents? Specifically Nana
-        \item Either here or at the very end I should mention Anette
-    \end{itemize}
-    \item Close Family
-    \item Ellie and Sam
-    \item Mum and Dad
-    \begin{itemize}
-        \item Huge support they have always given me
-        \item Particularly supportive throughout this PhD
-        \item I appreciate everything they do for me and I could not have finished this PhD, or many other things, without them.
-        \item I love you both and thank you.
-    \end{itemize}
-    \item Maybe Nana here?
-    \begin{itemize}
-        \item She went through a lot and did everything for her family
-        \item she became a deputy head mistress because she knew what education meant for someone
-        \item I wish she were here to see me graduate 
-    \end{itemize}
-    \item Something about Auntie Annette
-    \begin{itemize}
-        \item she passed too young and I miss her
-        \item She was always so supportive of everything I did
-        \item always so positive, always excited to ask me about my life, always so proud of me no matter what I was doing.
-        \item She was a great source of support while Nana was ill and after she passed away
-        \item Auntie Annette passed away just before I went to Dublin and I still miss her dearly
-        \item I wish she was here to see me graduate, I will miss her over-excited hug the first time I would have seen her after graduating
-        \item I can't even express how much I miss my auntie
-    \end{itemize}
-\end{itemize}
-\fi
-
-This PhD has been a life-changing experience for me on many levels and I wouldn't have made it this far without the help of a lot of people.
-
-First and foremost I need to thank my supervisor Professor Naomi Harte, who gave me this chance in the first place. Naomi has stuck by me at every point of this PhD, through the lows and the highs. She is a great role model whom I have learned technically, academic and personally.\thoughts{not sure about this line, also I should say something mroe bout naomi's technical knowledge.} She was not afraid to give me the tough truth when I needed to hear it, but was also incredibly supportive when my back was up against the wall. Many people would not have gone as far as Naomi has to support me over the last few years and I will never forget that, thank you.
-
-I must also thank Professor Peter Bell, who was my supervisor during my internship at the University of Edinburgh. Peter agreed to let me visit the informatics department in Edinburgh after I accosted him at Interspeech 2023 asking for help. He was kind and helpful and I learned a lot from his incredible knowledge of ASR. This internship led to my first publication and I will never forget that either. While I won't list them all, everyone I met at Edinburgh was also fantastic. Whether it was the great lunch chats, the weekend rugby or Johanna's great generosity of giving me a bed for my first weeks there. You all made such a difference to my time in Edinburgh, thank you.
-
-This PhD would not have been possible without the lovely colleagues and friends I have met along the way. Professor Anil Kokaram has created a workplace that makes us all want to come in and see our colleagues every day. For that I thank him. I want to thank my Sigmedia PhD and PostDoc peers for making me look forward to work every day. To Sebastien, Mark and Ayushi and DJ who were here when I arrived. To Sophia, Ciaron, Clement, Darren, Viboothi, who started at the same time as me. To Sam O'Connor-Russel, Sam Kotey, Justine, Shashwat, Danilo, Arman, Shu and Meegan, who joined soon after. To Zhaofeng, Julien, Conal, Udit, Boldo, Sigmedia the next generation. To Aris, Vicky, Rishabh, Delphine and Vu, the most recent additions to our speech lab. To Dee, Ilaria, Mel, Stephen, whom I link simply by all being wonderful people. Whether it was what I learned from each of you, how I grew alongside you or whether you simply provided good company to enjoy a beer or a puck about. You have all made a huge impact on my life and my PhD possible, thank you. 
-
-Additionally, to the Academics and Staff of Sigmedia, of whom I have run out of space to name. Every member of this team has been kind and patient, whilst just being excellent at each of their respective jobs. I've worked in many places and really never met a team like you. A special mention to John, who always gives me a good laugh while solving my various printer issues and Michael, who is about to enjoy a very well-deserved retirement. The Broader Trinity staff have also been excellent. Especially Fionn O'Sullivan and Declan Reilly who have been a huge part of getting me to the end, thank you.
-
-Outside of Sigmedia I would like to thank my funding body D-Real and Professor Carol O'Sullivan who heads it. I literally would not have been to do without you. Extra thanks to Stephen Carol who was the administrator for most of my time at D-Real. He always had time to help with any minor or major issue whenever I needed anything. His organisation of writing sessions, writing retreats and various D-Real events made this PhD. More broadly I would like to thank everyone else involved with D-Real, especially the other students who made every D-Real event that much better. Thank you all.
-
-This PhD would not have been possible without the support of my friends. I would like to thank Johanna, Anna-Lisa, Rob and Lauren, who have become lifelong friends. Every pint of Guinness, every game of pool, every brunch and day trip made me so happy, thank you so much. I'll see you all soon. I would also like to mention my friends from back home, in North London. I'm a doctor guys, none of us saw this coming! That bedrock of friendship to come back to has been so important. Wherever I was, whenever it was, you've always been such a source of strength for me and has made this PhD and many other things in my life possible, thank you. To those I met at the University of York, the place that really started this journey, thank you. A special shoutout to my old housemates, Clemmie, Lauren, Jen and Sam as well as their respective partners. As well to the various housemates I've had in Dublin, you've been great. Especially Maria and Connor who always had time for chat at the end of the day.
-
-Briefly I would like to thank my extended family. The Storeys and O'Driscolls are made up of incredible people, who I am incredibly lucky to be related to. Every christmas gathering we do in the O'Driscoll family makes my year. It is difficult to summarise how much the O'Driscoll family means to me but, all of you, in each of your own ways, have provided such support and confort to me over the years, thank you. The Storey family are also incredible, they are inspirational, fun, smart and also supportive and mean the world to me, thank you also. I have far, far, too many family members to list by name unfortunately and it would be unfair to pick out individuals. However, I really believe that I would not be the person I am without all of you. This PhD is, in my eyes, is an achievment of our families and what makes us all special, not just me. So, thank you all, you're incredible. 
-
-To my sister Ellie. Ellie is about to become a doctor herself having recently completed her own doctorate. Having the support of a sister who knows and understands me, has many of the same experiences and, more recently, even understands how difficult getting a doctorate is has been invaluable. Ellie is often someone I think of as just a better version of myself, she is often inspirational to me and I'm lucky to have her as a sister. Thanks sis and congratulations on your own achievement! To my soon to be brother-in-law Sam, keep doing what your doing mate. It's a joy hanging out with you when I come back to London and you have been a great support to during this time, thank you.
-
-The most important thanks should go to my parents, Marie and Graham. My long-suffering parents have always been there for me, no matter what I was going through. They have never given up hope on me, they have always been there when I needed them and they have supported me in every decision I have ever made. For a multitude of reasons I won't list here, this PhD would in no way have been posisble without them. I love you both and don't say thank you nearly enough, for everything you do for me. So here I thank you, you mean the world to me.
-
-\subsubsection{Those who could not be here}
 I would like to set aside some space to address those who I have lost and therefore cannot be here. Firstly my Grandma Maureen, who died when I was young. I didn't get to know her well but I did see the loss that everyone felt when she went. I remember her warmth and kindness and I wish she were still here now. Grandad Dick died when I was older, but still young. He had a hard life, but never let it stop him bringing happiness to all the people around him. Sadly, the best example of this I have is his funeral, where I was amazed to see what seemed like the entirey of East London come out to mourn him. I wish I knew you both better, but I still miss you and wish you were both here now. Grandad Bob I knew a little better, he passed when I was a teenager. He was an Electrical Engineer, like me, he loved science and was proud that it was one of my favourite subjects in school. I still have the copy of Bill Bryson's "A Short History of Nearly Everything" he gave me and I sometimes read the note he wrote to me on the inside cover. I would have liked for him to have been here now to see me follow in his footsteps.
 
 Nana Mary, my final grandparent, survived into my twenties, of all my grandparents I knew her best. Mary O'Driscoll, born Mary Burke, was a farm girl born in county Galway. She lived in a rough time in Irish history and as a young woman had to move to London to find work. There, she met my grandfather Richard [Dick] O'Driscoll. They got married and had six lovely children, the first of which was my mother Marie. Life could be hard as an Irish person in London at this time. So, after my youngest uncle was old, enough Nana would go back into the workforce. She got a job as a teacher in a local catholic shool and made her way up to deputy headmistress. This job would allowed Nana and Grandad to buy their home in Ilford. This is the home I would eventually go to visit her in many years later. Through her work and the tough times she endured, Nana had a great belief in the importance of education. It is tool to help keep her family safe and comfortable, but also a tool to help all people better understand everything and everyone around them. She passed away a few years before I moved to Ireland to study. So I can only imagine what it would have meant to her to see her grandson gradute from Trinity College Dublin. I wish she was here to see it, it would have meant the world to me. Since she isn't here, the next best thing I can do is to write about her in this thesis, for her memory to be kept on record in the Trinity Acrhives. Nana Mary, was an incredible role model for me and I think this is the least she deserves.
@@ -359,7 +314,7 @@ Nana Mary, my final grandparent, survived into my twenties, of all my grandparen
 %Lastly I would like to remember my Auntie Annette, Annette White, born Annette O'Driscoll, who passed away a little after Nana. She passed away young from cancer and I miss her so much. Auntie Annette was always there to support me, always excited and interested in hearing about whatever I was doing at the time. She had endless positivity and joy when hearing about my life and just about anything else she talked about. 
 
 Lastly I would like to remember my Auntie Annette, Annette White, born Annette O'Driscoll, who passed away a little after Nana. When we used to go and visit the White family in Portsmouth, I would enter the house and often be greated by the sound of Auntie Anette singing to herself in another room. She would be singing one of her favourite songs, but, as always, would have forgotten many of the words. I would walk towards the sound of her singing, I would hear her making up for the forgotten words by inserting her own additions into the song. Often she would replace the missing parts of the song with the ingredients to whatever meal she was currently preparing, such as a fruit salad. As I got closer she would see me, she would immediately stop singing about melons and apples and rush over to give me a big cuddle. She sit down and ask me endless questions about my life and be so happy with and excited about whatever answer I gave. I feel so sad when I remember that I will not be able to tell her all about my PhD graduation. To think how happy and proud she would have been and how happy that would have made me feel. I would like to share a million different stories about Auntie Annette, but after writing this I simply can't stop crying.\thoughts{probably shouldn't have this here} So, instead, I will simply send my love, and my thanks for all the years we had, to her. As well, I send my love and thanks to the whole of the White family, who have been through so much and whom I love dearly.
-
+\fi
 
 
 \tableofcontents

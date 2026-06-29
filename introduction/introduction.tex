@@ -1,119 +1,4 @@
 \chapter{Introduction}
-\iffalse
-\begin{itemize}
-    \item Mark: 10 pages
-    \begin{itemize}
-        \item Structure:
-        \item Overview/Introduction: 2.5 pages
-        \item Thesis Statement: 1.5 pages
-        \item Thesis outline: 2.5 pages
-        \item Contributions: 2 pages
-        \item Publications: 1 page
-        \item 1 blank page
-    \end{itemize}
-    \item Rishabh: 7 pages
-    \begin{itemize}
-        \item Overview (Main contributions): 4.5 pages
-        \item List of Publications: 1 page
-        \item Taxonomy (outline, but for graduation by publication): 0.5 pages
-        \item Thesis structure: 1 page
-    \end{itemize}
-    \item Sam: 11 pages
-    \begin{itemize}
-        \item Structure:
-        \item Overview/Introduction: 4.5 pages
-        \item Thesis statement: 2 pages
-        \item Thesis Outline: 2.5 pages
-        \item contributions: 2 pages
-    \end{itemize}
-    \item Ayushi: 5 pages
-    \begin{itemize}
-        \item Introduction: 1 page
-        \item Outline: 1.5 pages
-        \item Original contributions: 1 page
-        \item publications: 1 page
-        \item blank: 0.5 pages
-    \end{itemize}
-    \item George: 8 pages
-    \begin{itemize}
-        \item Overview/Introduction: 3 pages
-        \item Thesis Outline: 1.5 pages
-        \item Contributions: 3 pages
-    \end{itemize}
-\end{itemize}
-
-\hl{End of Summaries}
-
-\begin{itemize}
-    \item An opening sentence about 
-    \item Some reasons as to why ASR is important, 1 paragraph max
-    \item A reference to how, in 2014, things changed to DNNs/ AI
-    \item How that has ballooned into AI
-    \item What AI is used for and why it is important for everyone to have access to ASR
-    \begin{itemize}
-        \item Subtitles for the deaf
-        \item Lectures, zoom calls, something academic
-        \item Speech to text for people with mobility issues, or dyslexia
-        \item Speech interfaces 
-        \item Bank speech interfaces, speech interfaces
-    \end{itemize}
-    \item ASR technologies are now big buisness? - dunno if we need this one
-    \item 
-    \item However, it still struggles with certain languages
-    \item List some groups that are still problematic, accents dialects languages
-    \item I could expand to cross-talk, or speech impediments maybe
-    \item Then a short section on the technical details
-    \item Very brief ferences to early DNN ASRs
-    \item very brief mention of Transformers
-    \item Explain that labelling data is expensive and time consuming
-    \item SSL models and the removal of labelled data
-    \item and then a mention of the imbalance between recognition across languages
-    \item How monolingual models do better, but bypass some of the benefits
-    \item We want to be able to design ASR models that can reasonably adapt to new languages
-    \item With this speech, domains with less data have a better chance of inclusion
-    \begin{itemize}
-        \item disabled people who speak in accents or small languages will not be excluded
-    \end{itemize}
-    \item So, how do we go about this? Well, first we need to understand the scale of the problem
-    \item Then we move on to a summary of the chapters and thesis structure.
-\end{itemize}
-
-\begin{itemize}
-    \item \hl{1st paragraph}
-    \item The very concept of speech
-    \item The concept of signals and complexity
-    \item transcription/text and it being a simplification 
-    \item all of the information in a speech signal
-    \begin{itemize}
-        \item We want to show this with a spectrogram on the next page, so all of the things in a spectrogram will be listed here
-        \item Word
-        \item Letter 
-        \item phonemes
-        \item Articulations
-        \item Silence
-    \end{itemize}
-    
-\end{itemize}
-
-Automatic transcription of the spoken word has long been the aim of researchers around the world. 
-
-Human beings have been communicating through speech for thousands of years, language
-
-Spoken language is arguably the most important form of communication in the human race
-
-Spoken audio signals are complex and contain a lot of information, that we distill it into a text transcript. 
-
-What is speech, why is transcription improtant why is automatic transcription important?
-
-\hl{Somewhere here I will have a spectrogram that shows multiple things, such as formants and a whole word, it is a good eye-catching opener, maybe I have it referred to in the introduction}
-\fi
-%Speech and language have underpinned human society for hundreds of thousands of years. 
-
-
-%The ability to confer complex information through speech has been crucial to human development throughout history. Communication through speech and language has allowed humanity to develop into large societies all across the world. The invention of the written language gave humans the ability to communicate over large distances. Writing even allowed us to pass down knowledge to future generations. Technology has forever focused on spreading human communication, making it as efficient and far-reaching as possible. The printing press, the radio, the telephone, the television, and the internet have all furthered humanity's ability to communicate. So it might seem strange then that until recently, we had no reliable way of automatically transcribing speech. 
-
-
-
 The information contained in a single utterance of speech is vast. From only a few seconds of speech, we can identify a speaker's gender, age and their proximity relative to our own. The frequency and rhythms of speech can tell us about the urgency or the emotional weight of the statement. The harmonic nature, the placement of silence or noise and the prosody of the speech can then convey words and meaning. The pronunciation of these words can even tell us information about the speaker's region of birth or the circumstances of their upbringing. In only a few seconds, the human brain can receive and process this information-rich signal. 
 
 From the 1950s onwards, researchers began working to achieve the automatic transcription of human speech. This is a task that, despite decades of research, has proven difficult to replicate. It is also the task that this thesis seeks to improve upon. The first step to understanding a speech signal is to compute the Fast Fourier Transform (FFT). The FFT enabled computers to decompose a speech signal into its frequency components efficiently. The FFTs for short overlapping windows of audio can then be computed and arranged over time. This produces a representation of the signal with frequency on the y axis, time on the x axis and frequency magnitude on the z axis. This representation is known as the spectrogram and allows us to visualise the breadth of information encoded in speech. 
@@ -134,7 +19,7 @@ This volume of information proved difficult for early signal processing to autom
 
 %Early DNN architectures taught Recurrent Neural Networks (RNNs) \cite{Graves2012} to learn sequential labelled speech data using Connectionist Temporal (CTC) Loss \cite{graves2006connectionist}. 
 
-The first DNN architectures learned speech using Connectionist Temporal (CTC) Loss \cite{graves2006connectionist} and learned from thousands of hours of speech. However, CTC required human-transcribed speech data for training, but human transcription is time-consuming and expensive. So, Self-Supervised Learning (SSL) techniques were developed to learn speech without the need for expensive labelling \cite{wav2vec, hsu2021hubert}. They were combined with transformers \cite{vaswani2017attention}, which allow the parallel processing of speech frames, to achieve impressive results. This thesis explores how SSL ASR models learn and how they have been used in modern ASR.
+The first DNN architectures learned speech using Connectionist Temporal Classification (CTC) Loss \cite{graves2006connectionist} and learned from thousands of hours of speech. However, CTC required human-transcribed speech data for training, but human transcription is time-consuming and expensive. So, Self-Supervised Learning (SSL) techniques were developed to learn speech without the need for expensive labelling \cite{wav2vec, hsu2021hubert}. They were combined with transformers \cite{vaswani2017attention}, which allow the parallel processing of speech frames, to achieve impressive results. This thesis explores how SSL ASR models learn and how they have been used in modern ASR.
 
 SSL ASR models were able to vastly reduce the cost of training data by bypassing human labelling. It also expanded the number of sources from which data could be extracted. Since SSL loss functions do not have a labelled objective, training must be split into 2 stages: pretraining and fine-tuning. The pretraining stage is done with SSL and then the model is fine-tuned to a labelled objective, such as speech transcriptions, with CTC. To maximise the benefits of SSL, training on large datasets for long periods is done during pretraining. Unlabelled data cannot be utilised in fine-tuning. There are many resources for unlabeled or semi-labelled data, so including them can greatly expand the size of the data pool. The fine-tuning dataset can then be much smaller than the pretraining dataset, since the bulk of learning has already been done.
 
@@ -303,23 +188,7 @@ Prior studies have shown that wav2vec 2.0 learns phonemes and manner of articula
     \item \textbf{Storey, E.}, Harte, N., and Bell, P. (2024) "Language Bias in Self-Supervised Learning For Automatic Speech Recognition," \textit{IEEE Spoken Language Technology Workshop (SLT)}, Macao, 2024, pp. 37-42, doi:10.1109/SLT61566.2024.10832268.
 \end{enumerate}
 
-
-\iffalse
-We see in Figure \ref{ed_fig:fine_tuning_100hours} the Character Error Rate (CER) results after finetuning each of our pretrained models to 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Key Word and Phrases Section %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\nomenclature[K]{Bias - Model}{This model is biased towards Language \textit{[\hl{Language}]} due to...}
-\nomenclature[K]{Bias - Dataset}{This dataset is biased towards Language \textit{[\hl{Language}]} because of...}
-\nomenclature[K]{Bias - Error}{The Error output of this model shows bias towards...}
-\nomenclature[K]{Bias - IOU}{The IOU between these models shows bias towards...}
-\nomenclature[K]{Datasets - Hours}{\hl{Dataset Name} has \hl{Number} of hours in language \hl{Language}}
-\nomenclature[K]{Datasets - Language}{\hl{Dataset Name} contains data from \hl{list of Languages}}
-\nomenclature[K]{Datasets - Language}{\hl{Dataset Name} contains data from \hl{list of Languages}}
-\nomenclature[K]{Models - Architecture high level}{The \hl{Model Name} architecture consists of \textit{[\hl{High Level Architecture}]}}
-\nomenclature[K]{Models - Architecture low level}{The z\textit{[\hl{Model Name}]} \texit{[\hl{model module}]} consists of \texit{[\hl{number}]} of \texit{[\hl{layer/block type}]} layer\hl{/}blocks} 
-\nomenclature[K]{Models - Architecture Model Type}{\textit{[\hl{Model Name}]} is a \textit{[\hl{Model Type i.e. conformer CNN Transformer}]} model consisting of \textit{[\hl{High Level Overview}]}}
-\nomenclature[K]{Motivation - Experiments}{The results from Section \textit{[\hl{Section Number}]} show that \textit{[\hl{Section conclusion}]} this leads us to the question... \change{this could do with better wording}}
-\nomenclature[K]{Motivation - Introduction}{The previous section concluded that \textit{[\hl{Previous Section Conclusions}]}, this section will investigate the concept of \textit{[\hl{Current Section Research Question}]}}
-\nomenclature[K]{Finetunging - Same Data as Training}{finetuning to a subset of the data the model was trained on \textit{[\hl{Dataset or Datasets}]}, in this case \textit{[\hl{Number of Hours}]} hours of each dataset}
-\fi
+\nomenclature[A]{CTC}{Connectionist Temporal Classification}
+\nomenclature[A]{ASR}{Automatic Speech Recognition}
+\nomenclature[A]{DNN}{Deep Neural Network}
+\nomenclature[A]{SSL}{Self-Supervised Learning}
